@@ -4,17 +4,27 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
-    "dev": "strapi develop",
+    "dev": "cross-env ENV_PATH='./.env.development' strapi develop",
+    "develop": "strapi develop",
+
     "start": "strapi start",
-    "build": "strapi build",
+    "start-dev": "cross-env ENV_PATH='./.env.development' strapi develop",
+    "start-prod": "cross-env ENV_PATH=./.env.production strapi start",
+
+    "build": "strapi build -- --clean",
+    "build-dev": "cross-env ENV_PATH='./.env.development' strapi build -- --clean",
+    "build-prod": "cross-env ENV_PATH='./.env.production' strapi build -- --clean",
+
     "strapi": "strapi"
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/strapi": "4.0.2",
-    "@strapi/plugin-users-permissions": "4.0.2",
     "@strapi/plugin-i18n": "4.0.2",
-    "sqlite3": "5.0.2"
+    "@strapi/plugin-users-permissions": "4.0.2",
+    "@strapi/strapi": "4.0.2",
+    "cross-env": "^7.0.3",
+    "sqlite3": "5.0.2",
+    "stripe": "^8.195.0"
   },
   "author": {
     "name": "A Strapi developer"

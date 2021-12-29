@@ -6,4 +6,13 @@
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::package-order.package-order');
+let stripe = undefined;
+
+module.exports = createCoreService('api::package-order.package-order', ({ strapi, env }) => ({
+    stripe: () => {
+        if (stripe) {
+            stripe = require('stripe')(env('STRIPE_API_KEY'));
+        }
+        return stripe;
+    }
+}));
