@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "package_orders",
+  "info": {
+    "singularName": "package-order",
+    "pluralName": "package-orders",
+    "displayName": "Package Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "default": 1
+    },
+    "totalTikToks": {
+      "type": "integer",
+      "required": true
+    },
+    "remainMints_mod": {
+      "type": "integer",
+      "required": true
+    },
+    "stripeResponseSessionObj": {
+      "type": "json"
+    },
+    "referral": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::referral.referral",
+      "inversedBy": "package_orders"
+    }
+  }
+}

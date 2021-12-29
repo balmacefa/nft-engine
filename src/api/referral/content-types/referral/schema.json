@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "referrals",
+  "info": {
+    "singularName": "referral",
+    "pluralName": "referrals",
+    "displayName": "Referral"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "stripeCouponObj": {
+      "type": "json",
+      "required": true
+    },
+    "package_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::package-order.package-order",
+      "mappedBy": "referral"
+    }
+  }
+}
