@@ -3,13 +3,22 @@
 /**
  *  package-order controller
  */
- const packagePriceUSD = 7.5;
+const packagePriceUSD = 7.5;
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::package-order.package-order', ({ strapi }) => ({
+module.exports = createCoreController('api::package-order.package-order', ({ strapi, env }) => ({
 
     createCheckoutSession: async ctx => {
+        strapi.log.info('ENTER POST /package-order/checkout-session');
+        strapi.log.debug(JSON.stringify(ctx?.request?.body));
+        strapi.log.info(strapi.config.get('server.stripe_success_url'));
+        strapi.log.info(strapi.config.get('server.stripe_cancel_url'));
+
+
+        // log strapi
+        const stripe = strapi.service('api::package-order.package-order').stripe();
+
         const user = ctx.state.user;
         const {
             quantity
@@ -23,19 +32,22 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
                         product_data: {
                             name: '5_TikTok_NFT_Package',
                         },
-                        unit_amount_decimal: packagePriceUSD,
+                        unit_amount_decimal: packagePriceUSD * 100,
                     },
                     quantity: quantity,
                 },
             ],
             allow_promotion_codes: true,
-            client_reference_id: user.id,
+            // client_reference_id: user?.id,
             mode: 'payment',
-            success_url: `${strapi.config.get('server.url')}/order-success`,
-            cancel_url: `${strapi.config.get('server.url')}/order-cancel`,
+            success_url: strapi.config.get('server.stripe_success_url'),
+            cancel_url: strapi.config.get('server.stripe_cancel_url'),
         });
 
-        ctx.response.redirect(session.url);
+        strapi.log.info('EXIT POST /package-order/checkout-session');
+        strapi.log.debug(JSON.stringify(session));
+
+        return session.url;
     },
     create: async ctx => {
         stripe = strapi.service('api::package-order.package-order').stripe();

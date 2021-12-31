@@ -9,5 +9,8 @@ module.exports = ({ env }) => ({
   watchIgnoreFiles: [
     '**/config-sync/files/**',
   ],
-  url: env('PUBLIC_URL', 'http://localhost:1337')
+  url: env('PUBLIC_URL', 'http://localhost:1337'),
+  stripe_success_url: env('STRIPE_SUCCESS_URL'),
+  stripe_cancel_url: env('STRIPE_CANCEL_URL'),
+  stripe_api_key: env('STRIPE_API_KEY')
 });
