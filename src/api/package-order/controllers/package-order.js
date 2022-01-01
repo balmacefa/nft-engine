@@ -6,15 +6,14 @@
 const packagePriceUSD = 7.5;
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const unparsed = require('koa-body/unparsed.js');
 
-module.exports = createCoreController('api::package-order.package-order', ({ strapi, env }) => ({
+
+module.exports = createCoreController('api::package-order.package-order', ({ strapi }) => ({
 
     createCheckoutSession: async ctx => {
         strapi.log.info('ENTER POST /package-order/checkout-session');
         strapi.log.debug(JSON.stringify(ctx?.request?.body));
-        strapi.log.info(strapi.config.get('server.stripe_success_url'));
-        strapi.log.info(strapi.config.get('server.stripe_cancel_url'));
-
 
         // log strapi
         const stripe = strapi.service('api::package-order.package-order').stripe();
@@ -39,54 +38,72 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
             ],
             allow_promotion_codes: true,
             // client_reference_id: user?.id,
+            metadata: {
+                strapi_user_id: "user.id",
+            },
             mode: 'payment',
             success_url: strapi.config.get('server.stripe_success_url'),
             cancel_url: strapi.config.get('server.stripe_cancel_url'),
         });
 
+        strapi.log.debug("Stripe session: \n" + JSON.stringify(session));
         strapi.log.info('EXIT POST /package-order/checkout-session');
-        strapi.log.debug(JSON.stringify(session));
 
         return session.url;
     },
-    create: async ctx => {
-        stripe = strapi.service('api::package-order.package-order').stripe();
-        orderAPI = strapi.service('api::package-order.package-order')
-        const user = ctx.state.user;
-        const {
-            quantity
-        } = ctx.request.body;
+    webhookFulfillOrder: async ctx => {
+        strapi.log.info('ENTER POST /package-order/webhook/fulfill-order');
 
-        // Charge the customer
+        const stripe = strapi.service('api::package-order.package-order').stripe();
+        const orderAPI = strapi.service('api::package-order.package-order');
+
+        const payload = ctx.request.body[unparsed];
+        const sig = ctx?.request?.header['stripe-signature'];
+        const secret = strapi.config.get('server.stripe_webhook_secret');
+
+        let event;
+
         try {
-            await stripe.charges.create({
-                // Transform cents to dollars.
-                amount: amount * 100,
-                currency: 'usd',
-                description: `Order ${new Date()} by ${user.id}`,
-                source: token,
-            });
-
-            // Register the order in the database
-            try {
-                const validData = await strapi.entityValidator.validateEntityUpdate(strapi.models.package_orders, data)
-
-                const order = await orderAPI.create({
-                    user: ctx.state.user.id,
-                    address,
-                    amount,
-                    dishes,
-                    postalCode,
-                    city,
-                });
-
-                const sanitizedEntity = await this.sanitizeOutput(order, ctx);
-                return this.transformResponse(sanitizedEntity);
-            } catch (err) {
-                // Silent
-            }
+            event = stripe.webhooks.constructEvent(payload, sig, secret);
         } catch (err) {
-            // Silent
+            strapi.log.error(`ERROR 400 Webhook: \n ${err.message}`);
+            strapi.log.error(JSON.stringify(err));
+            return ctx.throw(400, `Webhook Error`);
         }
+        // Handle the checkout.session.completed event
+        if (event.type === 'checkout.session.completed') {
+            try {
+                const session = event.data.object;
+                strapi.log.debug("Stripe session: \n" + JSON.stringify(session));
+                const order = await stripe.checkout.sessions.listLineItems(session.id);
+                strapi.log.debug("Stripe Order: \n" + JSON.stringify(order));
+                const orderDetails = order.data[0];
+
+                // Register the order in the database
+                const entity = await orderAPI.create(
+                    {
+                        data: {
+                            quantity: orderDetails.quantity,
+                            totalTikToks: orderDetails.quantity * 5,
+                            remainMints_mod: orderDetails.quantity * 5,
+                            stripeResponseSessionObj: session,
+                            stripeResponseListLineItemsObj: order,
+                            amount_subtotal: session.amount_subtotal / 100,
+                            amount_total: session.amount_total / 100,
+                            // referralCode: TODO: get referral code from ?session?
+                            user: session?.metadata?.strapi_user_id
+                        }
+                    }
+                );
+                strapi.log.info('EXIT POST /package-order/webhook/fulfill-order with: \n' + JSON.stringify(entity));
+                return entity;
+            } catch (err) {
+                strapi.log.error(`ERROR: \n ${err.message}`);
+                strapi.log.error(JSON.stringify(err));
+                return ctx.throw(400, `Webhook Error`);
+            }
+        }
+        // return ok
+        return ctx.body = 'processed';
     },
 }));

@@ -12,5 +12,6 @@ module.exports = ({ env }) => ({
   url: env('PUBLIC_URL', 'http://localhost:1337'),
   stripe_success_url: env('STRIPE_SUCCESS_URL'),
   stripe_cancel_url: env('STRIPE_CANCEL_URL'),
-  stripe_api_key: env('STRIPE_API_KEY')
+  stripe_api_key: env('STRIPE_API_KEY'),
+  stripe_webhook_secret: env('STRIPE_WEBHOOK_SECRET'),
 });

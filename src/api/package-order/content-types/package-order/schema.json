@@ -14,8 +14,7 @@
   "attributes": {
     "quantity": {
       "type": "integer",
-      "required": true,
-      "default": 1
+      "required": true
     },
     "totalTikToks": {
       "type": "integer",
@@ -25,7 +24,16 @@
       "type": "integer",
       "required": true
     },
+    "amount_subtotal": {
+      "type": "decimal"
+    },
+    "amount_total": {
+      "type": "decimal"
+    },
     "stripeResponseSessionObj": {
+      "type": "json"
+    },
+    "stripeResponseListLineItemsObj": {
       "type": "json"
     },
     "referral": {

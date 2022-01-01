@@ -2,10 +2,17 @@ module.exports = [
   'strapi::errors',
   'strapi::security',
   'strapi::cors',
-  'strapi::poweredBy',
+  // 'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
-  'strapi::body',
+  {
+    name: 'strapi::body',
+    config: {
+      "enabled": true,
+      "multipart": true,
+      "includeUnparsed": true
+    },
+  },
   'strapi::favicon',
-  'strapi::public',
+  'strapi::public'
 ];
