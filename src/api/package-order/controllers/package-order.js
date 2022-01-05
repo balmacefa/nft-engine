@@ -77,6 +77,7 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
             let session;
             let orderDetails;
             let order;
+            let referral;
 
             try {
                 session = event.data.object;
@@ -92,6 +93,16 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
                         }
                     );
                     strapi.log.info("Stripe session has a promo coupon code applied: \n" + JSON.stringify(session));
+                    
+                    const referralAPI = strapi.db.query('api::referral.referral');
+                    // find referral with stripe_id
+                    const promotionCode = session.total_details.breakdown.discounts[0].discount.promotion_code;
+                    referral = await referralAPI.findOne({
+                        where: {
+                            stripe_id: promotionCode
+                        }
+                    });
+                    strapi.log.info("Using referral: \n" + JSON.stringify(referral));
                 }
 
                 strapi.log.debug("Stripe Order: \n" + JSON.stringify(order));
@@ -114,7 +125,7 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
                             stripeResponseListLineItemsObj: order,
                             amount_subtotal: session.amount_subtotal / 100,
                             amount_total: session.amount_total / 100,
-                            // referralCode: TODO: get referral code from ?session?
+                            ...(referral) && { referral: referral.id },
                             user: session?.metadata?.strapi_user_id
                         }
                     }
