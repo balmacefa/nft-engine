@@ -11,6 +11,12 @@ module.exports = {
             method: 'POST',
             path: '/package-order/webhook/fulfill-order',
             handler: `${controller}.webhookFulfillOrder`,
+        },
+        // countRemainMints
+        {
+            method: 'GET',
+            path: '/package-order/countRemainMints',
+            handler: `${controller}.countRemainMints`,
         }
     ]
 }

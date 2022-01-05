@@ -9,6 +9,23 @@ const { createCoreController } = require('@strapi/strapi').factories;
 const unparsed = require('koa-body/unparsed.js');
 
 
+const countRemainMints_mod = async (strapi, userId) => {
+    const referralAPI = strapi.db.query('api::package-order.package-order');
+    const entries = await referralAPI.findMany({
+        select: ['remainMints_mod', 'id'],
+        where: {
+            user: userId,
+            remainMints_mod: {
+                $gt: 0,
+            },
+        },
+        populate: false,
+    });
+    // [{remainMints_mod:10}, {remainMints_mod:20}]
+    const sum = entries.reduce((acc, cur) => acc + cur.remainMints_mod, 0);
+    return sum;
+}
+
 module.exports = createCoreController('api::package-order.package-order', ({ strapi }) => ({
 
     createCheckoutSession: async ctx => {
@@ -93,7 +110,7 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
                         }
                     );
                     strapi.log.info("Stripe session has a promo coupon code applied: \n" + JSON.stringify(session));
-                    
+
                     const referralAPI = strapi.db.query('api::referral.referral');
                     // find referral with stripe_id
                     const promotionCode = session.total_details.breakdown.discounts[0].discount.promotion_code;
@@ -141,4 +158,14 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
         // return ok
         return ctx.body = 'processed';
     },
+    countRemainMints: async ctx => {
+        strapi.log.info('ENTER GET /package-order/countRemainMints_mod');
+
+        // const userId = ctx.state.user; //TODO: change to user.id
+        const userId = "1"; //TODO: change to user.id
+
+        const count = await countRemainMints_mod(strapi, userId);
+        strapi.log.info('EXIT GET /package-order/countRemainMints_mod');
+        return count;
+    }
 }));
