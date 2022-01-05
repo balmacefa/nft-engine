@@ -4,14 +4,15 @@
   "info": {
     "singularName": "referral",
     "pluralName": "referrals",
-    "displayName": "Referral"
+    "displayName": "Referral",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "stripeCouponObj": {
+    "stripePromotionCodeObj": {
       "type": "json",
       "required": true
     },
@@ -20,6 +21,11 @@
       "relation": "oneToMany",
       "target": "api::package-order.package-order",
       "mappedBy": "referral"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

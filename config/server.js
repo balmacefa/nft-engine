@@ -14,4 +14,5 @@ module.exports = ({ env }) => ({
   stripe_cancel_url: env('STRIPE_CANCEL_URL'),
   stripe_api_key: env('STRIPE_API_KEY'),
   stripe_webhook_secret: env('STRIPE_WEBHOOK_SECRET'),
+  stripe_discount_code_referrals: env('STRIPE_DISCOUNT_CODE_REFERRALS', 'STANDARD_REFERRAL_COUPON_CODE'),
 });

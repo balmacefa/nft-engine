@@ -18,7 +18,9 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
         // log strapi
         const stripe = strapi.service('api::package-order.package-order').stripe();
 
-        const user = ctx.state.user;
+        // const userId = ctx.state.user; //TODO: change to user.id
+        const userId = "1"; //TODO: change to user.id
+
         const {
             quantity
         } = ctx.request.body;
@@ -37,9 +39,9 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
                 },
             ],
             allow_promotion_codes: true,
-            // client_reference_id: user?.id,
+            client_reference_id: userId,
             metadata: {
-                strapi_user_id: "user.id",
+                strapi_user_id: userId,
             },
             mode: 'payment',
             success_url: strapi.config.get('server.stripe_success_url'),
@@ -72,13 +74,35 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
         }
         // Handle the checkout.session.completed event
         if (event.type === 'checkout.session.completed') {
-            try {
-                const session = event.data.object;
-                strapi.log.debug("Stripe session: \n" + JSON.stringify(session));
-                const order = await stripe.checkout.sessions.listLineItems(session.id);
-                strapi.log.debug("Stripe Order: \n" + JSON.stringify(order));
-                const orderDetails = order.data[0];
+            let session;
+            let orderDetails;
+            let order;
 
+            try {
+                session = event.data.object;
+                strapi.log.debug("Stripe session: \n" + JSON.stringify(session));
+                order = await stripe.checkout.sessions.listLineItems(session.id);
+
+                if (session.amount_total !== session.amount_subtotal) {
+                    // a coupon was applied to the session
+                    session = await stripe.checkout.sessions.retrieve(
+                        session.id,
+                        {
+                            expand: ['total_details.breakdown'],
+                        }
+                    );
+                    strapi.log.info("Stripe session has a promo coupon code applied: \n" + JSON.stringify(session));
+                }
+
+                strapi.log.debug("Stripe Order: \n" + JSON.stringify(order));
+                orderDetails = order.data[0];
+            } catch (err) {
+                strapi.log.error(`ERROR: \n ${err.message}`);
+                strapi.log.error(JSON.stringify(err));
+                return ctx.throw(400, `Webhook Error`);
+            }
+
+            try {
                 // Register the order in the database
                 const entity = await orderAPI.create(
                     {
@@ -100,7 +124,7 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
             } catch (err) {
                 strapi.log.error(`ERROR: \n ${err.message}`);
                 strapi.log.error(JSON.stringify(err));
-                return ctx.throw(400, `Webhook Error`);
+                return ctx.throw(400, `Error while creating order`);
             }
         }
         // return ok

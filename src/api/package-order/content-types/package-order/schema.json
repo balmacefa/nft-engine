@@ -41,6 +41,12 @@
       "relation": "manyToOne",
       "target": "api::referral.referral",
       "inversedBy": "package_orders"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "package_orders"
     }
   }
 }
