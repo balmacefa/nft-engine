@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tik_tok_configs",
+  "info": {
+    "singularName": "tik-tok-config",
+    "pluralName": "tik-tok-configs",
+    "displayName": "TikTokConfig",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cookie_s_v_web_id": {
+      "type": "string"
+    },
+    "cookie_sid_ucp_v1": {
+      "type": "string"
+    },
+    "latest_selected_blockchain": {
+      "type": "enumeration",
+      "enum": [
+        "ETH",
+        "BSC",
+        "MATIC",
+        "CELO",
+        "ONE"
+      ]
+    },
+    "send_address": {
+      "type": "string"
+    },
+    "extra_message": {
+      "type": "string"
+    },
+    "royalties": {
+      "type": "json"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
