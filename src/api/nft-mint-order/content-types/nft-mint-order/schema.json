@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "tik_tok_configs",
+  "collectionName": "nft_mint_orders",
   "info": {
-    "singularName": "tik-tok-config",
-    "pluralName": "tik-tok-configs",
-    "displayName": "TikTok Config",
+    "singularName": "nft-mint-order",
+    "pluralName": "nft-mint-orders",
+    "displayName": "NFT Mint Order",
     "description": ""
   },
   "options": {
@@ -12,13 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "cookie_s_v_web_id": {
+    "sendAddress": {
       "type": "string"
     },
-    "cookie_sid_ucp_v1": {
-      "type": "string"
-    },
-    "latestSelectedBlockchain": {
+    "blockchain": {
       "type": "enumeration",
       "enum": [
         "ETH",
@@ -27,9 +24,6 @@
         "CELO",
         "ONE"
       ]
-    },
-    "sendAddress": {
-      "type": "string"
     },
     "extraMessage": {
       "type": "string"
@@ -47,6 +41,16 @@
           }
         ]
       }
+    },
+    "transactionID": {
+      "type": "string",
+      "unique": true
+    },
+    "contractAddress": {
+      "type": "json"
+    },
+    "status": {
+      "type": "string"
     },
     "user": {
       "type": "relation",

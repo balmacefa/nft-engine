@@ -69,6 +69,13 @@
       "target": "api::package-order.package-order",
       "private": true,
       "mappedBy": "users_permissions_user"
+    },
+    "nft_contracts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::nft-contract.nft-contract",
+      "mappedBy": "user",
+      "private": true
     }
   }
 }

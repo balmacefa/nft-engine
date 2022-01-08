@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nft_contracts",
+  "info": {
+    "singularName": "nft-contract",
+    "pluralName": "nft-contracts",
+    "displayName": "NFT Contract",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "symbol": {
+      "type": "string"
+    },
+    "blockchain": {
+      "type": "enumeration",
+      "enum": [
+        "ETH",
+        "BSC",
+        "MATIC",
+        "CELO",
+        "ONE"
+      ]
+    },
+    "transactionID": {
+      "type": "string",
+      "unique": true
+    },
+    "contractAddress": {
+      "type": "json"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "nft_contracts"
+    }
+  }
+}
