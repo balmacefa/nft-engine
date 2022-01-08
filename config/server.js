@@ -15,4 +15,21 @@ module.exports = ({ env }) => ({
   stripe_api_key: env('STRIPE_API_KEY'),
   stripe_webhook_secret: env('STRIPE_WEBHOOK_SECRET'),
   stripe_discount_code_referrals: env('STRIPE_DISCOUNT_CODE_REFERRALS', 'STANDARD_REFERRAL_COUPON_CODE'),
+  bull_mq_config: {
+    connection: {
+      host: env('REDIS_HOST', 'localhost'),
+      port: env.int('REDIS_PORT', 6379),
+      maxRetriesPerRequest: null,
+      enableReadyCheck:false
+    },
+    queueOptions: {
+      defaultJobOptions: {
+        attempts: env.int('BULL_RETRY_ATTEMPTS', 5),
+        backoff: {
+          type: env('BULL_BACK_OFF_TYPE', "exponential"),
+          delay: env.int('BULL_BACK_OFF_DELAY', 1000),
+        }
+      }
+    }
+  }
 });
