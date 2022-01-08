@@ -1,6 +1,6 @@
 module.exports = {
-    'NFT_Engine': {
+    'nft-engine': {
         enabled: true,
-        resolve: './src/plugins/NFT_Engine'
+        resolve: './src/plugins/nft-engine'
     },
 }

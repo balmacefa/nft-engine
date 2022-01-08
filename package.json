@@ -6,23 +6,23 @@
   "scripts": {
     "dev": "cross-env ENV_PATH='./.env.development' strapi develop",
     "develop": "strapi develop",
-
     "start": "strapi start",
     "start-dev": "cross-env ENV_PATH='./.env.development' strapi develop",
     "start-prod": "cross-env ENV_PATH=./.env.production strapi start",
-
     "build": "strapi build -- --clean",
     "build-dev": "cross-env ENV_PATH='./.env.development' strapi build -- --clean",
     "build-prod": "cross-env ENV_PATH='./.env.production' strapi build -- --clean",
-
     "strapi": "strapi"
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/plugin-i18n": "4.0.2",
-    "@strapi/plugin-users-permissions": "4.0.2",
-    "@strapi/strapi": "4.0.2",
+    "@strapi/plugin-i18n": "4.0.3",
+    "@strapi/plugin-users-permissions": "4.0.3",
+    "@strapi/strapi": "4.0.3",
+    "@tatumio/tatum": "^1.30.8",
+    "bullmq": "^1.64.0",
     "cross-env": "^7.0.3",
+    "socket.io": "^4.4.1",
     "sqlite3": "5.0.2",
     "stripe": "^8.195.0"
   },

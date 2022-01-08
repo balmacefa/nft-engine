@@ -1,10 +1,10 @@
 {
-  "name": "NFT_Engine",
+  "name": "nft-engine",
   "version": "0.0.0",
   "description": "This is the description of the plugin.",
   "strapi": {
-    "name": "NFT_Engine",
-    "description": "Description of NFT_Engine plugin",
+    "name": "nft-engine",
+    "description": "Description of nft-engine plugin",
     "kind": "plugin"
   },
   "dependencies": {},
