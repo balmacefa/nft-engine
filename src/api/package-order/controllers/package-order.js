@@ -7,23 +7,28 @@ const packagePriceUSD = 7.5;
 
 const { createCoreController } = require('@strapi/strapi').factories;
 const unparsed = require('koa-body/unparsed.js');
-
+const CacheKey = require('../../utils/CacheKeys.js');
 
 const countRemainMints_mod = async (strapi, userId) => {
-    const referralAPI = strapi.db.query('api::package-order.package-order');
-    const entries = await referralAPI.findMany({
-        select: ['remainMints_mod', 'id'],
-        where: {
-            user: userId,
-            remainMints_mod: {
-                $gt: 0,
+    const Cache = strapi.plugin('nft-engine').redisCache;
+    const key = CacheKey.countRemainMints(userId);
+    return await Cache.wrap(key, async () => {
+        strapi.log.debug(`HIT CACHING cb for key: ${key}`);
+        const referralAPI = strapi.db.query('api::package-order.package-order');
+        const entries = await referralAPI.findMany({
+            select: ['remainMints_mod', 'id'],
+            where: {
+                user: userId,
+                remainMints_mod: {
+                    $gt: 0,
+                },
             },
-        },
-        populate: false,
+            populate: false,
+        });
+        // [{remainMints_mod:10}, {remainMints_mod:20}]
+        const sum = entries.reduce((acc, cur) => acc + cur.remainMints_mod, 0);
+        return sum;
     });
-    // [{remainMints_mod:10}, {remainMints_mod:20}]
-    const sum = entries.reduce((acc, cur) => acc + cur.remainMints_mod, 0);
-    return sum;
 }
 
 module.exports = createCoreController('api::package-order.package-order', ({ strapi }) => ({

@@ -21,6 +21,8 @@
     "@strapi/strapi": "4.0.3",
     "@tatumio/tatum": "^1.30.8",
     "bullmq": "^1.64.0",
+    "cache-manager": "^3.6.0",
+    "cache-manager-ioredis": "^2.1.0",
     "cross-env": "^7.0.3",
     "socket.io": "^4.4.1",
     "sqlite3": "5.0.2",
