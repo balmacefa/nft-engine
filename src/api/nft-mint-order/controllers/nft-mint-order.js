@@ -22,7 +22,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
 
         // const userId = ctx.state.user; //TODO: change to user.id
         const userId = "1"; //TODO: change to user.id
-
+        let tikTokVideoId;
         const {
             tikTokUrl,
             blockchain,
@@ -41,7 +41,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         // tikTokUrl Example:
         // https://www.tiktok.com/@sanyabeckerr/video/7024893021720218881?is_copy_url=1&is_from_webapp=v1
         // Get the video id from the url: 7024893021720218881
-        const tikTokVideoId = tikTokUrl.split('/').pop().split('?')[0];
+        tikTokVideoId = tikTokUrl.split('/').pop().split('?')[0];
 
         // the the video metadata
         const tikTokVideoMetadata = await axiosInstance.get(`/api/video/${tikTokVideoId}`);
@@ -83,22 +83,25 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
 
         try {
             const jobData = {
-                entity,
+                nftMintOrderEntity:entity,
                 tikTokVideoMetadata,
                 s_v_web_id,
-                sid_ucp_v1
+                sid_ucp_v1,
+                userId,
             }
             const queue = strapi
                 .plugin('nft-engine')
                 .bull.queue;
 
-            const data = await queue.add('mint-nft', { ...jobData });
+            const data = await queue.add('mint-nft', { ...jobData }, {
+                jobId: tikTokVideoId,
+            });
             strapi.log.debug(`Job Created: \n ${JSON.stringify(data)}`);
 
         } catch (err) {
             strapi.log.error(`ERROR: \n ${err.message}`);
             strapi.log.error(JSON.stringify(err));
-            return ctx.badRequest(`Error while creating mint order job`);
+            return ctx.badRequest(`Error while creating mint order job \n ${err.message}`);
         }
 
         return entity;

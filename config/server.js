@@ -39,5 +39,14 @@ module.exports = ({ env }) => ({
       username: env('TIKTOK_API_USER_KEY'),
       password: env('TIKTOK_API_PASSWORD_KEY'),
     },
-  }
+  },
+  blockchainKeys: {
+    // "ETH","BSC","MATIC","CELO","ONE"
+    ETH: env('PRIVATE_KEY_ETH_KEY'),
+    BSC: env('PRIVATE_KEY_BSC_KEY'),
+    MATIC: env('PRIVATE_KEY_MATIC_KEY'),
+    CELO: env('PRIVATE_KEY_CELO_KEY'),
+    ONE: env('PRIVATE_KEY_ONE_KEY'),
+  },
+  blockchainUseTestNet: env.bool('BLOCKCHAIN_USE_TEST_NET', true),
 });
