@@ -20,7 +20,7 @@ module.exports = ({ env }) => ({
       host: env('REDIS_HOST', 'localhost'),
       port: env.int('REDIS_PORT', 6379),
       maxRetriesPerRequest: null,
-      enableReadyCheck:false
+      enableReadyCheck: false
     },
     queueOptions: {
       defaultJobOptions: {
@@ -31,5 +31,13 @@ module.exports = ({ env }) => ({
         }
       }
     }
+  },
+  tiktok_api_axios_config: {
+    baseURL: env('TIKTOK_API_URL'),
+    timeout: env.int('TIKTOK_API_TIMEOUT', 5000),
+    auth: {
+      username: env('TIKTOK_API_USER_KEY'),
+      password: env('TIKTOK_API_PASSWORD_KEY'),
+    },
   }
 });

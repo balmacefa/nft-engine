@@ -53,4 +53,5 @@ module.exports = ({ strapi }) => {
     queue,
   };
   strapi.plugin('nft-engine').redisCache = redisCache;
+  strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);
 };
