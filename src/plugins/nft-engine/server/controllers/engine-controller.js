@@ -1,92 +1,53 @@
 'use strict';
 
-const { deployNFT, getNFTContractAddress, Currency } = require('@tatumio/tatum');
+const { deployNFT, getNFTContractAddress, Currency, ipfsUpload } = require('@tatumio/tatum');
+const Temp = require('temp');
+const { v4: uuidv4 } = require('uuid');
 
-const getOrCreateContractAddress = async (nftMintOrderEntity, strapi, job) => {
-  const { blockchain, user: { id: userId } } = nftMintOrderEntity;
 
-  const controllerAPI = strapi.service('api::nft-contract.nft-contract');
-  const nftContractDB = strapi.db.query('api::nft-contract.nft-contract');
+const { getOrCreateContractAddress } = require('./contract-address-step.js');
+// require lodash
+const _ = require('lodash');
 
-  let contractEntity = await nftContractDB.findOne({
-    where: {
-      user: userId,
-      blockchain: blockchain,
-    }
-  });
 
-  if (!contractEntity) {
-    contractEntity = await controllerAPI.create(
-      {
-        data: {
-          name: '',
-          symbol: '',
-          blockchain: blockchain,
-          // transactionID: null,
-          // contractAddress:null,
-          user: userId,
-        }
-      }
-    );
-  }
+const getIpfsFilesDic = async (strapi, job) => {
+  const {
+    nftMintOrderEntity,
+    tikTokVideoMetadata,
+    s_v_web_id,
+    sid_ucp_v1,
+    tempPath
+  } = job.data;
 
-  const privateKey = strapi.config.get('server.blockchainKeys')[blockchain];
-  const useTestNet = strapi.config.get('server.blockchainUseTestNet');
+  const uploadCover = () =>
+    new Promise(async (resolve) => {
+      job.updateProgress({ msg: 'Uploading cover image to IPFS' });
+      const coverUrl = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.cover');
+      const fetchCover = await axios.get(coverUrl, { responseType: 'arraybuffer' });
+      resolve(
+        await ipfsUpload(Buffer.from(fetchCover.data), `cover_${uuidv4()}.jpg`)
+      );
+      // response example:
+      // {
+      //   "ipfsHash": "bafybeihrumg5hfzqj6x47q63azflcpf6nkgcvhzzm6/test-356.jpg"
+      // }
+    });
 
-  let updateData;
-  let transaction;
+  const uploadVideo = () =>
+    new Promise(async (resolve) => {
+      job.updateProgress({ msg: 'Uploading Tiktok video to IPFS' });
+      const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
+      const axiosInstance = axios.create(strapi.config.get('server.tiktok_api_axios_config'));
+      const fetchVideo = await axiosInstance.get(`/api/download_video/${videoId}`, { responseType: 'arraybuffer' });
+      resolve(
+        await ipfsUpload(Buffer.from(fetchVideo.data), `video_${uuidv4()}.mp4`)
+      );
+    });
 
-  if (!contractEntity.transactionID) {
-    // call Tatum
-    transaction = await deployNFT(useTestNet,
-      {
-        chain: Currency[blockchain],
-        name: `ERC721_${blockchain}_${userId}`,
-        publicMint: false, // This is IMPORTANT to set to false; Only the privateKey can mint
-        symbol: `ERC_SYMBOL_${blockchain}_${userId}`,
-        fromPrivateKey: privateKey,
-        provenance: true,
-        feeCurrency: Currency.CUSD,
-      });
+  const ipfsResult = await Promise.allSettled([uploadCover(),uploadVideo()]);
+  job.updateProgress({ msg: 'IPFS upload complete' });
 
-    if (transaction.failed) {
-      strapi.log.error("Creation of contract failed: \n" + JSON.stringify(transaction));
-      // Throw error
-      throw new Error("Creation of contract failed: \n" + JSON.stringify(transaction));
-    }
-
-    // Update contract entity with transaction.txId
-    updateData = {
-      id: contractEntity.id,
-      data: {
-        transactionID: transaction.txId,
-      }
-    }
-
-    job.updateProgress({ msg: 'NFT contract created' });
-  }
-
-  if (!contractEntity.contractAddress) {
-    const contractAddress = await getNFTContractAddress(Currency[blockchain], transaction);
-    updateData = {
-      ...updateData,
-      data: {
-        ...updateData.data,
-        contractAddress: { contractAddress }
-      }
-    };
-
-    job.updateProgress({ msg: 'NFT Address transaction found' });
-  }
-
-  if (updateData) {
-    contractEntity = await nftContractDB.update(updateData.id, updateData.data);
-    // log
-    strapi.log.info(`Contract updated: ${JSON.stringify(contractEntity)}`);
-  }
-
-  return contractEntity;
-};
+}
 
 module.exports = ({ strapi }) => ({
   createJob: async ctx => {
@@ -109,7 +70,12 @@ module.exports = ({ strapi }) => ({
       sid_ucp_v1
     } = job.data;
 
-    const nftContractEntity = getOrCreateContractAddress(nftMintOrderEntity, strapi);
+    // create temp folder
+    const tempPath = Temp.mkdirSync(`temp_mint_order_entity_{${nftMintOrderEntity.id}}__`);
+    job.data.tempPath = tempPath;
+
+    const nftContractEntity = await getOrCreateContractAddress(nftMintOrderEntity, strapi, job);
+    const ipfsFilesDic = await getIpfsFilesDic(strapi, job);
 
     // Do something with job
     return 'some value';

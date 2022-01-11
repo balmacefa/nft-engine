@@ -66,4 +66,4 @@ const schema = yup.object({
     sid_ucp_v1: yup.string().required("sid_ucp_v1 is required"),
 }).required();
 
-export default schema;
+module.exports =  schema;
