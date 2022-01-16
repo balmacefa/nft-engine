@@ -1,0 +1,159 @@
+{
+    "statusCode": 0,
+    "itemInfo": {
+        "itemStruct": {
+            "id": "7033806427676265733",
+            "desc": "Days at #Pisa #italy🇮🇹",
+            "createTime": 1637685679,
+            "video": {
+                "id": "7033806427676265733",
+                "height": 1024,
+                "width": 576,
+                "duration": 73,
+                "ratio": "720p",
+                "cover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/1879d40ac1c14912bdf19d6e923523d2?x-expires=1641967200&x-signature=rirhDt2B29xlKZ%2FQ9kT8IBfhR9o%3D",
+                "originCover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/5a10fc5130ca4af6aa70fe3e4cc2e96f_1637685679?x-expires=1641967200&x-signature=KlYy7RUfbkW9OP40nsFhlJAXysQ%3D",
+                "dynamicCover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/5a68ebe0cd674e0883e4e3572bf96b3b_1637685680?x-expires=1641967200&x-signature=Wh%2BRdGG64POGeIe6YVyci1ICeq4%3D",
+                "playAddr": "https://v16-webapp.tiktok.com/f28dc4294197063e457fc7f1d2ee4eb3/61de738b/video/tos/useast2a/tos-useast2a-ve-0068c003/6abb028545c3406abb94b127de4dbd34/?a=1988&br=3162&bt=1581&cd=0%7C0%7C0&ch=0&cr=0&cs=0&dr=0&ds=3&er=&ft=XOQ9-3E7nz7Thm~SdlXq&l=202201120020500102452450030B81387C&lr=tiktok_m&mime_type=video_mp4&net=0&pl=0&qs=0&rc=M3NsPDc6ZjdrOTMzNzczM0ApZjc1ODhpNWUzN2ZnZjU8NWdmZ2NmcjQwZmJgLS1kMTZzcy0vYjQxMF8wLzUzNWE1Xy86Yw%3D%3D&vl=&vr=",
+                "downloadAddr": "https://v16-webapp.tiktok.com/f28dc4294197063e457fc7f1d2ee4eb3/61de738b/video/tos/useast2a/tos-useast2a-ve-0068c003/6abb028545c3406abb94b127de4dbd34/?a=1988&br=3162&bt=1581&cd=0%7C0%7C0&ch=0&cr=0&cs=0&dr=0&ds=3&er=&ft=XOQ9-3E7nz7Thm~SdlXq&l=202201120020500102452450030B81387C&lr=tiktok_m&mime_type=video_mp4&net=0&pl=0&qs=0&rc=M3NsPDc6ZjdrOTMzNzczM0ApZjc1ODhpNWUzN2ZnZjU8NWdmZ2NmcjQwZmJgLS1kMTZzcy0vYjQxMF8wLzUzNWE1Xy86Yw%3D%3D&vl=&vr=",
+                "shareCover": [
+                    "",
+                    "https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/5a10fc5130ca4af6aa70fe3e4cc2e96f_1637685679~tplv-tiktok-play.jpeg?x-expires=1641967200&x-signature=FeOww2moCRP%2FKoHSlfsXCbdkr30%3D",
+                    "https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/5a10fc5130ca4af6aa70fe3e4cc2e96f_1637685679~tplv-tiktokx-share-play.jpeg?x-expires=1641967200&x-signature=XlYPby5xje%2BssDLjmO4LHF85cyk%3D"
+                ],
+                "reflowCover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/1879d40ac1c14912bdf19d6e923523d2?x-expires=1641967200&x-signature=rirhDt2B29xlKZ%2FQ9kT8IBfhR9o%3D",
+                "bitrate": 1619257,
+                "encodedType": "normal",
+                "format": "mp4",
+                "videoQuality": "normal",
+                "encodeUserTag": "",
+                "codecType": "h264",
+                "definition": "720p"
+            },
+            "author": {
+                "id": "6612341770439917573",
+                "uniqueId": "balmacefa",
+                "nickname": "Fabián Balmaceda",
+                "avatarThumb": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9826c7862431a26f534f1d2ad2697ff2~c5_100x100.jpeg?x-expires=1642032000&x-signature=J0bejhff093giYvvbhanavdk5Rw%3D",
+                "avatarMedium": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9826c7862431a26f534f1d2ad2697ff2~c5_720x720.jpeg?x-expires=1642032000&x-signature=Ku1Wwc%2FuGfmyPR4Wd0nPqBkWoKw%3D",
+                "avatarLarger": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9826c7862431a26f534f1d2ad2697ff2~c5_1080x1080.jpeg?x-expires=1642032000&x-signature=2dsZ9%2BB4ClvC5pwKmMDP0MLvTSY%3D",
+                "signature": "",
+                "verified": false,
+                "secUid": "MS4wLjABAAAAU4Irv2PXFcaaHdxX5MblKdzg2AMXwIeNcxwpcLR4d0yRgAq2UIhQq0PBtOJmIlHz",
+                "secret": false,
+                "ftc": false,
+                "relation": 0,
+                "openFavorite": false,
+                "commentSetting": 0,
+                "duetSetting": 0,
+                "stitchSetting": 0,
+                "privateAccount": false,
+                "isADVirtual": false
+            },
+            "music": {
+                "id": "7033806298751830790",
+                "title": "original sound",
+                "playUrl": "https://sf16-ies-music-va.tiktokcdn.com/obj/musically-maliva-obj/7033806385221880581.mp3",
+                "coverThumb": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9826c7862431a26f534f1d2ad2697ff2~c5_100x100.jpeg?x-expires=1642032000&x-signature=J0bejhff093giYvvbhanavdk5Rw%3D",
+                "coverMedium": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9826c7862431a26f534f1d2ad2697ff2~c5_720x720.jpeg?x-expires=1642032000&x-signature=Ku1Wwc%2FuGfmyPR4Wd0nPqBkWoKw%3D",
+                "coverLarge": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9826c7862431a26f534f1d2ad2697ff2~c5_1080x1080.jpeg?x-expires=1642032000&x-signature=2dsZ9%2BB4ClvC5pwKmMDP0MLvTSY%3D",
+                "authorName": "Fabián Balmaceda",
+                "original": true,
+                "duration": 73,
+                "album": ""
+            },
+            "challenges": [
+                {
+                    "id": "2340999",
+                    "title": "pisa",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "1592200897538054",
+                    "title": "italy🇮🇹",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                }
+            ],
+            "stats": {
+                "diggCount": 18,
+                "shareCount": 0,
+                "commentCount": 0,
+                "playCount": 248
+            },
+            "isActivityItem": false,
+            "duetInfo": {
+                "duetFromId": "0"
+            },
+            "originalItem": false,
+            "officalItem": false,
+            "textExtra": [
+                {
+                    "awemeId": "",
+                    "start": 8,
+                    "end": 13,
+                    "hashtagName": "pisa",
+                    "hashtagId": "2340999",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 14,
+                    "end": 24,
+                    "hashtagName": "italy🇮🇹",
+                    "hashtagId": "1592200897538054",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                }
+            ],
+            "secret": false,
+            "forFriend": false,
+            "digged": false,
+            "itemCommentStatus": 0,
+            "showNotPass": false,
+            "vl1": false,
+            "itemMute": false,
+            "authorStats": {
+                "followingCount": 128,
+                "followerCount": 29,
+                "heartCount": 192,
+                "videoCount": 15,
+                "diggCount": 18500,
+                "heart": 192
+            },
+            "privateItem": false,
+            "duetEnabled": false,
+            "stitchEnabled": false,
+            "shareEnabled": true,
+            "isAd": false,
+            "duetDisplay": 0,
+            "stitchDisplay": 0
+        }
+    },
+    "shareMeta": {
+        "title": "Fabián Balmaceda on TikTok",
+        "desc": "Days at #Pisa #italy🇮🇹"
+    }
+}

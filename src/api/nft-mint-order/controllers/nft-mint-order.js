@@ -44,7 +44,14 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         tikTokVideoId = tikTokUrl.split('/').pop().split('?')[0];
 
         // the the video metadata
-        const tikTokVideoMetadata = await axiosInstance.get(`/api/video/${tikTokVideoId}`);
+        const tikTokVideoMetadata = await axiosInstance.get(`/api/video/${tikTokVideoId}`,
+            {
+                data: {
+                    s_v_web_id,
+                    sid_ucp_v1
+                }
+            }
+        );
         const { itemInfo: { itemStruct: { author } } } = tikTokVideoMetadata;
 
         // validate that the user is the owner of the tiktok
@@ -83,7 +90,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
 
         try {
             const jobData = {
-                nftMintOrderEntity:entity,
+                nftMintOrderEntity: entity,
                 tikTokVideoMetadata,
                 s_v_web_id,
                 sid_ucp_v1,

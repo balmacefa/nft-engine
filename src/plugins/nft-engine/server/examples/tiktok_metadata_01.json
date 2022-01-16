@@ -1,0 +1,365 @@
+{
+    "statusCode": 0,
+    "itemInfo": {
+        "itemStruct": {
+            "id": "7031370259835768070",
+            "desc": "#dúo con @masaki.rocha #alfa #exnovia #consejos #relashion #relashionship #relashionahipgoals #ligar #amorpropio",
+            "createTime": 1637118464,
+            "video": {
+                "id": "7031370259835768070",
+                "height": 540,
+                "width": 608,
+                "duration": 12,
+                "ratio": "720p",
+                "cover": "https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/a02576468b3243ce9bf954802cf50292~tplv-dmt-logom:tos-useast2a-v-0068/ea4da0395bbf428ca216d4ccfb406187.image?x-expires=1641967200&x-signature=o3rHe7A2lM%2BJtG2J%2BMD7OYsWlPI%3D",
+                "originCover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/794124baa7d74e3c974a0c8b80307c6e_1637118465?x-expires=1641967200&x-signature=XKep0e2cb3KyUvZWRFdWtQEjSg8%3D",
+                "dynamicCover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/acff0345e0014778a90999e2862fd9cc_1637118465?x-expires=1641967200&x-signature=9l15JXdrQ9tLtkjPkG9Wn%2BIpMCE%3D",
+                "playAddr": "https://v16-webapp.tiktok.com/dcefbf0de64d70d604f6924f0f42cd37/61de7021/video/tos/useast2a/tos-useast2a-pve-0068/fb5447532b424a4aa1db5eb1a69df38c/?a=1988&br=1392&bt=696&cd=0%7C0%7C1&ch=0&cr=0&cs=0&cv=1&dr=0&ds=3&er=&ft=Yu12_FGgkag3-I&l=202201120007170102450152050F831C6E&lr=tiktok_m&mime_type=video_mp4&net=0&pl=0&qs=0&rc=anIzNjU6ZnQ6OTMzNzczM0ApOzpmO2RoOmQ6NzZmZWdnaWdqMmdncjQwMF5gLS1kMTZzczQyYzNeYF9eMDQyMmBgNDM6Yw%3D%3D&vl=&vr=",
+                "downloadAddr": "https://v16-webapp.tiktok.com/dcefbf0de64d70d604f6924f0f42cd37/61de7021/video/tos/useast2a/tos-useast2a-pve-0068/fb5447532b424a4aa1db5eb1a69df38c/?a=1988&br=1392&bt=696&cd=0%7C0%7C1&ch=0&cr=0&cs=0&cv=1&dr=0&ds=3&er=&ft=Yu12_FGgkag3-I&l=202201120007170102450152050F831C6E&lr=tiktok_m&mime_type=video_mp4&net=0&pl=0&qs=0&rc=anIzNjU6ZnQ6OTMzNzczM0ApOzpmO2RoOmQ6NzZmZWdnaWdqMmdncjQwMF5gLS1kMTZzczQyYzNeYF9eMDQyMmBgNDM6Yw%3D%3D&vl=&vr=",
+                "shareCover": [
+                    "",
+                    "https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/794124baa7d74e3c974a0c8b80307c6e_1637118465~tplv-tiktok-play.jpeg?x-expires=1641967200&x-signature=JuvSuh47O2eLA9LpzLRExDtVNOA%3D",
+                    "https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/794124baa7d74e3c974a0c8b80307c6e_1637118465~tplv-tiktokx-share-play.jpeg?x-expires=1641967200&x-signature=xXUHx4F4O%2BkH63Qp%2Fj6Tuub1U1o%3D"
+                ],
+                "reflowCover": "https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/b6e339eeef68fc6cf08f62c96503ef8f?x-expires=1641967200&x-signature=U5IQv2MDchBSU0DckELeCdIRwog%3D",
+                "bitrate": 712792,
+                "encodedType": "normal",
+                "format": "mp4",
+                "videoQuality": "normal",
+                "encodeUserTag": "",
+                "codecType": "h264",
+                "definition": "720p"
+            },
+            "author": {
+                "id": "6971643462366233605",
+                "uniqueId": "gio_sar",
+                "nickname": "Gio Salgado",
+                "avatarThumb": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/d6c57a1b5d78d645d2b0c551fd0bc25b~c5_100x100.jpeg?x-expires=1642032000&x-signature=2952RNFy4RKnoNqBnGohpBV37u4%3D",
+                "avatarMedium": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/d6c57a1b5d78d645d2b0c551fd0bc25b~c5_720x720.jpeg?x-expires=1642032000&x-signature=lZY0pSKVUm6QIVVb%2BHZKolj%2Fo7A%3D",
+                "avatarLarger": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/d6c57a1b5d78d645d2b0c551fd0bc25b~c5_1080x1080.jpeg?x-expires=1642032000&x-signature=f%2BxKcf%2Bong98nQDjCVXWNY7cHXA%3D",
+                "signature": "Www.instagram.com/elgio.sar",
+                "verified": false,
+                "secUid": "MS4wLjABAAAAn-N6DW7GFlKMLzLyzW-SdtmgzCMjRzvEqcBm16-gLP4MB8rxv1hqq0x6dScOVktk",
+                "secret": false,
+                "ftc": false,
+                "relation": 0,
+                "openFavorite": false,
+                "commentSetting": 0,
+                "duetSetting": 0,
+                "stitchSetting": 0,
+                "privateAccount": false,
+                "isADVirtual": false
+            },
+            "music": {
+                "id": "7027130142040263430",
+                "title": "Nuestra Canción x Praise God",
+                "playUrl": "https://sf16-ies-music-va.tiktokcdn.com/obj/musically-maliva-obj/7027130202543115013.mp3",
+                "coverThumb": "https://p77-sign-va.tiktokcdn.com/tos-maliva-avt-0068/deebe816f0f4c0f932055add1028ea5e~c5_100x100.jpeg?x-expires=1642032000&x-signature=wvxe3SdU65pdJ%2FUPaQzi0yL88d0%3D",
+                "coverMedium": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/deebe816f0f4c0f932055add1028ea5e~c5_720x720.jpeg?x-expires=1642032000&x-signature=QGnxL6gp3RtSHYH8EaCr81DA5t4%3D",
+                "coverLarge": "https://p77-sign-va.tiktokcdn.com/tos-maliva-avt-0068/deebe816f0f4c0f932055add1028ea5e~c5_1080x1080.jpeg?x-expires=1642032000&x-signature=kzWgiSrtPVIlAPAZ1zKivhqrZKI%3D",
+                "authorName": "𝐁𝐫𝐮𝐧𝐨.",
+                "original": true,
+                "duration": 13,
+                "album": ""
+            },
+            "challenges": [
+                {
+                    "id": "82813861",
+                    "title": "dúo",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "329827",
+                    "title": "alfa",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "24201853",
+                    "title": "exnovia",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "1895506",
+                    "title": "consejos",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "7160643",
+                    "title": "relashion",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "511765",
+                    "title": "relashionship",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "17187285",
+                    "title": "relashionahipgoals",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "17677250",
+                    "title": "ligar",
+                    "desc": "",
+                    "profileThumb": "",
+                    "profileMedium": "",
+                    "profileLarger": "",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                },
+                {
+                    "id": "7105454",
+                    "title": "amorpropio",
+                    "desc": "Prepárate para escuchas historias y los mejores consejos sobre autoestima. Haz una pausa para conocer más sobre el #AmorPropio 💗",
+                    "profileThumb": "https://p16-amd-va.tiktokcdn.com/obj/musically-maliva-obj/c463247c902619f0de9df68f6ade09a0",
+                    "profileMedium": "https://p16-amd-va.tiktokcdn.com/obj/musically-maliva-obj/c463247c902619f0de9df68f6ade09a0",
+                    "profileLarger": "https://p16-amd-va.tiktokcdn.com/obj/musically-maliva-obj/c463247c902619f0de9df68f6ade09a0",
+                    "coverThumb": "",
+                    "coverMedium": "",
+                    "coverLarger": "",
+                    "isCommerce": false
+                }
+            ],
+            "stats": {
+                "diggCount": 3217,
+                "shareCount": 18,
+                "commentCount": 42,
+                "playCount": 44200
+            },
+            "isActivityItem": false,
+            "duetInfo": {
+                "duetFromId": "7028667018983492870"
+            },
+            "originalItem": false,
+            "officalItem": false,
+            "textExtra": [
+                {
+                    "awemeId": "7028667018983492870",
+                    "start": 9,
+                    "end": 22,
+                    "hashtagName": "",
+                    "hashtagId": "",
+                    "type": 0,
+                    "userId": "6824878650854016005",
+                    "isCommerce": false,
+                    "userUniqueId": "masaki.rocha",
+                    "secUid": "MS4wLjABAAAAz0mT4RDAy6-Gz4vKIX5vsHeFvMu7vrO7p6wAX1L59pItzETBX8yUsKNjDYGrH5t-",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 0,
+                    "end": 4,
+                    "hashtagName": "dúo",
+                    "hashtagId": "82813861",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 23,
+                    "end": 28,
+                    "hashtagName": "alfa",
+                    "hashtagId": "329827",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 29,
+                    "end": 37,
+                    "hashtagName": "exnovia",
+                    "hashtagId": "24201853",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 38,
+                    "end": 47,
+                    "hashtagName": "consejos",
+                    "hashtagId": "1895506",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 48,
+                    "end": 58,
+                    "hashtagName": "relashion",
+                    "hashtagId": "7160643",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 59,
+                    "end": 73,
+                    "hashtagName": "relashionship",
+                    "hashtagId": "511765",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 74,
+                    "end": 93,
+                    "hashtagName": "relashionahipgoals",
+                    "hashtagId": "17187285",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 94,
+                    "end": 100,
+                    "hashtagName": "ligar",
+                    "hashtagId": "17677250",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                },
+                {
+                    "awemeId": "",
+                    "start": 101,
+                    "end": 112,
+                    "hashtagName": "amorpropio",
+                    "hashtagId": "7105454",
+                    "type": 1,
+                    "userId": "",
+                    "isCommerce": false,
+                    "userUniqueId": "",
+                    "secUid": "",
+                    "subType": 0
+                }
+            ],
+            "secret": false,
+            "forFriend": false,
+            "digged": false,
+            "itemCommentStatus": 0,
+            "showNotPass": false,
+            "vl1": false,
+            "itemMute": false,
+            "authorStats": {
+                "followingCount": 84,
+                "followerCount": 151600,
+                "heartCount": 1300000,
+                "videoCount": 137,
+                "diggCount": 530,
+                "heart": 1300000
+            },
+            "privateItem": false,
+            "duetEnabled": true,
+            "stitchEnabled": true,
+            "shareEnabled": true,
+            "stickersOnItem": [
+                {
+                    "stickerType": 4,
+                    "stickerText": [
+                        "Like si ya pasaste o estás pasando por este pedo ",
+                        "Así pasa carnal yo se lo que se siente ",
+                        "Uffff…. 👌",
+                        "Mis respetos parcero \nYa eres un Dios griego ",
+                        "Si el lo hizo por qué tú no? "
+                    ]
+                },
+                {
+                    "stickerType": 9,
+                    "stickerText": [
+                        "Transformate en un Dios Griego"
+                    ]
+                }
+            ],
+            "isAd": false,
+            "duetDisplay": 0,
+            "stitchDisplay": 0
+        }
+    },
+    "shareMeta": {
+        "title": "Gio Salgado on TikTok",
+        "desc": "#dúo con @masaki.rocha #alfa #exnovia #consejos #relashion #relashionship #relashionahipgoals #ligar #amorpropio"
+    }
+}
