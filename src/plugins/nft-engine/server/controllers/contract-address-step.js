@@ -1,17 +1,23 @@
 'use strict';
 
-const { deployNFT, getNFTContractAddress, mintNFTWithUri, Currency } = require('@tatumio/tatum');
+// const { deployNFT, getNFTContractAddress, Currency } = require('@tatumio/tatum');
+const tatumService = require('./tatumService');
 
 // require lodash
 const _ = require('lodash');
 
-const getOrCreateContractAddress = async (nftMintOrderEntity, strapi, job) => {
-    const { blockchain, user: { id: userId } } = nftMintOrderEntity;
+const getOrCreateContractAddress = async (strapi, job) => {
+
+    const blockchain = "MATIC",
+    const {
+        userId
+    } = job.data;
 
     const controllerAPI = strapi.service('api::nft-contract.nft-contract');
     const nftContractDB = strapi.db.query('api::nft-contract.nft-contract');
 
-    const useTestNet = strapi.config.get('server.blockchainUseTestNet');
+    const signatureId = strapi.config.get('server.tatum.signatureId');
+    const useTestNet = strapi.config.get('server.tatum.useTestNet');
 
     const name = `ERC721_${blockchain}_${userId}`;
     const symbol = `ERC_SYMBOL_${blockchain}_${userId}`;
@@ -39,22 +45,20 @@ const getOrCreateContractAddress = async (nftMintOrderEntity, strapi, job) => {
         );
     }
 
-    const privateKey = strapi.config.get('server.blockchainKeys')[blockchain];
-
     let updateData = {};
     let transaction;
 
     if (!contractEntity.transactionID) {
         // call Tatum
-        transaction = await deployNFT(useTestNet,
+        // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
+        transaction = await tatumService.deployNFT(strapi,
             {
                 name,
+                chain: "MATIC",
                 symbol,
-                chain: Currency[blockchain],
-                publicMint: false, // This is IMPORTANT to set to false; Only the privateKey can mint
-                fromPrivateKey: privateKey,
                 provenance: true,
-                feeCurrency: Currency.CUSD,
+                publicMint: false, // This is IMPORTANT to set to false; Only the privateKey can mint
+                signatureId: signatureId,
             });
 
         if (transaction.failed) {
@@ -75,7 +79,7 @@ const getOrCreateContractAddress = async (nftMintOrderEntity, strapi, job) => {
     }
 
     if (!contractEntity.contractAddress) {
-        const { contractAddress } = await getNFTContractAddress(Currency[blockchain], transaction);
+        const { contractAddress } = await tatumService.getNFTContractAddress(transaction);
         updateData = {
             ...updateData,
             data: {
@@ -95,43 +99,6 @@ const getOrCreateContractAddress = async (nftMintOrderEntity, strapi, job) => {
 
     return contractEntity;
 }
-
-const mintTiktokNFT = async (nftMetadata, nftContractEntity, strapi, job) => {
-    job.updateProgress({ msg: 'Minting NFT' });
-
-    const {
-        tikTokVideoMetadata,
-        nftMintOrderEntity
-    } = job.data;
-
-    const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
-
-    // Docs: https://docs.tatum.io/guides/blockchain/how-to-create-royalty-nfts-with-percentage-cashback-and-provenance-data#minting-a-new-unique-erc-721-token
-    const privateKey = strapi.config.get('server.blockchainKeys')[blockchain];
-
-    const body = {
-
-        to: nftMintOrderEntity.sendAddress,
-        url: metaUrl,
-        tokenId: videoId,
-        provenance: true,
-        // authorAddresses: [], authorAddresses -> the address or addresses to which cashback will be sent.
-        // cashbackValues: ["0.5"],  cashbackValues  -> the percentage value(s) of the cashback to be sent.
-        // In the example below, the value "0.5" means that 0.005% of the sale price will be transferred to the author each time the NFT is transferred.
-        chain: Currency[nftContractEntity.blockchain],
-        contractAddress: nftContractEntity.contractAddress,
-        fromPrivateKey: privateKey
-    }
-
-    if (nftMintOrderEntity.isSplitRoyaltyRate) {
-        body.authorAddresses = _.map(nftMintOrderEntity.splitAddress, (address) => address.address);
-        body.cashbackValues = _.map(nftMintOrderEntity.splitAddress, (address) => address.splitRoyaltyRate * 100);
-    }
-
-    const transactionHash = await mintNFTWithUri(useTestNet, body);
-
-};
-
 
 module.exports = {
     getOrCreateContractAddress

@@ -1,11 +1,9 @@
 'use strict';
 
-const { deployNFT, getNFTContractAddress, Currency, ipfsUpload } = require('@tatumio/tatum');
-const Temp = require('temp');
-
 const { getOrCreateContractAddress } = require('./contract-address-step.js');
 const { getIpfsCoverAndVideo } = require('./ipfs-cover-video-step.js');
-const { getTiktokMetadata, uploadTiktokMetadataToIPFS, mintTiktokNFT } = require('./build-metadata-step.js');
+const { getTiktokMetadata, uploadTiktokMetadataToIPFS } = require('./build-metadata-step.js');
+const { mintTiktokNFT } = require('./mint-nft-step.js');
 
 module.exports = ({ strapi }) => ({
   createJob: async ctx => {
@@ -21,25 +19,17 @@ module.exports = ({ strapi }) => ({
   },
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
-    const {
-      nftMintOrderEntity,
-      tikTokVideoMetadata
-    } = job.data;
-
-    // create temp folder
-    const tempPath = Temp.mkdirSync(`temp_mint_order_entity_{${nftMintOrderEntity.id}}__`);
-    job.data.tempPath = tempPath;
-
-    const nftContractEntity = await getOrCreateContractAddress(nftMintOrderEntity, strapi, job);
+    const nftContractEntity = await getOrCreateContractAddress(strapi, job);
     const coverAndVideoMeta = await getIpfsCoverAndVideo(strapi, job);
     const nftMetadata = await getTiktokMetadata(coverAndVideoMeta, strapi, job);
     // upload metadata to IPFS
     const nftMetadataUrl = await uploadTiktokMetadataToIPFS(nftMetadata, nftContractEntity, strapi, job);
     // mint NFT
+    const nft = mintTiktokNFT(nftMetadataUrl, nftContractEntity, strapi, job);
 
 
     // Do something with job
-    return 'some value';
+    return nft;
   },
   mintNFTJobCompleted: async (job, returnValue) => {
     strapi.log.info('ENTER mintNFTJobCompleted');

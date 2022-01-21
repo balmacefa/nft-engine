@@ -34,19 +34,21 @@ module.exports = ({ env }) => ({
   },
   tiktok_api_axios_config: {
     baseURL: env('TIKTOK_API_URL'),
-    timeout: env.int('TIKTOK_API_TIMEOUT', 5000),
+    timeout: env.int('TIKTOK_API_TIMEOUT', 50000),
     auth: {
       username: env('TIKTOK_API_USER_KEY'),
       password: env('TIKTOK_API_PASSWORD_KEY'),
     },
   },
-  blockchainKeys: {
-    // "ETH","BSC","MATIC","CELO","ONE"
-    ETH: env('PRIVATE_KEY_ETH_KEY'),
-    BSC: env('PRIVATE_KEY_BSC_KEY'),
-    MATIC: env('PRIVATE_KEY_MATIC_KEY'),
-    CELO: env('PRIVATE_KEY_CELO_KEY'),
-    ONE: env('PRIVATE_KEY_ONE_KEY'),
+  tatum_api_axios_config: {
+    baseURL: env('TATUM_API_URL'),
+    headers: {
+      'x-api-key': env('TATUM_API_KEY')
+    }
   },
-  blockchainUseTestNet: env.bool('BLOCKCHAIN_USE_TEST_NET', true),
+  tatum:{
+    signatureId: env('TATUM_SIGNATURE_ID'),
+    retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
+    retries: env.int('TATUM_RETRIES', 5)
+  }
 });

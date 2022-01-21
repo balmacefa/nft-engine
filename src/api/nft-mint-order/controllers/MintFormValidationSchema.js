@@ -39,7 +39,7 @@ const splitAddressObjectSchema = yup.object().shape({
 });
 
 const schema = yup.object({
-    tikTokUrl: yup.number().required("TikTok URL is required"),
+    tikTokUrl: yup.string().required("TikTok URL is required"),
     blockchain: yup.string().required("Blockchain is required"),
     singleAddress: yup.string().required("Address is required"),
     // extraComment max length is 255

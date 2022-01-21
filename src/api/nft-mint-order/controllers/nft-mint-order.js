@@ -44,7 +44,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         tikTokVideoId = tikTokUrl.split('/').pop().split('?')[0];
 
         // the the video metadata
-        const tikTokVideoMetadata = await axiosInstance.get(`/api/video/${tikTokVideoId}`,
+        const { data: tikTokVideoMetadata } = await axiosInstance.get(`/api/video/${tikTokVideoId}`,
             {
                 data: {
                     s_v_web_id,
@@ -110,7 +110,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
             strapi.log.error(JSON.stringify(err));
             return ctx.badRequest(`Error while creating mint order job \n ${err.message}`);
         }
-
+        strapi.log.info(`EXIT POST /nft-mint-order/createMintNFTOrder \n ${entity}`);
         return entity;
     }
 

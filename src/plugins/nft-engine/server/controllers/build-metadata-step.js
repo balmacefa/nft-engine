@@ -1,11 +1,7 @@
 'use strict';
 
-const { deployNFT, getNFTContractAddress, Currency, ipfsUpload } = require('@tatumio/tatum');
-
 const { ipfsUpload } = require('@tatumio/tatum');
 const { v4: uuidv4 } = require('uuid');
-// axios
-const axios = require('axios');
 
 // require lodash
 const _ = require('lodash');
@@ -89,7 +85,7 @@ const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
     job.updateProgress({ msg: 'Uploading NFT metadata to IPFS' });
     const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
     const metadataBuffer = Buffer.from(JSON.stringify(nftMetadata), 'utf8');
-    const responseIPFS = await ipfsUpload(metadataBuffer, `nft_tiktok_metadata_${videoId}.json`);
+    const responseIPFS = await ipfsUpload(metadataBuffer, `nft_tiktok_metadata_${videoId}__${uuidv4()}__.json`);
     // response example:
     // {
     //   "ipfsHash": "bafybeihrumg5hfzqj6x47q63azflcpf6nkgcvhzzm6/test-356.jpg"
