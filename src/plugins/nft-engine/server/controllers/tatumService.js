@@ -3,7 +3,8 @@ const axios = require('axios');
 // http
 const http = require('http');
 const https = require('https');
-const axiosRetry, { isNetworkOrIdempotentRequestError } = require('axios-retry');
+const axiosRetry = require('axios-retry');
+const { isNetworkOrIdempotentRequestError } = require('axios-retry');
 
 // generate Axios
 const getAxiosInstance = (strapi) => {
@@ -26,11 +27,15 @@ const getAxiosInstance = (strapi) => {
 
 module.exports = {
   deployNFT: async (strapi, body) => {
-    const axiosInstance = getAxiosInstance(strapi);
-    return await axiosInstance.post('/v3/nft/deploy', body);
+    const { data } = await getAxiosInstance(strapi).post('/v3/nft/deploy', body);
+    return data;
   },
   getNFTContractAddress: async (strapi, txId) => {
-    const axiosInstance = getAxiosInstance(strapi);
-    return await axiosInstance.get(`/v3/blockchain/sc/address/MATIC/${txId}`);
+    const { data } = await getAxiosInstance(strapi).get(`/v3/blockchain/sc/address/MATIC/${txId}`);
+    return data;
+  },
+  getTransactionDetailFromSignature: async (strapi, signatureId) => {
+    const { data } = await getAxiosInstance(strapi).get(`/v3/kms/${signatureId}`);
+    return data;
   }
 };

@@ -28,12 +28,17 @@
         "ONE"
       ]
     },
-    "transactionID": {
+    "transactionId": {
+      "type": "string",
+      "unique": true
+    },
+    "signatureId": {
       "type": "string",
       "unique": true
     },
     "contractAddress": {
-      "type": "json"
+      "type": "string",
+      "unique": true
     },
     "user": {
       "type": "relation",

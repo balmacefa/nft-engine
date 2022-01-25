@@ -42,7 +42,7 @@
         ]
       }
     },
-    "transactionID": {
+    "transactionId": {
       "type": "string",
       "unique": true
     },

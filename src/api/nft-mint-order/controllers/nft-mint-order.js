@@ -74,7 +74,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
                             royaltyRate: royaltyRate,
                             splitAddress: splitAddress,
                         },
-                        // transactionID: null,
+                        // transactionId: null,
                         // contractAddress:null,
                         status: 'pending',
                         user: userId,
