@@ -25,6 +25,10 @@
         "ONE"
       ]
     },
+    "tikTokVideoId": {
+      "type": "string",
+      "unique": true
+    },
     "extraMessage": {
       "type": "string"
     },
@@ -46,8 +50,12 @@
       "type": "string",
       "unique": true
     },
+    "signatureId": {
+      "type": "string",
+      "unique": true
+    },
     "contractAddress": {
-      "type": "json"
+      "type": "string"
     },
     "status": {
       "type": "string"

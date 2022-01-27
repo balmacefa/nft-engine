@@ -20,8 +20,8 @@ const getOrCreateContractAddress = async (strapi, job) => {
 
     const tatumSignerId = strapi.config.get('server.tatum.signatureId');
 
-    const name = `ERC721_${blockchain}_${userId}`;
-    const symbol = `ERC_SYMBOL_${blockchain}_${userId}`;
+    const name = `CRIPTOK__${userId}__`;
+    const symbol = `CRIPTOK`;
 
     let contractEntity = await nftContractDB.findOne({
         where: {
@@ -66,9 +66,17 @@ const getOrCreateContractAddress = async (strapi, job) => {
         }
 
         // Update contract entity with transaction.signatureId
-        contractEntity = await nftContractDB.update(contractEntity.id, {
-            signatureId: response.signatureId
-        });
+        contractEntity = await nftContractDB.update(
+            {
+                where: {
+                    id: contractEntity.id
+
+                },
+                data: {
+                    signatureId: response.signatureId
+                }
+
+            });
 
         job.updateProgress({ msg: 'NFT contract queued' });
     }
@@ -78,6 +86,7 @@ const getOrCreateContractAddress = async (strapi, job) => {
         let txId = undefined;
 
         while (txId === undefined) {
+            job.updateProgress({ msg: `Waiting for blockchain confirmation` });
             // call Tatum
             // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
             const response = await tatumService.getTransactionDetailFromSignature(strapi, contractEntity.signatureId);
@@ -85,18 +94,33 @@ const getOrCreateContractAddress = async (strapi, job) => {
             await Sleep(strapi.config.get('server.tatum.waitSigning'))
         }
 
-        contractEntity = await nftContractDB.update(contractEntity.id, {
-            transactionId: txId
-        });
+        contractEntity = await nftContractDB.update(
+            {
+                where: {
+                    id: contractEntity.id
+
+                },
+                data: {
+                    transactionId: txId
+                }
+
+            });
         job.updateProgress({ msg: 'NFT contract created' });
     }
 
     if (!contractEntity.contractAddress) {
-        const { contractAddress } = await tatumService.getNFTContractAddress(transaction);
+        const { contractAddress } = await tatumService.getNFTContractAddress(strapi, contractEntity.transactionId);
 
-        contractEntity = await nftContractDB.update(contractEntity.id, {
-            contractAddress
-        });
+        contractEntity = await nftContractDB.update(
+            {
+                where: {
+                    id: contractEntity.id
+
+                },
+                data: {
+                    contractAddress
+                }
+            });
 
         job.updateProgress({ msg: `NFT contract address ${contractEntity}` });
     }

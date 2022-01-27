@@ -18,14 +18,12 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         // validate request body
         await validateYupSchema(mintOrderSchema)(ctx.request.body);
 
-        const controllerAPI = strapi.service('api::nft-mint-order.nft-mint-order');
+        const nftMintOrderDB = strapi.db.query('api::nft-mint-order.nft-mint-order');
 
         // const userId = ctx.state.user; //TODO: change to user.id
         const userId = "1"; //TODO: change to user.id
-        let tikTokVideoId;
         const {
             tikTokUrl,
-            blockchain,
             singleAddress, // send to this address (owner of the NFT), and use as royalty address if isSplitRoyaltyRate is false
             extraComment,
             isSplitRoyaltyRate,
@@ -35,13 +33,15 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
             sid_ucp_v1,
         } = ctx.request.body;
 
+        const blockchain = "MATIC";
+
         // validate that tikTokUrl is the owner of the tiktok
         const axiosInstance = axios.create(strapi.config.get('server.tiktok_api_axios_config'));
 
         // tikTokUrl Example:
         // https://www.tiktok.com/@sanyabeckerr/video/7024893021720218881?is_copy_url=1&is_from_webapp=v1
         // Get the video id from the url: 7024893021720218881
-        tikTokVideoId = tikTokUrl.split('/').pop().split('?')[0];
+        const tikTokVideoId = tikTokUrl.split('/').pop().split('?')[0];
 
         // the the video metadata
         const { data: tikTokVideoMetadata } = await axiosInstance.get(`/api/video/${tikTokVideoId}`,
@@ -61,27 +61,34 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
 
         let entity;
         try {
-            // Register the order in the database
-            entity = await controllerAPI.create(
-                {
-                    data: {
-                        sendAddress: singleAddress,
-                        blockchain: blockchain,
-                        extraMessage: extraComment,
-                        royalties: {
-                            isSplitRoyaltyRate,
-                            singleAddress: singleAddress,
-                            royaltyRate: royaltyRate,
-                            splitAddress: splitAddress,
-                        },
-                        // transactionId: null,
-                        // contractAddress:null,
-                        status: 'pending',
-                        user: userId,
-                    }
+            entity = await nftMintOrderDB.findOne({
+                where: {
+                    tikTokVideoId: tikTokVideoId
                 }
-            );
+            });
 
+            if (!entity) {
+                entity = await nftMintOrderDB.create(
+                    {
+                        data: {
+                            sendAddress: singleAddress,
+                            blockchain,
+                            tikTokVideoId,
+                            extraMessage: extraComment,
+                            royalties: {
+                                isSplitRoyaltyRate,
+                                singleAddress: singleAddress,
+                                royaltyRate: royaltyRate,
+                                splitAddress: splitAddress,
+                            },
+                            // transactionId: null,
+                            // contractAddress:null,
+                            status: 'pending',
+                            user: userId,
+                        }
+                    }
+                );
+            }
         } catch (err) {
             strapi.log.error(`ERROR: \n ${err.message}`);
             strapi.log.error(JSON.stringify(err));
@@ -100,9 +107,13 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
                 .plugin('nft-engine')
                 .bull.queue;
 
-            const data = await queue.add('mint-nft', { ...jobData }, {
-                jobId: tikTokVideoId,
-            });
+            const data = await queue.add('mint-nft', { ...jobData }
+                // TODO: REVIEW THIS JOB ID TINK......
+                // , {
+                //     jobId: tikTokVideoId,
+                // }
+            );
+
             strapi.log.debug(`Job Created: \n ${JSON.stringify(data)}`);
 
         } catch (err) {

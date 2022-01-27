@@ -1,6 +1,5 @@
 'use strict';
 
-const { ipfsUpload } = require('@tatumio/tatum');
 const { v4: uuidv4 } = require('uuid');
 
 // require lodash

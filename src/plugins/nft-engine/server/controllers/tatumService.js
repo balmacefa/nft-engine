@@ -26,6 +26,21 @@ const getAxiosInstance = (strapi) => {
 
 
 module.exports = {
+  uploadInterPlanetaryData: async (strapi, {data, type}) => {
+    const buffer = Buffer.from(data);
+    // convert to blob
+    const blob = new Blob([buffer], { type: type });
+    const formData = new FormData();
+    formData.append('file', blob);
+
+    const response = await getAxiosInstance(strapi)
+      .post('/v3/ipfs', bodyFormData);
+    return response.data;
+  },
+  mintNFTWithUri: async (strapi, body) => {
+    const { data } = await getAxiosInstance(strapi).post('/v3/nft/mint', body);
+    return data;
+  },
   deployNFT: async (strapi, body) => {
     const { data } = await getAxiosInstance(strapi).post('/v3/nft/deploy', body);
     return data;
