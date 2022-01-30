@@ -46,18 +46,18 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         // the the video metadata
         const { data: tikTokVideoMetadata } = await axiosInstance.get(`/api/video/${tikTokVideoId}`,
             {
-                data: {
-                    s_v_web_id,
-                    sid_ucp_v1
-                }
+                // data: {
+                //     s_v_web_id,
+                //     sid_ucp_v1
+                // }
             }
         );
         const { itemInfo: { itemStruct: { author } } } = tikTokVideoMetadata;
 
-        // validate that the user is the owner of the tiktok
-        if (author.id !== "6612341770439917573") { // TODO: change to user.id
-            return ctx.badRequest('User is not the owner of the TikTok')
-        }
+        // validate that the user is the owner of the tiktok TODO
+        // if (author.id !== "6612341770439917573") { // TODO: change to user.id
+        //     return ctx.badRequest('User is not the owner of the TikTok')
+        // }
 
         let entity;
         try {

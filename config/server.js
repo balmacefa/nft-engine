@@ -59,4 +59,8 @@ module.exports = ({ env }) => ({
       walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS')
     }
   },
+  pinata:{
+    apiKey: env("PINATA_API_KEY"),
+    secret: env("PINATA_SECRET"),
+  }
 });

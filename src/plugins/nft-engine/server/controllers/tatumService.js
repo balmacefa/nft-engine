@@ -1,5 +1,8 @@
 'use strict';
 const axios = require('axios');
+// const { ipfsUpload } = require('@tatumio/tatum');
+const pinataSDK = require('@pinata/sdk');
+
 // http
 const http = require('http');
 const https = require('https');
@@ -26,17 +29,16 @@ const getAxiosInstance = (strapi) => {
 
 
 module.exports = {
-  uploadInterPlanetaryData: async (strapi, {data, type}) => {
-    const buffer = Buffer.from(data);
-    // convert to blob
-    const blob = new Blob([buffer], { type: type });
-    const formData = new FormData();
-    formData.append('file', blob);
+  uploadIpfs: async (strapi, path) => {
+    const key = strapi.config.get('server.pinata.apiKey');
+    const secret = strapi.config.get('server.pinata.secret');
 
-    const response = await getAxiosInstance(strapi)
-      .post('/v3/ipfs', bodyFormData);
-    return response.data;
+    const response = await pinataSDK(key, secret)
+      .pinFromFS(path);
+
+    return response.IpfsHash;
   },
+
   mintNFTWithUri: async (strapi, body) => {
     const { data } = await getAxiosInstance(strapi).post('/v3/nft/mint', body);
     return data;

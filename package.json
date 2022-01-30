@@ -16,6 +16,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@pinata/sdk": "^1.1.23",
     "@strapi/plugin-i18n": "4.0.5",
     "@strapi/plugin-users-permissions": "4.0.5",
     "@strapi/strapi": "4.0.5",

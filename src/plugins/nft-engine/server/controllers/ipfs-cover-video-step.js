@@ -7,8 +7,15 @@ const axios = require('axios');
 
 // require lodash
 const _ = require('lodash');
+const fs = require('fs');
+const Temp = require('temp').track();
 
 const getIpfsCoverAndVideo = async (strapi, job) => {
+    // return {
+    //     "image": `ipfs://sdlafksdj`, // cover
+    //     "animation_url": `ipfs://oifdpoasiudf`,
+    // }
+
     const {
         tikTokVideoMetadata
     } = job.data;
@@ -18,13 +25,16 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
         new Promise(async (resolve) => {
             job.updateProgress({ msg: 'Uploading cover image to IPFS' });
             const coverUrl = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.cover');
-            const fetchCover = await axios.get(coverUrl, { responseType: 'arraybuffer' });
-            const ipfs = tatumService.uploadInterPlanetaryData(strapi,
-                {
-                    data: fetchCover.data,
-                    type: 'image/jpeg',
-                }
-            );
+            const fetch = await axios.get(coverUrl, { responseType: 'stream' });
+            const { path } = Temp.openSync({
+                prefix: `criptok_cover_${videoId}`,
+                suffix: `.jpg`
+            });
+            // write data to path
+            await fetch.data.pipe(fs.createWriteStream(path));
+
+            const ipfs = await tatumService.uploadIpfs(strapi, path);
+
             resolve(ipfs);
             // response example:
             // {
@@ -38,22 +48,17 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
             const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
             const axiosInstance = axios.create(strapi.config.get('server.tiktok_api_axios_config'));
 
+            const fetch = await axiosInstance.get(`/api/download_video/${videoId}`,
+                { responseType: 'stream' });
 
-            const fetchVideo = await axiosInstance.get(`/api/download_video/${videoId}`,
-                {
-                    responseType: 'arraybuffer',
-                    // data: {
-                    //     s_v_web_id,
-                    //     sid_ucp_v1
-                    // }
-                }
-            );
-            const ipfs = tatumService.uploadInterPlanetaryData(strapi,
-                {
-                    data: fetchVideo.data,
-                    type: 'video/mp4',
-                }
-            );
+            const { path } = Temp.openSync({
+                prefix: `criptok_video_${videoId}`,
+                suffix: `.mp4`
+            });
+            await fetch.data.pipe(fs.createWriteStream(path));
+
+            const ipfs = await tatumService.uploadIpfs(strapi, path);
+
             resolve(ipfs);
         });
 
@@ -76,8 +81,8 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
     job.updateProgress({ msg: 'IPFS upload complete' });
 
     return {
-        "image": `ipfs://${ipfsResult[0].value.ipfsHash}`, // cover
-        "animation_url": `ipfs://${ipfsResult[1].value.ipfsHash}`, // video
+        "image": `ipfs://${ipfsResult[0].value}`, // cover
+        "animation_url": `ipfs://${ipfsResult[1].value}`, // video
     }
 
 }
