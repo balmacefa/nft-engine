@@ -71,6 +71,69 @@ module.exports = ({ strapi }) => {
           });
         break;
       }
+      case 'tiktok': {
+        const tiktok = purest({
+          provider: 'tiktok',
+          key: providers.tiktok.key,
+          secret: providers.tiktok.secret,
+          config: {
+            tiktok: {
+              defaults: {
+                origin: 'https://open-api.tiktok.com',
+                // "transport": "session",
+                state: true,
+              },
+              scope: ['user.info.basic'],
+              custom_params: {
+                response_type: "code"
+              },
+            },
+          },
+        });
+
+        tiktok
+          .query()
+          .get('users/@me')
+          .auth(access_token)
+          .request((err, res, body) => {
+            if (err) {
+              callback(err);
+            } else {
+              // Combine username and discriminator because discord username is not unique
+              var username = `${body.username}#${body.discriminator}`;
+              callback(null, {
+                username,
+                email: body.email,
+              });
+            }
+          });
+        break;
+      }
+      case 'twitter': {
+        const twitter = purest({
+          provider: 'twitter',
+          config: purestConfig,
+          key: providers.twitter.key,
+          secret: providers.twitter.secret,
+        });
+
+        twitter
+          .query()
+          .get('account/verify_credentials')
+          .auth(access_token, query.access_secret)
+          .qs({ screen_name: query['raw[screen_name]'], include_email: 'true' })
+          .request((err, res, body) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback(null, {
+                username: body.screen_name,
+                email: body.email,
+              });
+            }
+          });
+        break;
+      }
       case 'cognito': {
         // get the id_token
         const idToken = query.id_token;
@@ -91,7 +154,6 @@ module.exports = ({ strapi }) => {
           provider: 'facebook',
           config: purestConfig,
         });
-
         facebook
           .query()
           .get('me?fields=name,email')
@@ -192,31 +254,6 @@ module.exports = ({ strapi }) => {
               callback(null, {
                 username: body.userPrincipalName,
                 email: body.userPrincipalName,
-              });
-            }
-          });
-        break;
-      }
-      case 'twitter': {
-        const twitter = purest({
-          provider: 'twitter',
-          config: purestConfig,
-          key: providers.twitter.key,
-          secret: providers.twitter.secret,
-        });
-
-        twitter
-          .query()
-          .get('account/verify_credentials')
-          .auth(access_token, query.access_secret)
-          .qs({ screen_name: query['raw[screen_name]'], include_email: 'true' })
-          .request((err, res, body) => {
-            if (err) {
-              callback(err);
-            } else {
-              callback(null, {
-                username: body.screen_name,
-                email: body.email,
               });
             }
           });
