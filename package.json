@@ -48,7 +48,7 @@
   },
   "engines": {
     "node": "14.x.x",
-    "npm": "1.x"
+    "yarn": "1.x"
   },
   "license": "MIT"
 }
