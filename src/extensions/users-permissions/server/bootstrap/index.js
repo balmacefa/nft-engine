@@ -53,7 +53,12 @@ const initGrant = async pluginStore => {
       key: '',
       secret: '',
       callback: `${baseURL}/tiktok/callback`,
-      scope: ['identify', 'email'],
+      scope: ['user.info.basic'],
+      response: ["tokens", "raw", "profile"],
+      state: true,
+      authorize_url: "https://open-api.tiktok.com/platform/oauth/connect/",
+      access_url: "https://open-api.tiktok.com/oauth/access_token/",
+      oauth: 2
     },
     discord: {
       enabled: false,

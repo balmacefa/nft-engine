@@ -79,14 +79,10 @@ module.exports = ({ strapi }) => {
           config: {
             tiktok: {
               defaults: {
-                origin: 'https://open-api.tiktok.com',
-                // "transport": "session",
+                origin: providers.tiktok.origin,
                 state: true,
               },
-              scope: ['user.info.basic'],
-              custom_params: {
-                response_type: "code"
-              },
+              scope: providers.tiktok.scope
             },
           },
         });

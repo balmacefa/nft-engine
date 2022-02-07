@@ -17,14 +17,14 @@
   "devDependencies": {},
   "dependencies": {
     "@pinata/sdk": "^1.1.23",
-    "@strapi/plugin-i18n": "4.0.5",
-    "@strapi/plugin-users-permissions": "4.0.5",
-    "@strapi/strapi": "4.0.5",
+    "@strapi/plugin-i18n": "4.0.7",
+    "@strapi/plugin-users-permissions": "4.0.7",
+    "@strapi/strapi": "4.0.7",
     "@superhero/syntax-check": "^0.0.2",
-    "@tatumio/tatum": "^1.30.10",
+    "@tatumio/tatum": "^1.30.13",
     "await-sleep": "^0.0.1",
     "axios-retry": "^3.2.4",
-    "bullmq": "^1.66.1",
+    "bullmq": "^1.68.4",
     "cache-manager": "^3.6.0",
     "cache-manager-ioredis": "^2.1.0",
     "cross-env": "^7.0.3",
@@ -32,9 +32,10 @@
     "https": "^1.0.0",
     "socket.io": "^4.4.1",
     "sqlite3": "5.0.2",
-    "stripe": "^8.199.0",
+    "stripe": "^8.202.0",
     "temp": "^0.9.4",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "grant": "github:simov/grant"
   },
   "author": {
     "name": "A Strapi developer"

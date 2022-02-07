@@ -1,10 +1,13 @@
 module.exports = ({ env }) => ({
-  host: env('HOST', '0.0.0.0'),
+  host: env('HOST', 'localhost'),
   port: env.int('PORT', 1337),
   admin: {
     auth: {
       secret: env('ADMIN_JWT_SECRET', '0c102b187b3d9e4acb87c55f2d261674'),
     },
+  },
+  app: {
+    keys: env("APP_KEYS", "testKey1;testKey2").split(";"),
   },
   watchIgnoreFiles: [
     '**/config-sync/files/**',
@@ -49,17 +52,17 @@ module.exports = ({ env }) => ({
       'x-api-key': env('TATUM_API_KEY')
     }
   },
-  tatum:{
+  tatum: {
     signatureId: env('TATUM_SIGNATURE_ID'),
     retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
     retries: env.int('TATUM_RETRIES', 5),
     waitSigning: env.int('TATUM_WAIT_SIGNING', 5000),
-    fixedRoyalty:{
+    fixedRoyalty: {
       amount: env.float('TATUM_FIXED_ROYALTY_AMOUNT'),
       walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS')
     }
   },
-  pinata:{
+  pinata: {
     apiKey: env("PINATA_API_KEY"),
     secret: env("PINATA_SECRET"),
   }
