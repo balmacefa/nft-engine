@@ -28,14 +28,17 @@
     "cache-manager": "^3.6.0",
     "cache-manager-ioredis": "^2.1.0",
     "cross-env": "^7.0.3",
+    "grant": "github:simov/grant",
     "http": "^0.0.1-security",
     "https": "^1.0.0",
+    "pg": "^8.7.3",
+    "pg-connection-string": "^2.5.0",
+    "redis-url": "^1.2.1",
     "socket.io": "^4.4.1",
     "sqlite3": "5.0.2",
     "stripe": "^8.202.0",
     "temp": "^0.9.4",
-    "uuid": "^8.3.2",
-    "grant": "github:simov/grant"
+    "uuid": "^8.3.2"
   },
   "author": {
     "name": "A Strapi developer"

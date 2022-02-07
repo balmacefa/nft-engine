@@ -12,7 +12,7 @@ module.exports = ({ strapi }) => {
   const mainController = strapi
     .plugin('nft-engine')
     .controller('engineController');
-  const config = strapi.config.get('server.bull_mq_config');
+  const config = strapi.config.get('redis.bull_mq_config');
 
   const queueName = 'mint-nft-queue';
   const redisInstance = new IORedis(config.connection);
