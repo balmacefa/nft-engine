@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
+    "start": "strapi start",
     "dev": "cross-env ENV_PATH='./.env.development' strapi develop",
     "develop": "strapi develop",
-    "start": "strapi start",
     "start-dev": "cross-env ENV_PATH='./.env.development' strapi develop",
     "start-prod": "cross-env ENV_PATH=./.env.production strapi start",
     "build": "strapi build -- --clean",
@@ -16,6 +16,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@newrelic/winston-enricher": "^2.1.0",
     "@pinata/sdk": "^1.1.23",
     "@strapi/plugin-i18n": "4.0.7",
     "@strapi/plugin-users-permissions": "4.0.7",
