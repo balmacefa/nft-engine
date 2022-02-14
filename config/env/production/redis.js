@@ -1,11 +1,11 @@
-const redisConfig = require('redis-url');
+const redisConfig = require('redis-url').parse(process.env.REDIS_URL);
 
 module.exports = ({ env }) => ({
   bull_mq_config: {
     connection: {
-      host: redisConfig.parse(process.env.REDIS_URL).hostname,
-      port: parseInt(redisConfig.parse(process.env.REDIS_URL).port),
-      password: redisConfig.parse(process.env.REDIS_URL).password,
+      host: redisConfig.hostname,
+      port: parseInt(redisConfig.port),
+      password: redisConfig.password,
       maxRetriesPerRequest: null,
       enableReadyCheck: false
     },
