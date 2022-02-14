@@ -2848,10 +2848,10 @@
   dependencies:
     "@tatumio/bitcoincash-ops" "2.0.0"
 
-"@tatumio/tatum@^1.30.13":
-  version "1.30.14"
-  resolved "https://registry.yarnpkg.com/@tatumio/tatum/-/tatum-1.30.14.tgz#e51cbf8d416fbb63749c522153b50891ee4af205"
-  integrity sha512-QFIsMVtkJdkHOakGidqTuJEFW6/cNK3F64mSGFtG8LKkH7zT2kWxDHkRFdJGCNVD6svRTDVKDPDhfgUUtno7Tg==
+"@tatumio/tatum@^1.30.17":
+  version "1.30.17"
+  resolved "https://registry.yarnpkg.com/@tatumio/tatum/-/tatum-1.30.17.tgz#decd3d98ac95aa04e89b78087d5f77600ad1c3e7"
+  integrity sha512-6vkZyNObHSlkOBCXIzOjCEowZqiN6yyyhrlcuQt+oRLQcaDyYA/GGVak5Ihg9/0Ma3+/jzagPKyeOI/K3sHymw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.1.1"
     "@celo-tools/celo-ethers-wrapper" "0.0.5"
@@ -4884,10 +4884,10 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
 
-bullmq@^1.68.4:
-  version "1.68.4"
-  resolved "https://registry.yarnpkg.com/bullmq/-/bullmq-1.68.4.tgz#785b25e8016065b38f5d0740fa1a2cf92d6f8737"
-  integrity sha512-I0BYxhRocWHcNpzdXX5jR8DwKG1PkGJ8KUt9SJhWCCWd4sYvsMl6KV6J35ZfigGydXuAja19tbEefTUxdVv/sw==
+bullmq@^1.71.0:
+  version "1.71.0"
+  resolved "https://registry.yarnpkg.com/bullmq/-/bullmq-1.71.0.tgz#f3a7428fed5b6dfee35f54ead1d2216d14651241"
+  integrity sha512-pzPzSVq2C+ob1n2Qcezzwbbk24QGjsU39CzjJxudO7LIVQIQH4EFYajBbV5iw0y7njB3LbPQLqPX95oW9cUc6A==
   dependencies:
     cron-parser "^2.18.0"
     get-port "^5.1.1"

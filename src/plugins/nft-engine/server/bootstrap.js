@@ -15,8 +15,7 @@ module.exports = ({ strapi }) => {
   const config = strapi.config.get('redis.bull_mq_config');
 
   const queueName = 'mint-nft-queue';
-  const redisInstance = new IORedis(config.connection);
-  const queue = new Queue(queueName, { ...config.queueOptions, redisInstance });
+  const queue = new Queue(queueName, { ...config.queueOptions, connection: new IORedis(config.connection) });
   // this is to retry when the job fails
   new QueueScheduler(queueName);
 
@@ -24,7 +23,7 @@ module.exports = ({ strapi }) => {
   const worker = new Worker(queueName,
     async (job) => await mainController.mintNFTJob(job)
     , {
-      redisInstance
+      connection: new IORedis(config.connection)
     }
   );
   worker.on('completed', (job, returnValue) => mainController.mintNFTJobCompleted(job, returnValue));
@@ -39,7 +38,7 @@ module.exports = ({ strapi }) => {
   // redis cache
   const redisCache = CacheManager.caching({
     store: RedisStore,
-    redisInstance: redisInstance
+    redisInstance: new IORedis(config.connection)
   });
 
   // listen for redis connection error event

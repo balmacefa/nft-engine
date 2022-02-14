@@ -7,7 +7,8 @@ module.exports = ({ env }) => ({
       port: parseInt(redisConfig.port),
       password: redisConfig.password,
       maxRetriesPerRequest: null,
-      enableReadyCheck: false
+      enableReadyCheck: false,
+      lazyConnect: true
     },
     queueOptions: {
       // https://github.com/taskforcesh/bullmq/blob/bc533ca119600f92caca020dd280c1011e849417/docs/gitbook/api/bullmq.jobsoptions.md
