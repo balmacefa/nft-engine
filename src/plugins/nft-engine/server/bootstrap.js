@@ -15,6 +15,8 @@ module.exports = ({ strapi }) => {
   const config = strapi.config.get('redis.bull_mq_config');
 
   const queueName = 'mint-nft-queue';
+  strapi.log.info(JSON.stringify(config.connection));
+
   const queue = new Queue(queueName, { ...config.queueOptions, connection: new IORedis(config.connection) });
   // this is to retry when the job fails
   new QueueScheduler(queueName);
