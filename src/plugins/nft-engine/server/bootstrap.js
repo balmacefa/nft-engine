@@ -15,17 +15,17 @@ module.exports = ({ strapi }) => {
   const config = strapi.config.get('redis.bull_mq_config');
 
   const queueName = 'mint-nft-queue';
-  strapi.log.info(JSON.stringify(config.connection));
 
-  const queue = new Queue(queueName, { ...config.queueOptions, connection: new IORedis(config.connection) });
+  const connection = new IORedis(config.connection)
+  const queue = new Queue(queueName, { ...config.queueOptions, connection });
   // this is to retry when the job fails
-  new QueueScheduler(queueName);
+  new QueueScheduler(queueName, { connection });
 
   // Create a worker
   const worker = new Worker(queueName,
     async (job) => await mainController.mintNFTJob(job)
     , {
-      connection: new IORedis(config.connection)
+      connection
     }
   );
   worker.on('completed', (job, returnValue) => mainController.mintNFTJobCompleted(job, returnValue));
