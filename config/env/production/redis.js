@@ -1,4 +1,4 @@
-const redisConfig = require('redis-url').parse(process.env.REDIS_URL);
+const redisConfig = require('redis-url').parse(process.env.REDIS_URL || "");
 
 module.exports = ({ env }) => ({
   bull_mq_config: {
