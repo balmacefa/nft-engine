@@ -12,12 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "cookie_s_v_web_id": {
-      "type": "string"
-    },
-    "cookie_sid_ucp_v1": {
-      "type": "string"
-    },
     "latestSelectedBlockchain": {
       "type": "enumeration",
       "enum": [

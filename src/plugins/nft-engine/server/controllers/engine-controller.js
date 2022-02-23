@@ -4,6 +4,7 @@ const { getOrCreateContractAddress } = require('./contract-address-step.js');
 const { getIpfsCoverAndVideo } = require('./ipfs-cover-video-step.js');
 const { getTiktokMetadata, uploadTiktokMetadataToIPFS } = require('./build-metadata-step.js');
 const { mintTiktokNFT } = require('./mint-nft-step.js');
+const _ = require('lodash');
 
 module.exports = ({ strapi }) => ({
   createJob: async ctx => {
@@ -19,6 +20,11 @@ module.exports = ({ strapi }) => ({
   },
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
+    // add pushProgress to prototype
+    job.pushProgress = function (progress) {
+      this.pushProgress(_.concat(this.progress || [], progress));
+    };
+
     const nftContractEntity = await getOrCreateContractAddress(strapi, job);
     job.data.nftContractEntity = nftContractEntity;
     const coverAndVideoMeta = await getIpfsCoverAndVideo(strapi, job);
@@ -40,10 +46,6 @@ module.exports = ({ strapi }) => ({
   },
   mintNFTJobProgress: async (job, progress) => {
     strapi.log.info('ENTER mintNFTJobProgress');
-    // loadash if 'job.data.processQueueMgs' is not defined create emty array and push 'progress'
-    job.data.processQueueMgs = job.data.processQueueMgs || [];
-    job.data.processQueueMgs.push(progress);
-
     strapi.log.debug(JSON.stringify(job));
     strapi.log.debug(JSON.stringify(progress));
     strapi.log.info('EXIT mintNFTJobProgress');

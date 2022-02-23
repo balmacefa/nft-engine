@@ -7,7 +7,7 @@ const Sleep = require('await-sleep');
 const _ = require('lodash');
 
 const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
-    job.updateProgress({ msg: 'Minting NFT' });
+    job.pushProgress({ msg: 'Mint NFT: Init' });
 
     const {
         tikTokVideoMetadata,
@@ -70,7 +70,7 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
 
             });
 
-        job.updateProgress({ msg: 'NFT contract queued' });
+        job.pushProgress({ msg: 'Mint NFT: Queued' });
     }
 
     if (!mintOrderEntity.transactionId) {
@@ -78,7 +78,7 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
         let txId = undefined;
 
         while (txId === undefined) {
-            job.updateProgress({ msg: `Waiting for blockchain confirmation` });
+            job.pushProgress({ msg: `Mint NFT: Waiting for blockchain confirmation` });
             // call Tatum
             // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
             const response = await tatumService.getTransactionDetailFromSignature(strapi, mintOrderEntity.signatureId);
@@ -98,12 +98,13 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
                     contractAddress
                 }
             });
-        job.updateProgress({ msg: 'NFT contract created' });
+        job.pushProgress({ msg: 'Mint NFT: NFT contract created' });
     }
 
 
     // update job status
-    job.updateProgress({ msg: `NFT contract \n:${mintOrderEntity.transactionId}` });
+    job.pushProgress({ msg: `Mint NFT: Address -> ${mintOrderEntity.transactionId}`, data: mintOrderEntity.transactionId });
+
 
     return mintOrderEntity;
 };

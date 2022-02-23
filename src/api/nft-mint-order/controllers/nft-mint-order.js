@@ -29,8 +29,6 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
             isSplitRoyaltyRate,
             royaltyRate, // use if isSplitRoyaltyRate is false
             splitAddress, // use if isSplitRoyaltyRate is true
-            s_v_web_id,
-            sid_ucp_v1,
         } = ctx.request.body;
 
         const blockchain = "MATIC";
@@ -99,22 +97,36 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
             const jobData = {
                 nftMintOrderEntity: entity,
                 tikTokVideoMetadata,
-                s_v_web_id,
-                sid_ucp_v1,
                 userId,
             }
             const queue = strapi
                 .plugin('nft-engine')
                 .bull.queue;
-
-            const data = await queue.add('mint-nft', { ...jobData }
-                // TODO: REVIEW THIS JOB ID TINK......
-                // , {
-                //     jobId: tikTokVideoId,
-                // }
-            );
-
-            strapi.log.debug(`Job Created: \n ${JSON.stringify(data)}`);
+            // bullMQ
+            // find by project id
+            const job = await queue.getJob(tikTokVideoId);
+            let createJob = true;
+            if (job) {
+                strapi.log.info(`Job already exists for ${tikTokVideoId}`);
+                if (job.attemptsMade >= job.opts.attempts) {
+                    // remove job from queue
+                    await job.remove();
+                    strapi.log.info(`Job removed from queue for ${tikTokVideoId} due to max attempts`);
+                } else {
+                    // job is already in queue
+                    strapi.log.info(`Job already exists for ${tikTokVideoId} and will be retried`);
+                    createJob = false;
+                }
+            }
+            
+            if (createJob) {
+                const data = await queue.add('mint-nft', { ...jobData }
+                    , {
+                        jobId: tikTokVideoId,
+                    }
+                );
+                strapi.log.debug(`Job Created: \n ${JSON.stringify(data)}`);
+            }
 
         } catch (err) {
             strapi.log.error(`ERROR: \n ${err.message}`);

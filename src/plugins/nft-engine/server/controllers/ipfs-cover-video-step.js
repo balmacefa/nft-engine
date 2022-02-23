@@ -23,7 +23,7 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
 
     const uploadCover = () =>
         new Promise(async (resolve) => {
-            job.updateProgress({ msg: 'Uploading cover image to IPFS' });
+            job.pushProgress({ msg: 'IPFS media: Uploading cover image to IPFS' });
             const coverUrl = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.cover');
             const fetch = await axios.get(coverUrl, { responseType: 'stream' });
             const { path } = Temp.openSync({
@@ -44,7 +44,7 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
 
     const uploadVideo = () =>
         new Promise(async (resolve) => {
-            job.updateProgress({ msg: 'Uploading Tiktok video to IPFS' });
+            job.pushProgress({ msg: 'IPFS media: Uploading Tiktok video to IPFS' });
             const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
             const axiosInstance = axios.create(strapi.config.get('server.tiktok_api_axios_config'));
 
@@ -78,7 +78,7 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
         strapi.log.error(`Error while uploading to IPFS: \n ${JSON.stringify(error)}`);
         throw new Error(`Error while uploading to IPFS: \n ${JSON.stringify(error)}`);
     }
-    job.updateProgress({ msg: 'IPFS upload complete' });
+    job.pushProgress({ msg: 'IPFS media: Upload complete' });
 
     return {
         "image": `ipfs://${ipfsResult[0].value}`, // cover

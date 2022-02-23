@@ -1,3 +1,3 @@
 module.exports = {
-    countRemainMints: (userId) => `user__${userId}__remain_mint`,
+    countRemainMints: (userId) => `criptok:remain_mint:user:${userId}`,
 }

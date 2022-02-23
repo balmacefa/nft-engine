@@ -78,7 +78,7 @@ const getOrCreateContractAddress = async (strapi, job) => {
 
             });
 
-        job.updateProgress({ msg: 'NFT contract queued' });
+        job.pushProgress({ msg: 'NFT contract: Queued' });
     }
 
     if (!contractEntity.transactionId) {
@@ -86,7 +86,7 @@ const getOrCreateContractAddress = async (strapi, job) => {
         let txId = undefined;
 
         while (txId === undefined) {
-            job.updateProgress({ msg: `Waiting for blockchain confirmation` });
+            job.pushProgress({ msg: `NFT contract: Waiting for blockchain confirmation` });
             // call Tatum
             // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
             const response = await tatumService.getTransactionDetailFromSignature(strapi, contractEntity.signatureId);
@@ -105,7 +105,7 @@ const getOrCreateContractAddress = async (strapi, job) => {
                 }
 
             });
-        job.updateProgress({ msg: 'NFT contract created' });
+        job.pushProgress({ msg: 'NFT contract: Created' });
     }
 
     if (!contractEntity.contractAddress) {
@@ -122,7 +122,7 @@ const getOrCreateContractAddress = async (strapi, job) => {
                 }
             });
 
-        job.updateProgress({ msg: `NFT contract address ${contractEntity}` });
+        job.pushProgress({ msg: `NFT contract: Address -> ${contractEntity}`, data: contractEntity });
     }
 
     return contractEntity;

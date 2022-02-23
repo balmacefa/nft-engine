@@ -7,7 +7,7 @@ const fs = require('fs');
 const tatumService = require('./tatumService');
 
 const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
-    job.updateProgress({ msg: 'Building NFT metadata' });
+    job.pushProgress({ msg: 'NFT metadata: Building' });
 
     const {
         tikTokVideoMetadata
@@ -64,7 +64,7 @@ const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
         "description": desc,
         attributes
     };
-    job.updateProgress({ msg: 'NFT metadata built' });
+    job.pushProgress({ msg: 'NFT metadata: Built' });
     return metadata;
 };
 
@@ -76,7 +76,7 @@ const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
     } = job.data;
 
 
-    job.updateProgress({ msg: 'Uploading NFT metadata to IPFS' });
+    job.pushProgress({ msg: 'NFT metadata: Uploading metadata to IPFS' });
     const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
 
     const { path } = Temp.openSync({

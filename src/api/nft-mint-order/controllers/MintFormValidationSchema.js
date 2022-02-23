@@ -40,7 +40,6 @@ const splitAddressObjectSchema = yup.object().shape({
 
 const schema = yup.object({
     tikTokUrl: yup.string().required("TikTok URL is required"),
-    blockchain: yup.string().required("Blockchain is required"),
     singleAddress: yup.string().required("Address is required"),
     // extraComment max length is 255
     extraComment: yup.string().max(255, "Comment is too long, max 255 characters"),
@@ -61,9 +60,7 @@ const schema = yup.object({
     splitAddress: yup.array().when("isSplitRoyaltyRate", {
         is: true,
         then: yup.array().of(splitAddressObjectSchema)
-    }),
-    s_v_web_id: yup.string().required("S_V_Web_ID is required"),
-    sid_ucp_v1: yup.string().required("sid_ucp_v1 is required"),
+    })
 }).required();
 
 module.exports =  schema;
