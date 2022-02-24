@@ -36,7 +36,9 @@ module.exports = ({ env }) => ({
     signatureId: env('TATUM_SIGNATURE_ID'),
     retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
     retries: env.int('TATUM_RETRIES', 5),
-    waitSigning: env.int('TATUM_WAIT_SIGNING', 5000),
+    waitSigning: env.int('TATUM_WAIT_SIGNING', 2000),
+    // 30 min
+    maxWaitSigning: env.int('TATUM_MAX_WAIT_SIGNING', 1800000),
     fixedRoyalty: {
       amount: env.float('TATUM_FIXED_ROYALTY_AMOUNT'),
       walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS')

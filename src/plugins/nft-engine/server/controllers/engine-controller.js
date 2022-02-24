@@ -20,9 +20,20 @@ module.exports = ({ strapi }) => ({
   },
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
-    // add pushProgress to prototype
-    job.pushProgress = function (progress) {
-      this.pushProgress(_.concat(this.progress || [], progress));
+
+    job.__proto__.pushProgress = function (progress) {
+
+      // if progress is array _
+      const concat= [];
+      if (_.isArray(progress)) {
+        const lastProgress = this.progress[this.progress.length - 1];
+        if (lastProgress && lastProgress.msg === progress.msg) {
+          progress.count = lastProgress ? lastProgress.count + 1 : 1;
+          concat.push(progress);
+        }
+      }
+
+      this.updateProgress(_.concat(this.progress || [], progress, concat));
     };
 
     const nftContractEntity = await getOrCreateContractAddress(strapi, job);

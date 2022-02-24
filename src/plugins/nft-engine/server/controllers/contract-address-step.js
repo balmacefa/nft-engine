@@ -84,14 +84,20 @@ const getOrCreateContractAddress = async (strapi, job) => {
     if (!contractEntity.transactionId) {
         // to be sure the contract is being signed:
         let txId = undefined;
-
-        while (txId === undefined) {
+        const initTime = Date.now();
+        // Wait max of 30 min for the transaction to be signed
+        const maxTime = strapi.config.get('server.tatum.maxWaitSigning');
+        while (txId === undefined && Date.now() - initTime < maxTime) {
             job.pushProgress({ msg: `NFT contract: Waiting for blockchain confirmation` });
             // call Tatum
             // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
             const response = await tatumService.getTransactionDetailFromSignature(strapi, contractEntity.signatureId);
             txId = _.get(response, "txId", undefined);
             await Sleep(strapi.config.get('server.tatum.waitSigning'))
+        }
+
+        if (txId === undefined) {
+            throw new Error("Error: Transaction has not been signed - Timeout");
         }
 
         contractEntity = await nftContractDB.update(
