@@ -6,6 +6,9 @@ const IORedis = require('ioredis');
 const CacheManager = require('cache-manager');
 const RedisStore = require('cache-manager-ioredis');
 
+// socket.io
+let io = require('socket.io');
+
 module.exports = ({ strapi }) => {
   strapi.log.info('nft-engine: server: bootstrap: start');
 
@@ -19,7 +22,7 @@ module.exports = ({ strapi }) => {
   const connection = new IORedis(config.connection)
   const queue = new Queue(queueName, { ...config.queueOptions, connection });
   // this is to retry when the job fails
-  new QueueScheduler(queueName, { connection });
+  const qs = new QueueScheduler(queueName, { connection });
 
   // Create a worker
   const worker = new Worker(queueName,
@@ -48,6 +51,9 @@ module.exports = ({ strapi }) => {
     // This is to avoid NodeJS raising an unhandled exception when an error occurs.
     strapi.log.error("Redis Cache error: \n" + JSON.stringify(err));
   });
+
+  // socket.io
+  //  create channels for job.
 
   strapi.plugin('nft-engine').bull = {
     worker,
