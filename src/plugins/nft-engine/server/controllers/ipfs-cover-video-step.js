@@ -1,6 +1,6 @@
 'use strict';
 
-const tatumService = require('./tatumService');
+const pinataService = require('./services/pinataService');
 
 // axios
 const axios = require('axios');
@@ -8,7 +8,7 @@ const axios = require('axios');
 // require lodash
 const _ = require('lodash');
 const fs = require('fs');
-const Temp = require('temp').track();
+const Temp = require('temp');
 
 const getIpfsCoverAndVideo = async (strapi, job) => {
     // return {
@@ -17,24 +17,36 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
     // }
 
     const {
-        tikTokVideoMetadata
+        tikTokVideoMetadata,
+        videoId
     } = job.data;
-    const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
+
+    const { path: pathCover } = Temp.openSync({
+        prefix: `criptok_cover_${videoId}`,
+        suffix: `.jpg`
+    });
+
+    const { path: pathVideo } = Temp.openSync({
+        prefix: `criptok_video_${videoId}`,
+        suffix: `.mp4`
+    });
 
     const uploadCover = () =>
         new Promise(async (resolve) => {
             job.pushProgress({ msg: 'IPFS media: Uploading cover image to IPFS' });
             const coverUrl = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.cover');
             const fetch = await axios.get(coverUrl, { responseType: 'stream' });
-            const { path } = Temp.openSync({
-                prefix: `criptok_cover_${videoId}`,
-                suffix: `.jpg`
-            });
             // write data to path
-            await fetch.data.pipe(fs.createWriteStream(path));
 
-            const ipfs = await tatumService.uploadIpfs(strapi, path);
+            await fetch.data.pipe(fs.createWriteStream(pathCover));
 
+            const ipfs = await pinataService.pinFileToIPFS(strapi, pathCover,
+                {
+                    coverUrl: coverUrl,
+                    size: fs.statSync(path).size,
+                    videoId: videoId,
+                    
+                });
             resolve(ipfs);
             // response example:
             // {
@@ -45,20 +57,11 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
     const uploadVideo = () =>
         new Promise(async (resolve) => {
             job.pushProgress({ msg: 'IPFS media: Uploading Tiktok video to IPFS' });
-            const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
             const axiosInstance = axios.create(strapi.config.get('server.tiktok_api_axios_config'));
-
             const fetch = await axiosInstance.get(`/api/download_video/${videoId}`,
                 { responseType: 'stream' });
-
-            const { path } = Temp.openSync({
-                prefix: `criptok_video_${videoId}`,
-                suffix: `.mp4`
-            });
-            await fetch.data.pipe(fs.createWriteStream(path));
-
-            const ipfs = await tatumService.uploadIpfs(strapi, path);
-
+            await fetch.data.pipe(fs.createWriteStream(pathVideo));
+            const ipfs = await pinataService.pinFileToIPFS(strapi, pathVideo);
             resolve(ipfs);
         });
 
