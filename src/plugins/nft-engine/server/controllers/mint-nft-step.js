@@ -1,6 +1,6 @@
 'use strict';
 
-const tatumService = require('./tatumService');
+const tatumService = require('./services/tatumService');
 const Sleep = require('await-sleep');
 
 // require lodash
@@ -10,16 +10,14 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
     job.pushProgress({ msg: 'Mint NFT: Init' });
 
     const {
-        tikTokVideoMetadata,
         nftMintOrderEntity,
         nftContractEntity: {
             contractAddress
-        }
+        },
+        videoId
     } = job.data;
 
     let mintOrderEntity = nftMintOrderEntity;
-
-    const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
 
     // Docs: https://docs.tatum.io/guides/blockchain/how-to-create-royalty-nfts-with-percentage-cashback-and-provenance-data#minting-a-new-unique-erc-721-token
 

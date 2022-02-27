@@ -98,6 +98,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
                 nftMintOrderEntity: entity,
                 tikTokVideoMetadata,
                 userId,
+                videoId: tikTokVideoId
             }
             const queue = strapi
                 .plugin('nft-engine')

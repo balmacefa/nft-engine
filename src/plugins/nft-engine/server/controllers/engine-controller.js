@@ -45,7 +45,6 @@ module.exports = ({ strapi }) => ({
     // mint NFT
     const nft = await mintTiktokNFT(nftMetadataUrl, strapi, job);
 
-
     // Do something with job
     return { address: nft.transactionId };
   },

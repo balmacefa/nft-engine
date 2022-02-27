@@ -26,16 +26,34 @@ module.exports = ({ env }) => ({
       password: env('TIKTOK_API_PASSWORD_KEY'),
     },
   },
-  tatum_api_axios_config: {
-    baseURL: env('TATUM_API_URL'),
-    headers: {
-      'x-api-key': env('TATUM_API_KEY')
+  tatum_axios_instance: {
+    axiosConfig: {
+      baseURL: env('TATUM_API_URL'),
+      headers: {
+        'x-api-key': env('TATUM_API_KEY')
+      }
+    },
+    axiosRetry: {
+      retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
+      retries: env.int('TATUM_RETRIES', 5),
+      statusCodes: env.array('TATUM_RETRY_CONDITION', ['429', '500', '502', '503', '504']),
+    }
+  },
+  pinata_axios_instance: {
+    axiosConfig: {
+      baseURL: env('PINATA_API_URL', 'https://api.pinata.cloud/pinning'),
+      headers: {
+        authorization: env("PINATA_JWT"),
+      }
+    },
+    axiosRetry: {
+      retryDelay: env.int('PINATA_RETRY_DELAY', 1000),
+      retries: env.int('PINATA_RETRIES', 5),
+      statusCodes: env.array('PINATA_RETRY_CONDITION', ['429', '500', '502', '503', '504']),
     }
   },
   tatum: {
     signatureId: env('TATUM_SIGNATURE_ID'),
-    retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
-    retries: env.int('TATUM_RETRIES', 5),
     waitSigning: env.int('TATUM_WAIT_SIGNING', 2000),
     // 30 min
     maxWaitSigning: env.int('TATUM_MAX_WAIT_SIGNING', 1800000),
@@ -43,9 +61,5 @@ module.exports = ({ env }) => ({
       amount: env.float('TATUM_FIXED_ROYALTY_AMOUNT'),
       walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS')
     }
-  },
-  pinata: {
-    apiKey: env("PINATA_API_KEY"),
-    secret: env("PINATA_SECRET"),
   }
 });

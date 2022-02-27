@@ -4,7 +4,7 @@
 const _ = require('lodash');
 const Temp = require('temp');
 const fs = require('fs');
-const tatumService = require('./tatumService');
+const pinataService = require('./services/pinataService');
 
 const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
     job.pushProgress({ msg: 'NFT metadata: Building' });
@@ -70,15 +70,11 @@ const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
 
 // uploadTiktokMetadataToIPFS
 const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
-    // return "https://pastebin.com/raw/vMSmic4B";
     const {
-        tikTokVideoMetadata
+        videoId
     } = job.data;
 
-
     job.pushProgress({ msg: 'NFT metadata: Uploading metadata to IPFS' });
-    const videoId = _.get(tikTokVideoMetadata, 'itemInfo.itemStruct.video.id');
-
     const { path } = Temp.openSync({
         prefix: `criptok_metadata_${videoId}`,
         suffix: `.json`
@@ -87,7 +83,7 @@ const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
     // save nftMedata to path
     fs.writeFileSync(path, JSON.stringify(nftMetadata), 'utf8');
 
-    const ipfs = await tatumService.uploadIpfs(strapi, path);
+    const ipfs = await pinataService.pinFileToIPFS(strapi, path);
     // response example:
     // {
     //   "ipfsHash": "bafybeihrumg5hfzqj6x47q63azflcpf6nkgcvhzzm6/test-356.jpg"

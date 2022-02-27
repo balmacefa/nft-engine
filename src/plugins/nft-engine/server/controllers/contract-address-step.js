@@ -1,7 +1,7 @@
 'use strict';
 
 // const { deployNFT, getNFTContractAddress, Currency } = require('@tatumio/tatum');
-const tatumService = require('./tatumService');
+const tatumService = require('./services/tatumService');
 
 // require lodash
 const _ = require('lodash');
