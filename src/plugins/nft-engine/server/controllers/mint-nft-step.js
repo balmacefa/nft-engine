@@ -101,7 +101,8 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
                 },
                 data: {
                     transactionId: txId,
-                    contractAddress
+                    contractAddress,
+                    status: 'minted'
                 }
             });
         job.pushProgress({ msg: 'Mint NFT: NFT contract created' });

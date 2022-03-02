@@ -4,17 +4,17 @@ const axios = require('axios');
 // http
 const http = require('http');
 const https = require('https');
+const _ = require('lodash');
 
 // generate Axios
 module.exports = {
-  getAxiosInstance: (config,
-    {
-      responseInterceptor = (response) => response,
-      responseInterceptorError = (error) => Promise.reject(error),
-
-      requestInterceptor = (config) => config,
-      requestInterceptorError = (error) => Promise.reject(error)
-    }) => {
+  getAxiosInstance: (config, interceptors) => {
+    const inter = _.merge({
+      responseInterceptor: (response) => response,
+      responseInterceptorError: (error) => Promise.reject(error),
+      requestInterceptor: (config) => config,
+      requestInterceptorError: (error) => Promise.reject(error)
+    }, interceptors);
     const instance = axios.create(
       {
         ...config.axiosConfig,
@@ -24,8 +24,8 @@ module.exports = {
     );
 
     // add interceptors to retry
-    instance.interceptors.response.use(responseInterceptor, responseInterceptorError);
-    instance.interceptors.response.use(requestInterceptor, requestInterceptorError);
+    instance.interceptors.response.use(inter.responseInterceptor, inter.responseInterceptorError);
+    instance.interceptors.response.use(inter.requestInterceptor, inter.requestInterceptorError);
 
     // // In case of 429 Too Many Requests response error, request is triggered again
     // axiosRetry(instance, {

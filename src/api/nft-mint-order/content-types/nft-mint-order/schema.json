@@ -46,6 +46,12 @@
         ]
       }
     },
+    "nftMetadata": {
+      "type": "json"
+    },
+    "nftMetadataIPFS": {
+      "type": "string"
+    },
     "transactionId": {
       "type": "string",
       "unique": true

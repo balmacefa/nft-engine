@@ -47,7 +47,7 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
 
             // write data to path asynchronously
             const finishedDownload = promisify(stream.finished);
-            const writer = fs.createWriteStream(pathVideo);
+            const writer = fs.createWriteStream(pathCover);
             fetch.data.pipe(writer);
             await finishedDownload(writer);
 
@@ -83,6 +83,8 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
                     {
                         name: `cover_${videoId}`,
                         keyvalues: {
+                            type: 'cover',
+                            format: 'jpg',
                             coverUrl: coverUrl,
                             videoId: videoId,
                             userId
@@ -160,6 +162,8 @@ const getIpfsCoverAndVideo = async (strapi, job) => {
                     {
                         name: `video_${videoId}`,
                         keyvalues: {
+                            type: 'video',
+                            format: 'mp4',
                             videoId: videoId,
                             userId
                         }

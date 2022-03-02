@@ -6,7 +6,7 @@ const Temp = require('temp');
 const fs = require('fs');
 const pinataService = require('./services/pinataService');
 
-const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
+const getTiktokMetadata = async (coverVideoIPFS, strapi, job) => {
     job.pushProgress({ msg: 'NFT metadata: Building' });
 
     const {
@@ -60,7 +60,7 @@ const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
 
     const metadata = {
         "name": title,
-        ...coverAndVideoMeta,
+        ...coverVideoIPFS,
         "description": desc,
         attributes
     };
@@ -71,7 +71,8 @@ const getTiktokMetadata = async (coverAndVideoMeta, strapi, job) => {
 // uploadTiktokMetadataToIPFS
 const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
     const {
-        videoId
+        videoId,
+        userId
     } = job.data;
 
     job.pushProgress({ msg: 'NFT metadata: Uploading metadata to IPFS' });
@@ -83,12 +84,17 @@ const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
     // save nftMedata to path
     fs.writeFileSync(path, JSON.stringify(nftMetadata), 'utf8');
 
-    const ipfs = await pinataService.pinFileToIPFS(strapi, path);
-    // response example:
-    // {
-    //   "ipfsHash": "bafybeihrumg5hfzqj6x47q63azflcpf6nkgcvhzzm6/test-356.jpg"
-    // }
-    return `ipfs://${ipfs}`;
+    const ipfs = await pinataService.pinFileToIPFS(strapi, path,
+        {
+            name: `metadata_${videoId}`,
+            keyvalues: {
+                type: 'metadata',
+                format: 'json',
+                videoId: videoId,
+                userId
+            }
+        });
+    return `ipfs://${ipfs.IpfsHash}`;
 }
 
 module.exports = {

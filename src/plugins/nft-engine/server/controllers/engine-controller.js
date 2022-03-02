@@ -7,6 +7,24 @@ const { mintTiktokNFT } = require('./mint-nft-step.js');
 const _ = require('lodash');
 // const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 
+const updateNftMintOrderMetadata = async (nftMetadata, nftMetadataIPFS, strapi, job) => {
+  const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
+  let mintOrderEntity = job.data.nftMintOrderEntity;
+
+  mintOrderEntity = await nftMintOrderDb.update(
+    {
+      where: {
+        id: mintOrderEntity.id
+      },
+      data: {
+        nftMetadata,
+        nftMetadataIPFS
+      }
+    });
+  job.data.nftMintOrderEntity = mintOrderEntity;
+  return mintOrderEntity;
+}
+
 module.exports = ({ strapi }) => ({
   createJob: async ctx => {
     strapi.log.info('ENTER createJob');
@@ -26,7 +44,7 @@ module.exports = ({ strapi }) => ({
     job.__proto__.pushProgress = function (progress) {
 
       // if progress is array _
-      const concat= [];
+      const concat = [];
       if (_.isArray(progress)) {
         const lastProgress = this.progress[this.progress.length - 1];
         if (lastProgress && lastProgress.msg === progress.msg) {
@@ -40,15 +58,19 @@ module.exports = ({ strapi }) => ({
 
     const nftContractEntity = await getOrCreateContractAddress(strapi, job);
     job.data.nftContractEntity = nftContractEntity;
-    const coverAndVideoMeta = await getIpfsCoverAndVideo(strapi, job);
-    const nftMetadata = await getTiktokMetadata(coverAndVideoMeta, strapi, job);
+    const coverVideoIPFS = await getIpfsCoverAndVideo(strapi, job);
+    const nftMetadata = await getTiktokMetadata(coverVideoIPFS, strapi, job);
     // upload metadata to IPFS
     const nftMetadataUrl = await uploadTiktokMetadataToIPFS(nftMetadata, strapi, job);
+
+    // save data to show on strapi
+    await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
+
     // mint NFT
-    const nft = await mintTiktokNFT(nftMetadataUrl, strapi, job);
+    const mintOrderEntity = await mintTiktokNFT(nftMetadataUrl, strapi, job);
 
     // Do something with job
-    return { address: nft.transactionId };
+    return { address: mintOrderEntity.transactionId };
   },
   mintNFTJobCompleted: async (job, returnValue) => {
     strapi.log.info('ENTER mintNFTJobCompleted');
