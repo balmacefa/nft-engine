@@ -31,35 +31,40 @@ module.exports = ({ env }) => ({
       baseURL: env('TATUM_API_URL'),
       headers: {
         'x-api-key': env('TATUM_API_KEY')
-      }
+      },
+      maxBodyLength: 'Infinity'
     },
     axiosRetry: {
       retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
       retries: env.int('TATUM_RETRIES', 5),
-      statusCodes: env.array('TATUM_RETRY_CONDITION', ['429', '500', '502', '503', '504']),
     }
   },
   pinata_axios_instance: {
     axiosConfig: {
       baseURL: env('PINATA_API_URL', 'https://api.pinata.cloud/pinning'),
       headers: {
-        authorization: env("PINATA_JWT"),
-      }
+        // Authorization: `Bearer ${env("PINATA_JWT")}`,
+        pinata_api_key: env("PINATA_API_KEY"),
+        pinata_secret_api_key: env("PINATA_SECRET")
+      },
+      maxBodyLength: 'Infinity'
     },
     axiosRetry: {
       retryDelay: env.int('PINATA_RETRY_DELAY', 1000),
       retries: env.int('PINATA_RETRIES', 5),
-      statusCodes: env.array('PINATA_RETRY_CONDITION', ['429', '500', '502', '503', '504']),
+      maxWaitSigning: env.int('PINATA_MAX_WAIT_SIGNING', 5000),
     }
   },
   tatum: {
     signatureId: env('TATUM_SIGNATURE_ID'),
-    waitSigning: env.int('TATUM_WAIT_SIGNING', 2000),
-    // 30 min
-    maxWaitSigning: env.int('TATUM_MAX_WAIT_SIGNING', 1800000),
     fixedRoyalty: {
       amount: env.float('TATUM_FIXED_ROYALTY_AMOUNT'),
-      walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS')
+      walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS'),
+      maxWaitSigning: env.int('PINATA_MAX_WAIT_SIGNING', 5000)
     }
+  },
+  retryLoop: {
+    maxWaitTimeLoop: env.int('RETRY_LOOP_MAX_WAIT_TIME', 5000),
+    sleepWaitTimeLoop: env.int('RETRY_LOOP_SLEEP_WAIT_TIME', 1000),
   }
 });

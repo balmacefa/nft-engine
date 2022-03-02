@@ -76,7 +76,7 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
         let txId = undefined;
         const initTime = Date.now();
         // Wait max of 30 min for the transaction to be signed
-        const maxTime = strapi.config.get('server.tatum.maxWaitSigning');
+        const maxTime = strapi.config.get('server.retryLoop.maxWaitTimeLoop');
         while (txId === undefined && Date.now() - initTime < maxTime) {
             job.pushProgress({ msg: `Mint NFT: Waiting for blockchain confirmation` });
             // call Tatum
@@ -84,7 +84,7 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
             const response = await tatumService.getTransactionDetailFromSignature(strapi, mintOrderEntity.signatureId);
             txId = _.get(response, "txId", undefined);
             if (!txId) {
-                await Sleep(strapi.config.get('server.tatum.waitSigning'))
+                await Sleep(strapi.config.get('server.retryLoop.sleepWaitTimeLoop'))
             }
         }
 

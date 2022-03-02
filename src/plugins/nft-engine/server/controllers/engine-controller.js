@@ -5,6 +5,7 @@ const { getIpfsCoverAndVideo } = require('./ipfs-cover-video-step.js');
 const { getTiktokMetadata, uploadTiktokMetadataToIPFS } = require('./build-metadata-step.js');
 const { mintTiktokNFT } = require('./mint-nft-step.js');
 const _ = require('lodash');
+// const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 
 module.exports = ({ strapi }) => ({
   createJob: async ctx => {
@@ -18,6 +19,7 @@ module.exports = ({ strapi }) => ({
     strapi.log.info('EXIT createJob');
     return JSON.stringify(data);
   },
+
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
 

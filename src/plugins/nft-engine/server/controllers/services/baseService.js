@@ -4,12 +4,17 @@ const axios = require('axios');
 // http
 const http = require('http');
 const https = require('https');
-const axiosRetry = require('axios-retry');
-const { isNetworkOrIdempotentRequestError } = require('axios-retry');
 
 // generate Axios
 module.exports = {
-  getAxiosInstance: (config, retryCB) => {
+  getAxiosInstance: (config,
+    {
+      responseInterceptor = (response) => response,
+      responseInterceptorError = (error) => Promise.reject(error),
+
+      requestInterceptor = (config) => config,
+      requestInterceptorError = (error) => Promise.reject(error)
+    }) => {
     const instance = axios.create(
       {
         ...config.axiosConfig,
@@ -18,20 +23,22 @@ module.exports = {
       }
     );
 
-    // In case of 429 Too Many Requests response error, request is triggered again
-    const retryCondition = config.axiosRetry.statusCodes
-    axiosRetry(instance, {
-      retryDelay: () => config.axiosRetry.retryDelay,
-      retries: config.axiosRetry.retries,
-      retryCondition: async (error) => {
-        let r;
-        if (_.isFunction(retryCB)) {
-          r = await retryCB(error);
-        }
-        (error) => isNetworkOrIdempotentRequestError(error)
-          || _.includes(retryCondition, error?.response?.status) || r
-      }
-    });
+    // add interceptors to retry
+    instance.interceptors.response.use(responseInterceptor, responseInterceptorError);
+    instance.interceptors.response.use(requestInterceptor, requestInterceptorError);
+
+    // // In case of 429 Too Many Requests response error, request is triggered again
+    // axiosRetry(instance, {
+    //   retryDelay: () => config.axiosRetry.retryDelay,
+    //   retries: config.axiosRetry.retries,
+    //   retryCondition: async (error) => {
+    //     let r;
+    //     if (_.isFunction(retryCB)) {
+    //       r = await retryCB(error);
+    //     }
+    //     return isNetworkOrIdempotentRequestError(error) || r
+    //   }
+    // });
     return instance;
   },
 };
