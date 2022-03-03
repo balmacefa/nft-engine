@@ -119,7 +119,7 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
                     createJob = false;
                 }
             }
-            
+
             if (createJob) {
                 const data = await queue.add('mint-nft', { ...jobData }
                     , {
@@ -136,6 +136,39 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         }
         strapi.log.info(`EXIT POST /nft-mint-order/createMintNFTOrder \n ${entity}`);
         return entity;
+    },
+    getListByUser: async ctx => {
+        strapi.log.info('ENTER GET /nft-mint-order/getListByUser');
+        strapi.log.debug(JSON.stringify(ctx?.request?.body));
+
+        const nftMintOrderController = strapi.controller('api::nft-mint-order.nft-mint-order');
+        // const userId = ctx.state.user; //TODO: change to user.id
+        const userId = "1"; //TODO: change to user.id
+
+        let {
+            page,
+            pageSize
+        } = ctx.request.query;
+        // set default values and parse to int
+        page = parseInt(page || 0);
+        pageSize = parseInt(pageSize || 10);
+
+        const entities = await nftMintOrderController.find(
+            {
+                query: {
+                    filters: {
+                        user: userId
+                    },
+                    pagination: {
+                        page,
+                        pageSize,
+                    }
+                }
+            }
+        );
+
+        strapi.log.info(`EXIT GET /nft-mint-order/getListByUser \n ${JSON.stringify(entities)}`);
+        return entities;
     }
 
 }));

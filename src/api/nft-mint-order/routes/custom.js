@@ -6,6 +6,12 @@ module.exports = {
             method: 'POST',
             path: '/nft-mint-order/createMintNFTOrder',
             handler: `${controller}.createMintNFTOrder`,
+        },
+        {
+            method: 'GET',
+            path: '/nft-mint-order/getListByUser',
+            handler: `${controller}.getListByUser`,
         }
+        
     ]
 }
