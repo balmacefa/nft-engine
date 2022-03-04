@@ -10,6 +10,9 @@ const axios = require('axios');
 
 const mintOrderSchema = require('./MintFormValidationSchema.js');
 
+// get lodash
+const { get: _get } = require('lodash');
+
 module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ strapi }) => ({
     createMintNFTOrder: async ctx => {
         strapi.log.info('ENTER POST /nft-mint-order/createMintNFTOrder');
@@ -170,6 +173,49 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
 
         strapi.log.info(`EXIT GET /nft-mint-order/getListByUser \n ${JSON.stringify(entities)}`);
         return entities;
+    },
+    getMyOrder: async ctx => {
+        strapi.log.info('ENTER GET /nft-mint-order/getMyOrder');
+        strapi.log.debug(JSON.stringify(ctx?.request?.body));
+
+        const nftMintOrderController = strapi.controller('api::nft-mint-order.nft-mint-order');
+        // const userId = ctx.state.user; //TODO: change to user.id
+        const userId = "1"; //TODO: change to user.id
+
+        let {
+            id
+        } = ctx.request.query;
+
+        const result = await nftMintOrderController.find(
+            {
+                query: {
+                    filters: {
+                        $or: [
+                            {
+                                transactionId: id
+                            },
+                            {
+                                tikTokVideoId: id
+                            },
+                            {
+                                id: id
+                            }
+                        ],
+                        user: userId
+                    },
+                    pagination: {
+                        limit: 1
+                    }
+                }
+            }
+        );
+        const entity = _get(result, "data[0].attributes", null);
+        if (!entity) {
+            return ctx.notFound(`No order found for id ${id}`);
+        }
+        entity.id = _get(result, "data[0].id");
+        strapi.log.info(`EXIT GET /nft-mint-order/getMyOrder \n ${JSON.stringify(entity)}`);
+        return entity;
     }
 
 }));

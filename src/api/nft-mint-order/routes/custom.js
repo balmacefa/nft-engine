@@ -11,7 +11,11 @@ module.exports = {
             method: 'GET',
             path: '/nft-mint-order/getListByUser',
             handler: `${controller}.getListByUser`,
+        },
+        {
+            method: 'GET',
+            path: '/nft-mint-order/getMyOrder',
+            handler: `${controller}.getMyOrder`,
         }
-        
     ]
 }
