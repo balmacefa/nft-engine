@@ -166,7 +166,13 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
                     pagination: {
                         page,
                         pageSize,
-                    }
+                    },
+                    sort: [
+                        {
+                            // newest first
+                            createdAt: 'DESC'
+                        }
+                    ]
                 }
             }
         );
