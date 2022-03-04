@@ -151,7 +151,8 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         } = ctx.request.query;
         // set default values and parse to int
         page = parseInt(page || 0);
-        pageSize = parseInt(pageSize || 10);
+        // clamp pageSize between 1 and 100
+        pageSize = Math.max(1, Math.min(parseInt(pageSize || 10), 100));
 
         const entities = await nftMintOrderController.find(
             {
