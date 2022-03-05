@@ -21,7 +21,7 @@ const getTiktokMetadata = async (coverVideoIPFS, strapi, job) => {
                 commentCount,
                 playCount
             },
-            challenges,
+            challenges: hashtags,
             createTime,
             author: { uniqueId: authorUserName, nickname: authorNickname } } },
         shareMeta: { title, desc }
@@ -29,7 +29,7 @@ const getTiktokMetadata = async (coverVideoIPFS, strapi, job) => {
 
     let attributes = [];
 
-    const attribute = (trait_type, value, display_type) => (
+    const getAttribute = (trait_type, value, display_type) => (
         {
             trait_type,
             value,
@@ -41,22 +41,22 @@ const getTiktokMetadata = async (coverVideoIPFS, strapi, job) => {
     const mintTimestamp = Math.round(new Date().getTime() / 1000);
 
     attributes.push(
-        attribute('Author Username', authorUserName),
-        attribute('Author Nickname', authorNickname),
+        getAttribute('Author Username', authorUserName),
+        getAttribute('Author Nickname', authorNickname),
 
-        attribute('Likes', likesCount, 'number'),
-        attribute('Shares', shareCount, 'number'),
-        attribute('Comments', commentCount, 'number'),
-        attribute('Plays', playCount, 'number'),
+        getAttribute('Likes', likesCount, 'number'),
+        getAttribute('Shares', shareCount, 'number'),
+        getAttribute('Comments', commentCount, 'number'),
+        getAttribute('Plays', playCount, 'number'),
 
 
-        attribute('Tiktok Birthday', createTime, 'date'),
-        attribute('Mint Birthday', mintTimestamp, 'date'),
+        getAttribute('Tiktok Birthday', createTime, 'date'),
+        getAttribute('Mint Birthday', mintTimestamp, 'date'),
     )
 
     // Add Hashtag
-    attributes = attributes.concat(attributes,
-        challenges?.map(({ title }) => attribute('Hashtag', title)));
+    attributes = _.concat(attributes,
+        hashtags?.map(({ title }) => attribute('Hashtag', title)));
 
     const metadata = {
         "name": title,
