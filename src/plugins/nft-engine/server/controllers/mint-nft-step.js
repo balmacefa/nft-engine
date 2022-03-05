@@ -37,7 +37,7 @@ const mintTiktokNFT = async (nftMetadataUrl, strapi, job) => {
         signatureId: strapi.config.get('server.tatum.signatureId'),
     }
 
-    // set default royalties, 2.5% to criptok:
+    // set default royalties, 2.5% to criptok: TODO change if order include royalties for coupon discount of 20%
     let cashbackValues = [strapi.config.get('server.tatum.fixedRoyalty.amount')];
     let authorAddresses = [strapi.config.get('server.tatum.fixedRoyalty.walletAddress')];
 

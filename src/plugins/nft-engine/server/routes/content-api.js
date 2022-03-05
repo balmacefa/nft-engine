@@ -3,13 +3,13 @@
 module.exports = {
     type: 'content-api',
     routes: [
-        {
-            method: 'GET',
-            path: '/',
-            handler: 'engineController.createJob',
-            config: {
-                policies: [],
-            },
-        },
+        // {
+        //     method: 'GET',
+        //     path: '/',
+        //     handler: 'engineController.createJob',
+        //     config: {
+        //         policies: [],
+        //     },
+        // },
     ],
 };

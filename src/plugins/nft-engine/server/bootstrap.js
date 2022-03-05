@@ -8,8 +8,10 @@ const RedisStore = require('cache-manager-ioredis');
 const CacheKey = require('../../../api/utils/CacheKeys.js');
 const { createAdapter } = require('@socket.io/redis-adapter');
 
-// socket.io
-let io = require('socket.io');
+const EventEmitter = require('eventemitter3');
+
+// // socket.io
+const { Server } = require("socket.io");
 
 module.exports = ({ strapi }) => {
   strapi.log.info('nft-engine: server: bootstrap: start');
@@ -33,37 +35,6 @@ module.exports = ({ strapi }) => {
       connection
     }
   );
-
-  // // socket.io
-  // io = io(strapi.server);
-  // const ioChannels = {};
-  // // cache ioChannels in  
-  // const key = CacheKey.ioChannels;
-
-  // io.adapter(createAdapter(connection, connection.duplicate(),
-  //   {
-  //     key: key,
-  //     publishOnSpecificResponseChannel: true
-  //   }));
-
-  // // max number of clients per channel is 10
-  // io.on('connection', (socket) => {
-  //   // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
-  //   io.on('join', (channel) => {
-  //     if (!ioChannels[channel]) {
-  //       ioChannels[channel] = {
-  //         clients: [],
-  //         maxClients: 10,
-  //       };
-  //     }
-  //     if (ioChannels[channel].clients.length < ioChannels[channel].maxClients) {
-  //       ioChannels[channel].clients.push(socket.id);
-  //       socket.join(channel);
-  //     }
-  //   });
-  // });
-
-
   // worker.on('completed', (job) => {
   //   const jobId = job.data.jobId;
   //   if (ioChannels[jobId]) {
@@ -94,9 +65,75 @@ module.exports = ({ strapi }) => {
     strapi.log.error("Redis Cache error: \n" + JSON.stringify(err));
   });
 
+
+
+  // EventEmitter
+  //   var EE = new EventEmitter()
+  //   , context = { foo: 'bar' };
+
+  // function emitted() {
+  //   console.log(this === context); // true
+  // }
+
+  // EE.once('event-name', emitted, context);
+  // EE.on('another-event', emitted, context);
+  // EE.removeListener('another-event', emitted, context);
+  // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
+
+  const eventEmitter = new EventEmitter();
+
+
+  const io = new Server(strapi.server.httpServer, {
+    cors: strapi.config.get('server.frontend_cors')
+  });
+  const ioChannels = {};
+  // cache ioChannels in  
+  const key = CacheKey.ioChannels;
+
+  io.adapter(createAdapter(connection, connection.duplicate(),
+    {
+      key: key,
+      publishOnSpecificResponseChannel: true
+    }));
+
+  // max number of clients per channel is 10
+  io.on('connection', (socket) => {
+
+    // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
+    io.on('join', (channel) => {
+      if (!ioChannels[channel]) {
+        ioChannels[channel] = {
+          clients: [],
+          maxClients: 10,
+        };
+      }
+      if (ioChannels[channel].clients.length < ioChannels[channel].maxClients) {
+        ioChannels[channel].clients.push(socket.id);
+        socket.join(channel);
+      }
+    });
+
+    eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
+      socket.to(channel).emit(topic, payload);
+    });
+    // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
+    // emit push to channel
+
+    // on disconnect
+    socket.on('disconnect', () => {
+      // remove socket id from channel
+      const index = ioChannels[socket.channel].clients.indexOf(socket.id);
+      if (index > -1) {
+        ioChannels[socket.channel].clients.splice(index, 1);
+      }
+    });
+  });
+
+
   strapi.plugin('nft-engine').bull = {
     worker,
     queue,
+    eventEmitter
   };
   strapi.plugin('nft-engine').redisCache = redisCache;
   strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);

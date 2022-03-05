@@ -13,6 +13,14 @@ module.exports = ({ env }) => ({
     '**/config-sync/files/**',
   ],
   url: env('PUBLIC_URL', 'http://localhost:1337'),
+  frontend_cors:
+  {
+    origin: env('FRONTEND_URL', 'http://localhost:3000'),
+    methods: ['GET', 'POST'],
+    // allowedHeaders: ['my-header', 'Content-Type', 'Authorization'],
+    // credentials: true
+  },
+
   stripe_success_url: env('STRIPE_SUCCESS_URL'),
   stripe_cancel_url: env('STRIPE_CANCEL_URL'),
   stripe_api_key: env('STRIPE_API_KEY'),

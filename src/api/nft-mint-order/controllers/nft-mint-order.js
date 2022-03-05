@@ -23,8 +23,18 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
 
         const nftMintOrderDB = strapi.db.query('api::nft-mint-order.nft-mint-order');
 
+
+        //  check if user has remaining balance
+        
+        
         // const userId = ctx.state.user; //TODO: change to user.id
         const userId = "1"; //TODO: change to user.id
+        const nftMintOrderController = strapi.controller('api::nft-mint-order.nft-mint-order');
+        if(_.isEmpty(nftMintOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE'))) {
+            return ctx.PaymentRequired('You have no remaining balance to mint, please purchase more packages mints');
+        }
+
+
         const {
             tikTokUrl,
             singleAddress, // send to this address (owner of the NFT), and use as royalty address if isSplitRoyaltyRate is false
