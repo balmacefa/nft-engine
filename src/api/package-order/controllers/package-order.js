@@ -89,13 +89,34 @@ const _reduceRemainMints_mod = async (strapi, userId) => {
         });
 }
 
+const _increaseRemainMints_mod = async (strapi, userId) => {
+    const entity = _getLastPackageOrderDB(strapi, userId, 'INCREASE');
+    if (_.isNull(entity)) {
+        // return th('You have no remaining balance to mint, please purchase more packages mints');
+        throw new Error('FATAL_NO_RECOVERY: You have no remaining balance to mint, please purchase more packages mints');
+    }
+    const packageOrderDB = strapi.db.query('api::package-order.package-order');
+    const { id, remainMints_mod } = entity;
+    const newRemainMints_mod = remainMints_mod + 1;
+    const update = {
+        remainMints_mod: newRemainMints_mod,
+    }
 
+    return await packageOrderDB.update(
+        {
+            where: {
+                id: id
+            },
+            data: update
+        });
+}
 
 module.exports = createCoreController('api::package-order.package-order', ({ strapi }) => ({
 
     getCountRemainMints: async (strapi, userId) => await countRemainMints_mod(strapi, userId),
     getLastPackageOrderDB: async (strapi, userId, action) => await _getLastPackageOrderDB(strapi, userId, action),
-    reduceRemainMints: async (strapi, id) => await _reduceRemainMints_mod(strapi, id),
+    reduceRemainMints: async (strapi, userId) => await _reduceRemainMints_mod(strapi, userId),
+    increaseRemainMints: async (strapi, userId) => await _increaseRemainMints_mod(strapi, userId),
     createCheckoutSession: async ctx => {
         strapi.log.info('ENTER POST /package-order/checkout-session');
         strapi.log.debug(JSON.stringify(ctx?.request?.body));

@@ -122,9 +122,11 @@ module.exports = ({ strapi }) => {
     // on disconnect
     socket.on('disconnect', () => {
       // remove socket id from channel
-      const index = ioChannels[socket.channel].clients.indexOf(socket.id);
-      if (index > -1) {
-        ioChannels[socket.channel].clients.splice(index, 1);
+      if (ioChannels[socket.channel]) {
+        const index = ioChannels[socket.channel].clients.indexOf(socket.id);
+        if (index > -1) {
+          ioChannels[socket.channel].clients.splice(index, 1);
+        }
       }
     });
   });

@@ -96,18 +96,20 @@ module.exports = ({ strapi }) => ({
     }
 
     // if is job first attempts
+    const PackageOrderController = strapi.controller('api::package-order.package-order');
+    let decLastPackageOrder = await PackageOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE')
     if (_.get(job, "attemptsMade") <= 1) {
-      // reduce one package-order payment
-      const PackageOrderController = strapi.controller('api::package-order.package-order');
-      let decreaseEntity = await PackageOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE')
-      if (_.isEmpty(decreaseEntity)) {
+      // 🤑🤑🤑 reduce one package-order payment
+      if (_.isEmpty(decLastPackageOrder)) {
         return ctx.PaymentRequired('You have no remaining balance to mint, please purchase more packages mints');
       }
       // update package-order payment
       packageOrderPayment = await PackageOrderController.reduceRemainMints(strapi, userId);
       //  add to job
       job.data.packageOrderPayment = packageOrderPayment;
-    }else{}
+    } else {
+      job.data.packageOrderPayment = decLastPackageOrder;
+    }
     // Filter
     // ................................................................
 
@@ -141,6 +143,12 @@ module.exports = ({ strapi }) => ({
     sendJobToClient(job, strapi, "mintNFTJobProgress", progress)
   },
   mintNFTJobFailed: async (job, failedReason) => {
-    sendJobToClient(job, strapi, "mintNFTJobFailed", failedReason)
+    // check if is last attempt and increase order-packages mints
+    if (_.get(job, "attemptsMade") >= _.get(job, "opts.attempts")) {
+      const PackageOrderController = strapi.controller('api::package-order.package-order');
+      await PackageOrderController.increaseRemainMints(strapi, userId);
+    }
+
+    sendJobToClient(job, strapi, "mintNFTJobFailed", failedReason);
   }
 });
