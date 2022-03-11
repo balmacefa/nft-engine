@@ -63,7 +63,7 @@ const _getLastPackageOrderDB = async (strapi, userId, action) => {
         }
     }
     const entries = await packageOrderDB.findOne(query);
-    return _get(entries, "data[0].attributes", null);
+    return _.get(entries, "data[0].attributes", null);
 }
 
 // reduce remainMints_mod by 1 to the last packageOrderDB

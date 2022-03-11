@@ -10,8 +10,9 @@ const axios = require('axios');
 
 const mintOrderSchema = require('./MintFormValidationSchema.js');
 
+
 // get lodash
-const { get: _get } = require('lodash');
+const _ = require('lodash');
 
 module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ strapi }) => ({
     createMintNFTOrder: async ctx => {
@@ -29,9 +30,10 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         
         // const userId = ctx.state.user; //TODO: change to user.id
         const userId = "1"; //TODO: change to user.id
-        const nftMintOrderController = strapi.controller('api::nft-mint-order.nft-mint-order');
-        if(_.isEmpty(nftMintOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE'))) {
-            return ctx.PaymentRequired('You have no remaining balance to mint, please purchase more packages mints');
+        const PackageOrderController = strapi.controller('api::package-order.package-order');
+
+        if(_.isEmpty(PackageOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE'))) {
+            return ctx.badRequest('You have no remaining balance to mint, please purchase more packages mints');
         }
 
 
@@ -225,11 +227,11 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
                 }
             }
         );
-        const entity = _get(result, "data[0].attributes", null);
+        const entity = _.get(result, "data[0].attributes", null);
         if (!entity) {
             return ctx.notFound(`No order found for id ${id}`);
         }
-        entity.id = _get(result, "data[0].id");
+        entity.id = _.get(result, "data[0].id");
         strapi.log.info(`EXIT GET /nft-mint-order/getMyOrder \n ${JSON.stringify(entity)}`);
         return entity;
     }

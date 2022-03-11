@@ -13,6 +13,9 @@ const EventEmitter = require('eventemitter3');
 // // socket.io
 const { Server } = require("socket.io");
 
+// lodash
+const _ = require('lodash');
+
 module.exports = ({ strapi }) => {
   strapi.log.info('nft-engine: server: bootstrap: start');
 
@@ -129,6 +132,20 @@ module.exports = ({ strapi }) => {
         }
       }
     });
+  });
+
+
+  // generic subscribe for generic handling
+  strapi.db.lifecycles.subscribe((event) => {
+    if (event?.model?.uid === 'api::package-order.package-order'){
+      const actions = ['afterCreate', 'afterUpdate', 'afterDelete'];
+      // if event.action in list
+      if (actions.includes(event.action)) {
+        const key = CacheKey.countRemainMints(_.get(event, "params.data.user"));
+        strapi.log.debug('removing cache for key: ' + key);
+        redisCache.del(key);
+      }
+    }
   });
 
 
