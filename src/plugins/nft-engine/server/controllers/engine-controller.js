@@ -51,6 +51,7 @@ module.exports = ({ strapi }) => ({
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
 
+    // ----------------------------------------------------------------
     // Utils 🥇🤖
     // ----------------------------------------------------------------
     const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
@@ -78,11 +79,12 @@ module.exports = ({ strapi }) => ({
 
       this.updateProgress(_.concat(this.progress || [], progress, concat));
     };
+    // ................................................................
     // Utils 🥇🤖
     // ................................................................
 
-    // Filter
     // ----------------------------------------------------------------
+    // Filter
     // ----------------------------------------------------------------
 
     if (_.isEmpty(_.get(job, "data.nftMintOrderEntity"))) {
@@ -110,12 +112,13 @@ module.exports = ({ strapi }) => ({
     } else {
       job.data.packageOrderPayment = decLastPackageOrder;
     }
+    // ................................................................
     // Filter
     // ................................................................
 
 
-    // 👨‍🏭⛑ Create Progress
     // ----------------------------------------------------------------
+    // 👨‍🏭⛑ Create Progress
     // ----------------------------------------------------------------
 
     const nftContractEntity = await getOrCreateContractAddress(strapi, job);
@@ -131,6 +134,7 @@ module.exports = ({ strapi }) => ({
     // mint NFT
     const mintOrderEntity = await mintTiktokNFT(nftMetadataUrl, strapi, job);
 
+    // ................................................................
     // Create Progress
     // ................................................................
 
