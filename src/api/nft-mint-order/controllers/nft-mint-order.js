@@ -31,8 +31,8 @@ module.exports = createCoreController('api::nft-mint-order.nft-mint-order', ({ s
         // const userId = ctx.state.user; //TODO: change to user.id
         const userId = "1"; //TODO: change to user.id
         const PackageOrderController = strapi.controller('api::package-order.package-order');
-
-        if(_.isEmpty(PackageOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE'))) {
+        const lastOrder = await PackageOrderController.getReducerPackageOrderDB(strapi, userId)
+        if(_.isEmpty(lastOrder)) {
             return ctx.badRequest('You have no remaining balance to mint, please purchase more packages mints');
         }
 

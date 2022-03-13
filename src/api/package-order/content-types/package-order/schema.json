@@ -47,6 +47,10 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "package_orders"
+    },
+    "lastCompleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

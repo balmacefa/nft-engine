@@ -93,51 +93,56 @@ module.exports = ({ strapi }) => {
   // cache ioChannels in  
   const key = CacheKey.ioChannels;
 
-  io.adapter(createAdapter(connection, connection.duplicate(),
-    {
-      key: key,
-      publishOnSpecificResponseChannel: true
-    }));
+  try {
 
-  // max number of clients per channel is 10
-  io.on('connection', (socket) => {
+    io.adapter(createAdapter(connection, connection.duplicate(),
+      {
+        key: key,
+        publishOnSpecificResponseChannel: true
+      }));
 
-    // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
-    io.on('join', (channel) => {
-      if (!ioChannels[channel]) {
-        ioChannels[channel] = {
-          clients: [],
-          maxClients: 10,
-        };
-      }
-      if (ioChannels[channel].clients.length < ioChannels[channel].maxClients) {
-        ioChannels[channel].clients.push(socket.id);
-        socket.join(channel);
-      }
-    });
+    // max number of clients per channel is 10
+    io.on('connection', (socket) => {
 
-    eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
-      socket.to(channel).emit(topic, payload);
-    });
-    // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
-    // emit push to channel
-
-    // on disconnect
-    socket.on('disconnect', () => {
-      // remove socket id from channel
-      if (ioChannels[socket.channel]) {
-        const index = ioChannels[socket.channel].clients.indexOf(socket.id);
-        if (index > -1) {
-          ioChannels[socket.channel].clients.splice(index, 1);
+      // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
+      io.on('join', (channel) => {
+        if (!ioChannels[channel]) {
+          ioChannels[channel] = {
+            clients: [],
+            maxClients: 10,
+          };
         }
-      }
-    });
-  });
+        if (ioChannels[channel].clients.length < ioChannels[channel].maxClients) {
+          ioChannels[channel].clients.push(socket.id);
+          socket.join(channel);
+        }
+      });
 
+      eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
+        socket.to(channel).emit(topic, payload);
+      });
+      // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
+      // emit push to channel
+
+      // on disconnect
+      socket.on('disconnect', () => {
+        // remove socket id from channel
+        if (ioChannels[socket.channel]) {
+          const index = ioChannels[socket.channel].clients.indexOf(socket.id);
+          if (index > -1) {
+            ioChannels[socket.channel].clients.splice(index, 1);
+          }
+        }
+      });
+    });
+
+  } catch (err) {
+    strapi.log.error(err);
+  }
 
   // generic subscribe for generic handling
   strapi.db.lifecycles.subscribe((event) => {
-    if (event?.model?.uid === 'api::package-order.package-order'){
+    if (event?.model?.uid === 'api::package-order.package-order') {
       const actions = ['afterCreate', 'afterUpdate', 'afterDelete'];
       // if event.action in list
       if (actions.includes(event.action)) {
@@ -151,9 +156,9 @@ module.exports = ({ strapi }) => {
 
   strapi.plugin('nft-engine').bull = {
     worker,
-    queue,
-    eventEmitter
+    queue
   };
+  strapi.plugin('nft-engine').eventEmitter = eventEmitter;
   strapi.plugin('nft-engine').redisCache = redisCache;
   strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);
 };

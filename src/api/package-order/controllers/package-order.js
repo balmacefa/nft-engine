@@ -32,90 +32,109 @@ const countRemainMints_mod = async (strapi, userId) => {
     });
 }
 
-const _getLastPackageOrderDB = async (strapi, userId, action) => {
+const _getReducerPackageOrderDB = async (strapi, userId) => {
     const packageOrderDB = strapi.db.query('api::package-order.package-order');
-    // referralAPI.findMany in FIFO order
-    // getNextReferralAPI if remainMints_mod > 0
-    // sort by createdAt: 'DESC'
-    // if remainMints_mod == 0 
     const query = {
         select: ['remainMints_mod', 'id'],
         where: {
             user: userId,
             remainMints_mod: {
+                $gt: 0,
             }
         },
         sort: [
             {
-                createdAt: 'DESC',
+                remain_mints_mod: 'DESC',
+                createdAt: 'ASC',
             },
         ],
         populate: false,
+        limit: 1,
     }
-    // ((action === 'increase') 
-    if (action === 'INCREASE') {
-        query.where.remainMints_mod = {
-            $gt: 0,
-        }
-    } else if (action === 'DECREASE') {
-        query.where.remainMints_mod = {
-            $lt: 0,
-        }
-    }
-    const entries = await packageOrderDB.findOne(query);
-    return _.get(entries, "data[0].attributes", null);
+    const entries = await packageOrderDB.findMany(query);
+    return entries[0];
 }
 
 // reduce remainMints_mod by 1 to the last packageOrderDB
-const _reduceRemainMints_mod = async (strapi, userId) => {
-    const entity = _getLastPackageOrderDB(strapi, userId, 'DECREASE');
-    if (_.isNull(entity)) {
-        // return th('You have no remaining balance to mint, please purchase more packages mints');
-        throw new Error('FATAL_NO_RECOVERY: You have no remaining balance to mint, please purchase more packages mints');
-    }
+const _reduceRemainMints_mod = async (strapi, decLastPackageOrder, userId) => {
+    // Assume that const decLastPackageOrder = _getLastUsedPackageOrderDB(strapi, userId, 'DECREASE');
+    const entity = decLastPackageOrder;
     const packageOrderDB = strapi.db.query('api::package-order.package-order');
-    const { id, remainMints_mod } = entity;
-    const newRemainMints_mod = remainMints_mod - 1;
-    const update = {
-        remainMints_mod: newRemainMints_mod,
+    if (_.isEmpty(entity)) {
+        return null;
     }
 
-    return await packageOrderDB.update(
+    const total = entity.remainMints_mod - 1;
+    const update = {
+        remainMints_mod: total,
+    }
+    if (total <= 0) { // test true
+        // check if last used package exist and change lastUsed to false
+        await packageOrderDB.update(
+            {
+                where: {
+                    lastCompleted: true,
+                    user: userId,
+                },
+                data: {
+                    lastCompleted: false,
+                }
+            });
+
+        update.lastCompleted = true;
+    }
+
+    const result = await packageOrderDB.update(
         {
             where: {
-                id: id
+                id: entity.id
             },
             data: update
         });
+
+    return result;
+}
+
+const _getLastCompletedPackageOrderDB = async (strapi, userId) => {
+    const packageOrderDB = strapi.db.query('api::package-order.package-order');
+
+    const query = {
+        select: ['remainMints_mod', 'id'],
+        where: {
+            user: userId,
+            lastCompleted: true
+        },
+        populate: false,
+    };
+    const entity = await packageOrderDB.findOne(query);
+    return entity;
 }
 
 const _increaseRemainMints_mod = async (strapi, userId) => {
-    const entity = _getLastPackageOrderDB(strapi, userId, 'INCREASE');
+    const entity = _getLastCompletedPackageOrderDB(strapi, userId);
     if (_.isNull(entity)) {
         // return th('You have no remaining balance to mint, please purchase more packages mints');
         throw new Error('FATAL_NO_RECOVERY: You have no remaining balance to mint, please purchase more packages mints');
     }
-    const packageOrderDB = strapi.db.query('api::package-order.package-order');
-    const { id, remainMints_mod } = entity;
-    const newRemainMints_mod = remainMints_mod + 1;
-    const update = {
-        remainMints_mod: newRemainMints_mod,
-    }
 
-    return await packageOrderDB.update(
+    const packageOrderDB = strapi.db.query('api::package-order.package-order');
+    const result = await packageOrderDB.update(
         {
             where: {
-                id: id
+                id: entity.id
             },
-            data: update
+            data: {
+                remainMints_mod: entity.remainMints_mod + 1,
+            }
         });
+    return result;
 }
 
 module.exports = createCoreController('api::package-order.package-order', ({ strapi }) => ({
 
     getCountRemainMints: async (strapi, userId) => await countRemainMints_mod(strapi, userId),
-    getLastPackageOrderDB: async (strapi, userId, action) => await _getLastPackageOrderDB(strapi, userId, action),
-    reduceRemainMints: async (strapi, userId) => await _reduceRemainMints_mod(strapi, userId),
+    getReducerPackageOrderDB: async (strapi, userId) => await _getReducerPackageOrderDB(strapi, userId),
+    reduceRemainMints: async (strapi, decLastPackageOrder) => await _reduceRemainMints_mod(strapi, decLastPackageOrder),
     increaseRemainMints: async (strapi, userId) => await _increaseRemainMints_mod(strapi, userId),
     createCheckoutSession: async ctx => {
         strapi.log.info('ENTER POST /package-order/checkout-session');
@@ -124,7 +143,7 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
         // log strapi
         const stripe = strapi.service('api::package-order.package-order').stripe();
 
-        // const userId = ctx.state.user; //TODO: change to user.id
+        // const userId = ctx.state.user.id; //TODO: change to user.id
         const userId = "1"; //TODO: change to user.id
 
         const {
@@ -220,20 +239,31 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
             }
 
             try {
+                const userId = session.metadata.strapi_user_id;
+
+
+                const update = {
+                    quantity: orderDetails.quantity,
+                    totalTikToks: orderDetails.quantity * 5,
+                    remainMints_mod: orderDetails.quantity * 5,
+                    stripeResponseSessionObj: session,
+                    stripeResponseListLineItemsObj: order,
+                    amount_subtotal: session.amount_subtotal / 100,
+                    amount_total: session.amount_total / 100,
+                    ...(referral) && { referral: referral.id },
+                    user: userId
+                };
+
+                const lastCompleted = await _getLastCompletedPackageOrderDB(strapi, userId);
+
+                if (!lastCompleted) {
+                    update.lastCompleted = true;
+                }
+
                 // Register the order in the database
                 const entity = await orderAPI.create(
                     {
-                        data: {
-                            quantity: orderDetails.quantity,
-                            totalTikToks: orderDetails.quantity * 5,
-                            remainMints_mod: orderDetails.quantity * 5,
-                            stripeResponseSessionObj: session,
-                            stripeResponseListLineItemsObj: order,
-                            amount_subtotal: session.amount_subtotal / 100,
-                            amount_total: session.amount_total / 100,
-                            ...(referral) && { referral: referral.id },
-                            user: session?.metadata?.strapi_user_id
-                        }
+                        data: update
                     }
                 );
                 strapi.log.info('EXIT POST /package-order/webhook/fulfill-order with: \n' + JSON.stringify(entity));

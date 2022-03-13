@@ -15,18 +15,21 @@ const sendJobToClient = async (job, strapi, topic, workerValue) => {
   // strapi.log.info('ENTER mintNFTJobCompleted');
   // info topic
   strapi.log.info(`[timestamp]:[${job.timestamp}] ${topic}: jobId: ${job.id} workerValue: ${JSON.stringify(workerValue)}`);
+  try {
 
-  const EventEmitter = strapi.plugin('nft-engine').eventEmitter;
-  EventEmitter.emit('pushToChannel', {
-    channel: job.id, topic: topic, payload: {
-      job: OmitDeep(job, pluckSelect),
-      workerValue: workerValue,
-      topic: topic
-    }
-  });
+    const EventEmitter = strapi.plugin('nft-engine').eventEmitter;
+    EventEmitter.emit('pushToChannel', {
+      channel: job.id, topic: topic, payload: {
+        job: OmitDeep(job, pluckSelect),
+        workerValue: workerValue,
+        topic: topic
+      }
+    });
+  } catch (err) {
+    strapi.log.error(`[job_timestamp]:[${job.timestamp}] topic:${topic}: jobId: ${job.id} error: ${JSON.stringify(err)}`);
+  }
 
-
-  strapi.log.info('EXIT mintNFTJobCompleted');
+  strapi.log.info(`[job_timestamp]:[${job.timestamp}] topic:${topic}: jobId: ${job.id} workerValue: ${JSON.stringify(workerValue)}`);
 };
 
 const updateNftMintOrderMetadata = async (nftMetadata, nftMetadataIPFS, strapi, job) => {
@@ -56,12 +59,13 @@ module.exports = ({ strapi }) => ({
     // ----------------------------------------------------------------
     const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
 
-    _.get(job, "data.nftMintOrderEntity") = await nftMintOrderDb.findOne({
+
+    const nftMintOrderEntity = await nftMintOrderDb.findOne({
       where: {
         id: _.get(job, "data.nftMintOrderEntity.id")
       }
     });
-
+    await job.update(_.merge(job.data, { ...nftMintOrderEntity }));
     // ----------------------------------------------------------------
     job.__proto__.pushProgress = function (progress) {
 
@@ -99,18 +103,15 @@ module.exports = ({ strapi }) => ({
 
     // if is job first attempts
     const PackageOrderController = strapi.controller('api::package-order.package-order');
-    let decLastPackageOrder = await PackageOrderController.getLastPackageOrderDB(strapi, userId, 'DECREASE')
+    const userId = job.data.userId;
+    let decLastPackageOrder = await PackageOrderController.getReducerPackageOrderDB(strapi, userId)
     if (_.get(job, "attemptsMade") <= 1) {
       // 🤑🤑🤑 reduce one package-order payment
       if (_.isEmpty(decLastPackageOrder)) {
         return ctx.PaymentRequired('You have no remaining balance to mint, please purchase more packages mints');
       }
       // update package-order payment
-      packageOrderPayment = await PackageOrderController.reduceRemainMints(strapi, userId);
-      //  add to job
-      job.data.packageOrderPayment = packageOrderPayment;
-    } else {
-      job.data.packageOrderPayment = decLastPackageOrder;
+      await PackageOrderController.reduceRemainMints(strapi, decLastPackageOrder);
     }
     // ................................................................
     // Filter
@@ -150,7 +151,7 @@ module.exports = ({ strapi }) => ({
     // check if is last attempt and increase order-packages mints
     if (_.get(job, "attemptsMade") >= _.get(job, "opts.attempts")) {
       const PackageOrderController = strapi.controller('api::package-order.package-order');
-      await PackageOrderController.increaseRemainMints(strapi, userId);
+      await PackageOrderController.increaseRemainMints(strapi);
     }
 
     sendJobToClient(job, strapi, "mintNFTJobFailed", failedReason);
