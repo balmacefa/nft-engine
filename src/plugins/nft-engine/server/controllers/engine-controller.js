@@ -46,7 +46,6 @@ const updateNftMintOrderMetadata = async (nftMetadata, nftMetadataIPFS, strapi, 
         nftMetadataIPFS
       }
     });
-  job.data.nftMintOrderEntity = mintOrderEntity;
   return mintOrderEntity;
 }
 
@@ -57,16 +56,9 @@ module.exports = ({ strapi }) => ({
     // ----------------------------------------------------------------
     // Utils 🥇🤖
     // ----------------------------------------------------------------
-    const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
-
-
-    const nftMintOrderEntity = await nftMintOrderDb.findOne({
-      where: {
-        id: _.get(job, "data.nftMintOrderEntity.id")
-      }
-    });
-    await job.update(_.merge(job.data, { ...nftMintOrderEntity }));
-    // ----------------------------------------------------------------
+    job.__proto__.updateMerge = async function (obj) {
+      await job.update(_.merge(job.data, obj));
+    };
     job.__proto__.pushProgress = function (progress) {
 
       // if progress is array _
@@ -83,6 +75,16 @@ module.exports = ({ strapi }) => ({
 
       this.updateProgress(_.concat(this.progress || [], progress, concat));
     };
+    const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
+
+
+    let nftMintOrderEntity = await nftMintOrderDb.findOne({
+      where: {
+        id: _.get(job, "data.nftMintOrderEntity.id")
+      }
+    });
+    job.updateMerge({ nftMintOrderEntity })
+    // ----------------------------------------------------------------
     // ................................................................
     // Utils 🥇🤖
     // ................................................................
@@ -91,7 +93,7 @@ module.exports = ({ strapi }) => ({
     // Filter
     // ----------------------------------------------------------------
 
-    if (_.isEmpty(_.get(job, "data.nftMintOrderEntity"))) {
+    if (_.isNil(_.get(job, "data.nftMintOrderEntity"))) {
       return throwError(`Error while getting mint order entity for ${_.get(job, "data.nftMintOrderEntity.id")}`);
     }
 
@@ -107,7 +109,7 @@ module.exports = ({ strapi }) => ({
     let decLastPackageOrder = await PackageOrderController.getReducerPackageOrderDB(strapi, userId)
     if (_.get(job, "attemptsMade") <= 1) {
       // 🤑🤑🤑 reduce one package-order payment
-      if (_.isEmpty(decLastPackageOrder)) {
+      if (_.isNil(decLastPackageOrder)) {
         return ctx.PaymentRequired('You have no remaining balance to mint, please purchase more packages mints');
       }
       // update package-order payment
@@ -122,24 +124,50 @@ module.exports = ({ strapi }) => ({
     // 👨‍🏭⛑ Create Progress
     // ----------------------------------------------------------------
 
-    const nftContractEntity = await getOrCreateContractAddress(strapi, job);
-    job.data.nftContractEntity = nftContractEntity;
-    const coverVideoIPFS = await getIpfsCoverAndVideo(strapi, job);
-    const nftMetadata = await getTiktokMetadata(coverVideoIPFS, strapi, job);
-    // upload metadata to IPFS
-    const nftMetadataUrl = await uploadTiktokMetadataToIPFS(nftMetadata, strapi, job);
+    let nftContractEntity = _.get(job, "data.nftContractEntity")
+    if (_.isNil(nftContractEntity)) {
+      nftContractEntity = await getOrCreateContractAddress(strapi, job);
+      job.updateMerge({ nftContractEntity });
+    }
 
-    // save data to show on strapi
-    await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
+    let coverVideoIPFS = _.get(job, "data.coverVideoIPFS")
+    if (_.isNil(coverVideoIPFS)) {
+      coverVideoIPFS = await getIpfsCoverAndVideo(strapi, job);
+      job.updateMerge({ coverVideoIPFS });
+    }
 
-    // mint NFT
-    const mintOrderEntity = await mintTiktokNFT(nftMetadataUrl, strapi, job);
+    let nftMetadata = _.get(job, "data.nftMetadata")
+    if (_.isNil(nftMetadata)) {
+      nftMetadata = await getTiktokMetadata(coverVideoIPFS, strapi, job);
+      job.updateMerge({ nftMetadata });
+    }
+
+    let nftMetadataUrl = _.get(job, "data.nftMetadataUrl")
+    if (_.isNil(nftMetadataUrl)) {
+      // upload metadata to IPFS
+      const nftMetadataUrl = await uploadTiktokMetadataToIPFS(nftMetadataUrl, strapi, job);
+      job.updateMerge({ nftMetadataUrl });
+    }
+
+    nftMintOrderEntity = _.get(job, "data.nftMintOrderEntity")
+    if (_.isNil(nftMintOrderEntity)) {
+      // save data to show on strapi
+      nftMintOrderEntity = await updateNftMintOrderMetadata(nftMetadata, nftMintOrderEntity, strapi, job);
+      job.updateMerge({ nftMintOrderEntity });
+    }
+
+    nftMintOrderEntity = _.get(job, "data.mintOrderEntity")
+    if (_.isNil(nftMintOrderEntity)) {
+      // mint NFT
+      nftMintOrderEntity = await mintTiktokNFT(nftMetadataUrl, strapi, job);
+      job.updateMerge({ nftMintOrderEntity });
+    }
 
     // ................................................................
     // Create Progress
     // ................................................................
 
-    return mintOrderEntity
+    return nftMintOrderEntity
   },
   mintNFTJobCompleted: async (job, returnValue) => {
     sendJobToClient(job, strapi, "mintNFTJobCompleted", returnValue)

@@ -95,34 +95,33 @@ module.exports = ({ strapi }) => {
 
   try {
 
-    io.adapter(createAdapter(connection, connection.duplicate(),
-      {
-        key: key,
-        publishOnSpecificResponseChannel: true
-      }));
+    // io.adapter(createAdapter(connection, connection.duplicate(),
+    //   {
+    //     key: key,
+    //     publishOnSpecificResponseChannel: true
+    //   }));
 
     // max number of clients per channel is 10
     io.on('connection', (socket) => {
+      socket.on('channel', function (channel) {
+        if (channel) {
+          if (!ioChannels[channel]) {
+            ioChannels[channel] = {
+              clients: [],
+              maxClients: 10,
+            };
+          }
+          if (ioChannels[channel].clients.length < ioChannels[channel].maxClients) {
+            // check if socket already
+            if (ioChannels[channel].clients.indexOf(socket.id) === -1) {
 
-      // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
-      io.on('join', (channel) => {
-        if (!ioChannels[channel]) {
-          ioChannels[channel] = {
-            clients: [],
-            maxClients: 10,
-          };
-        }
-        if (ioChannels[channel].clients.length < ioChannels[channel].maxClients) {
-          ioChannels[channel].clients.push(socket.id);
-          socket.join(channel);
+              ioChannels[channel].clients.push(socket.id);
+              socket.join(channel);
+            }
+          }
         }
       });
 
-      eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
-        socket.to(channel).emit(topic, payload);
-      });
-      // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
-      // emit push to channel
 
       // on disconnect
       socket.on('disconnect', () => {
@@ -135,6 +134,14 @@ module.exports = ({ strapi }) => {
         }
       });
     });
+    // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
+
+    eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
+      io.to(channel).emit(topic, payload);
+    });
+    // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
+    // emit push to channel
+
 
   } catch (err) {
     strapi.log.error(err);
