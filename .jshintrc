@@ -1,0 +1,11 @@
+{
+    "curly": true,
+    "eqeqeq": true,
+    "esversion": 8,
+    "plugins": ["sonarjs"],
+    "rules": {
+        "sonarjs/cognitive-complexity": "error",
+        "sonarjs/no-identical-expressions": "error"
+        // etc.
+      }
+}

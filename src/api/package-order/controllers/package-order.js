@@ -55,46 +55,6 @@ const _getReducerPackageOrderDB = async (strapi, userId) => {
     return entries[0];
 }
 
-// reduce remainMints_mod by 1 to the last packageOrderDB
-const _reduceRemainMints_mod = async (strapi, decLastPackageOrder, userId) => {
-    // Assume that const decLastPackageOrder = _getLastUsedPackageOrderDB(strapi, userId, 'DECREASE');
-    const entity = decLastPackageOrder;
-    const packageOrderDB = strapi.db.query('api::package-order.package-order');
-    if (_.isEmpty(entity)) {
-        return null;
-    }
-
-    const total = entity.remainMints_mod - 1;
-    const update = {
-        remainMints_mod: total,
-    }
-    if (total <= 0) { // test true
-        // check if last used package exist and change lastUsed to false
-        await packageOrderDB.update(
-            {
-                where: {
-                    lastCompleted: true,
-                    user: userId,
-                },
-                data: {
-                    lastCompleted: false,
-                }
-            });
-
-        update.lastCompleted = true;
-    }
-
-    const result = await packageOrderDB.update(
-        {
-            where: {
-                id: entity.id
-            },
-            data: update
-        });
-
-    return result;
-}
-
 const _getLastCompletedPackageOrderDB = async (strapi, userId) => {
     const packageOrderDB = strapi.db.query('api::package-order.package-order');
 
@@ -110,9 +70,51 @@ const _getLastCompletedPackageOrderDB = async (strapi, userId) => {
     return entity;
 }
 
+// reduce remainMints_mod by 1 to the last packageOrderDB
+const _reduceRemainMints_mod = async (strapi, decLastPackageOrder, userId) => {
+    // Assume that const decLastPackageOrder = _getLastUsedPackageOrderDB(strapi, userId, 'DECREASE');
+    const entity = decLastPackageOrder;
+    const packageOrderDB = strapi.db.query('api::package-order.package-order');
+    if (_.isEmpty(entity)) {
+        return null;
+    }
+
+    const total = entity.remainMints_mod - 1;
+    const update = {
+        remainMints_mod: total
+    }
+    if (total <= 0) { // test true
+        // check if last used package exist and change lastUsed to false
+
+        const last = await _getLastCompletedPackageOrderDB(strapi, userId);
+        const r = await packageOrderDB.update(
+            {
+                where: {
+                    id: last.id
+                },
+                data: {
+                    lastCompleted: false,
+                }
+            });
+        // This allows to increment to this package in case a refund is needed/
+        update.lastCompleted = true;
+    }
+
+    const result = await packageOrderDB.update(
+        {
+            where: {
+                id: entity.id
+            },
+            data: update
+        });
+
+    return result;
+}
+
+
 const _increaseRemainMints_mod = async (strapi, userId) => {
-    const entity = _getLastCompletedPackageOrderDB(strapi, userId);
-    if (_.isNull(entity)) {
+    const entity = await _getLastCompletedPackageOrderDB(strapi, userId);
+    if (_.isNil(entity)) {
         // return th('You have no remaining balance to mint, please purchase more packages mints');
         throw new Error('FATAL_NO_RECOVERY: You have no remaining balance to mint, please purchase more packages mints');
     }
@@ -134,7 +136,7 @@ module.exports = createCoreController('api::package-order.package-order', ({ str
 
     getCountRemainMints: async (strapi, userId) => await countRemainMints_mod(strapi, userId),
     getReducerPackageOrderDB: async (strapi, userId) => await _getReducerPackageOrderDB(strapi, userId),
-    reduceRemainMints: async (strapi, decLastPackageOrder) => await _reduceRemainMints_mod(strapi, decLastPackageOrder),
+    reduceRemainMints: async (strapi, decLastPackageOrder, userId) => await _reduceRemainMints_mod(strapi, decLastPackageOrder, userId),
     increaseRemainMints: async (strapi, userId) => await _increaseRemainMints_mod(strapi, userId),
     createCheckoutSession: async ctx => {
         strapi.log.info('ENTER POST /package-order/checkout-session');

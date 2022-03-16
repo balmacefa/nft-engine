@@ -20,7 +20,7 @@ const getOrCreateContractAddress = async (strapi, job) => {
 
     const tatumSignerId = strapi.config.get('server.tatum.signatureId');
 
-    const name = `CRIPTOK__${userId}__`;
+    const name = `CRIPTOK__${userId}`;
     const symbol = `CRIPTOK`;
 
     let contractEntity = await nftContractDB.findOne({

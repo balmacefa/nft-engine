@@ -31,31 +31,6 @@ module.exports = ({ strapi }) => {
   // this is to retry when the job fails
   const qs = new QueueScheduler(queueName, { connection });
 
-  // Create a worker
-  const worker = new Worker(queueName,
-    async (job) => await mainController.mintNFTJob(job)
-    , {
-      connection
-    }
-  );
-  // worker.on('completed', (job) => {
-  //   const jobId = job.data.jobId;
-  //   if (ioChannels[jobId]) {
-  //     ioChannels[jobId].forEach(id => {
-  //       io.to(id).emit('job-completed', job);
-  //     });
-  //   }
-  // }
-
-  worker.on('completed', (job, returnValue) => mainController.mintNFTJobCompleted(job, returnValue));
-  worker.on('progress', (job, progress) => mainController.mintNFTJobProgress(job, progress));
-  worker.on('failed', (job, failedReason) => mainController.mintNFTJobFailed(job, failedReason));
-
-  worker.on('error', err => {
-    // This is to avoid NodeJS raising an unhandled exception when an error occurs.
-    strapi.log.error("Worker error: \n" + JSON.stringify(err));
-  });
-
   // redis cache
   const redisCache = CacheManager.caching({
     store: RedisStore,
@@ -67,24 +42,6 @@ module.exports = ({ strapi }) => {
     // This is to avoid NodeJS raising an unhandled exception when an error occurs.
     strapi.log.error("Redis Cache error: \n" + JSON.stringify(err));
   });
-
-
-
-  // EventEmitter
-  //   var EE = new EventEmitter()
-  //   , context = { foo: 'bar' };
-
-  // function emitted() {
-  //   console.log(this === context); // true
-  // }
-
-  // EE.once('event-name', emitted, context);
-  // EE.on('another-event', emitted, context);
-  // EE.removeListener('another-event', emitted, context);
-  // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
-
-  const eventEmitter = new EventEmitter();
-
 
   const io = new Server(strapi.server.httpServer, {
     cors: strapi.config.get('server.frontend_cors')
@@ -136,12 +93,6 @@ module.exports = ({ strapi }) => {
     });
     // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
 
-    eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
-      io.to(channel).emit(topic, payload);
-    });
-    // emitter.emit('foo.bar', 1, 2); // 'foo.bar' 1 2
-    // emit push to channel
-
 
   } catch (err) {
     strapi.log.error(err);
@@ -161,11 +112,75 @@ module.exports = ({ strapi }) => {
   });
 
 
+  // Create a worker
+  const worker = createWorker(queueName, mainController, connection, strapi, io);
+
   strapi.plugin('nft-engine').bull = {
     worker,
     queue
   };
-  strapi.plugin('nft-engine').eventEmitter = eventEmitter;
+  // strapi.plugin('nft-engine').eventEmitter = createEvenEmitter();
   strapi.plugin('nft-engine').redisCache = redisCache;
   strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);
 };
+function createEvenEmitter(io) {
+  const eventEmitter = new EventEmitter();
+
+
+  eventEmitter.once('pushToChannel', ({ channel, topic, payload }) => {
+    io.to(channel).emit(topic, payload);
+  });
+  return eventEmitter;
+}
+
+// Example 📖📖📖
+// EventEmitter.emit('pushToChannel', {
+//   channel: job.id, topic: topic, payload: {
+//     job: OmitDeep(job, pluckSelect),
+//     workerValue: workerValue,
+//     topic: topic
+//   }
+// });
+
+function createWorker(queueName, mainController, connection, strapi, io) {
+  const worker = new Worker(queueName,
+    async (job) => await mainController.mintNFTJob(job),
+    {
+      connection
+    }
+  );
+  // worker.on('completed', (job) => {
+  //   const jobId = job.data.jobId;
+  //   if (ioChannels[jobId]) {
+  //     ioChannels[jobId].forEach(id => {
+  //       io.to(id).emit('job-completed', job);
+  //     });
+  //   }
+  // }
+  worker.on('completed', (job, returnValue) => mainController.mintNFTJobCompleted(job, returnValue, io));
+  worker.on('progress', (job, progress) => mainController.mintNFTJobProgress(job, progress, io));
+  worker.on('failed', (job, failedReason) => mainController.mintNFTJobFailed(job, failedReason, io));
+
+  worker.on('error', err => {
+
+
+    // This is to avoid NodeJS raising an unhandled exception when an error occurs.
+    // err.message = 'Missing lock for job 7073556383794318634. failed';
+    const extractJobId = err.message.match(/job (\d+)/);
+
+    if (extractJobId) {
+      try {
+        mainController.workerError(extractJobId, err, io);
+        io.to(extractJobId).emit('job-failed', err);
+      } catch (e) {
+        strapi.log.error("Worker error [extractJobId]: \n" + JSON.stringify(e));
+      }
+    }
+
+
+    strapi.log.error("Worker error: \n" + JSON.stringify(err));
+    strapi.log.error("Worker error: restarting worker ???????????????????????!!!!!!!!!!!!!!!!");
+  });
+  return worker;
+}
+
