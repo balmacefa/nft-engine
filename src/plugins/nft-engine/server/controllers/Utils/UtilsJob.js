@@ -1,5 +1,7 @@
-
 const _ = require('lodash');
+
+const getJobId = (job) => _.get(job, "data.nftMintOrderEntity.id");
+
 
 const addJobExtraFunc = (job) => {
     job.__proto__.updateMerge = async function (obj) {
@@ -25,28 +27,29 @@ const addJobExtraFunc = (job) => {
 
         this.updateProgress(copyProgress);
     };
-}
+};
+
 
 const getSaveCurrentNftMintOrderEntity = async (strapi, job) =>{
     const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
     let nftMintOrderEntity = await nftMintOrderDb.findOne({
         where: {
-            id: _.get(job, DATA_MINT_ORDER_ENTITY_ID)
+            id: getJobId(job)
         }
     });
     await job.updateMerge({ nftMintOrderEntity });
-}
+};
 
 
 const jobFilter = async (job) => {
     if (_.isNil(_.get(job, "data.nftMintOrderEntity"))) {
-        return throwError(`Error while getting mint order entity for ${_.get(job, DATA_MINT_ORDER_ENTITY_ID)}`);
+        return throwError(`Error while getting mint order entity for ${getJobId(job)}`);
     }
 
     if (_.get(job, "data.nftMintOrderEntity.status") === "minted") {
         // log and return
-        strapi.log.info(`mintNFTJob: minted already for ${_.get(job, DATA_MINT_ORDER_ENTITY_ID)}`);
-        return _.get(job, "data.nftMintOrderEntity")
+        strapi.log.info(`mintNFTJob: minted already for ${getJobId(job)}`);
+        return _.get(job, "data.nftMintOrderEntity");
     }
 
     // if is job first attempts
@@ -86,5 +89,6 @@ const jobFilter = async (job) => {
 module.exports = {
     addJobExtraFunc,
     getSaveCurrentNftMintOrderEntity,
-    jobFilter
+    jobFilter,
+    getJobId
 };

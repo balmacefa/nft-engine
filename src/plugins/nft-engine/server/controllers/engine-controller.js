@@ -12,7 +12,8 @@ const {
 const {
   addJobExtraFunc,
   getSaveCurrentNftMintOrderEntity,
-  jobFilter
+  jobFilter,
+  getJobId
 } = require('./Utils/UtilsJob.js');
 
 const { getOrCreateContractAddress } = require('./contract-address-step.js');
@@ -25,7 +26,6 @@ const {
 
 const { mintTiktokNFT } = require('./mint-nft-step.js');
 
-const DATA_MINT_ORDER_ENTITY_ID = "data.nftMintOrderEntity.id";
 // const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 
 module.exports = ({ strapi }) => ({
@@ -94,7 +94,7 @@ module.exports = ({ strapi }) => ({
   mintNFTJobFailed: async (job, failedReason, io) => {
     // check if is last attempt and increase order-packages mints
     if (_.get(job, "attemptsMade") >= _.get(job, "opts.attempts")) {
-      await handleLastAttemptFailed(_.get(job, DATA_MINT_ORDER_ENTITY_ID), strapi);
+      await handleLastAttemptFailed(getJobId(job), strapi);
     }
 
     sendJobToClient(job, strapi, "mintNFTJobFailed", failedReason, io);

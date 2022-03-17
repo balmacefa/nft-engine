@@ -3,12 +3,15 @@ const _ = require('lodash');
 // const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 const OmitDeep = require('omit-deep');
 
-const pluckSelect = ['_id', 'created_at', 'published_at', 'createdAt', '__v'];
+const pluckSelect = ['tikTokVideoMetadata', '_id', 'created_at', 'published_at', 'createdAt', '__v'];
 
 const sendJobToClient = async (job, strapi, topic, workerValue, io) => {
 
-  // strapi.log.info('ENTER mintNFTJobCompleted');
-  // info topic
+  // topics:
+  // mintNFTJobCompleted
+  // mintNFTJobProgress
+  // mintNFTJobFailed
+  
   strapi.log.info(`[timestamp]:[${job.timestamp}] ${topic}: jobId: ${job.id} workerValue: ${JSON.stringify(workerValue)}`);
   try {
 
