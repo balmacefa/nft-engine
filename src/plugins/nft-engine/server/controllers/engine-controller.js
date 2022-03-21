@@ -54,7 +54,7 @@ module.exports = ({ strapi }) => ({
     // ----------------------------------------------------------------
     // 👨‍🏭⛑ Create Progress - 
     // ----------------------------------------------------------------
-
+    job.pushProgress({ msg: 'NFT Job Started 🤖👩‍🌾' });
     let nftContractEntity = await job_prop_check_update(job, "nftContractEntity",
       async () => await getOrCreateContractAddress(strapi, job)
     );

@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 const { Queue, QueueScheduler } = require('bullmq');
 const { Worker } = require('bullmq');
 const IORedis = require('ioredis');
@@ -14,7 +15,7 @@ const EventEmitter = require('eventemitter3');
 const { Server } = require("socket.io");
 
 // lodash
-const _ = require('lodash');
+const queueName = 'mint-nft-queue';
 
 module.exports = ({ strapi }) => {
   strapi.log.info('nft-engine: server: bootstrap: start');
@@ -23,8 +24,6 @@ module.exports = ({ strapi }) => {
     .plugin('nft-engine')
     .controller('engineController');
   const config = strapi.config.get('redis.bull_mq_config');
-
-  const queueName = 'mint-nft-queue';
 
   const connection = new IORedis(config.connection)
   const queue = new Queue(queueName, { ...config.queueOptions, connection });
@@ -52,11 +51,11 @@ module.exports = ({ strapi }) => {
 
   try {
 
-    // io.adapter(createAdapter(connection, connection.duplicate(),
-    //   {
-    //     key: key,
-    //     publishOnSpecificResponseChannel: true
-    //   }));
+    io.adapter(createAdapter(connection, connection.duplicate(),
+      {
+        key: key,
+        publishOnSpecificResponseChannel: true
+      }));
 
     // max number of clients per channel is 10
     io.on('connection', (socket) => {
@@ -113,7 +112,7 @@ module.exports = ({ strapi }) => {
 
 
   // Create a worker
-  const worker = createWorker(queueName, mainController, connection, strapi, io);
+  const worker = createWorker(mainController, connection, strapi, io);
 
   strapi.plugin('nft-engine').bull = {
     worker,
@@ -123,6 +122,8 @@ module.exports = ({ strapi }) => {
   strapi.plugin('nft-engine').redisCache = redisCache;
   strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);
 };
+
+
 function createEvenEmitter(io) {
   const eventEmitter = new EventEmitter();
 
@@ -142,21 +143,15 @@ function createEvenEmitter(io) {
 //   }
 // });
 
-function createWorker(queueName, mainController, connection, strapi, io) {
+function createWorker(mainController, connection, strapi, io) {
+
   const worker = new Worker(queueName,
     async (job) => await mainController.mintNFTJob(job),
     {
       connection
     }
   );
-  // worker.on('completed', (job) => {
-  //   const jobId = job.data.jobId;
-  //   if (ioChannels[jobId]) {
-  //     ioChannels[jobId].forEach(id => {
-  //       io.to(id).emit('job-completed', job);
-  //     });
-  //   }
-  // }
+
   worker.on('completed', (job, returnValue) => mainController.mintNFTJobCompleted(job, returnValue, io));
   worker.on('progress', (job, progress) => mainController.mintNFTJobProgress(job, progress, io));
   worker.on('failed', (job, failedReason) => mainController.mintNFTJobFailed(job, failedReason, io));
