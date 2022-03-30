@@ -55,8 +55,8 @@ const getTiktokMetadata = async (coverVideoIPFS, strapi, job) => {
     )
 
     // Add Hashtag
-    attributes = _.concat(attributes,
-        hashtags?.map(({ title }) => attribute('Hashtag', title)));
+    const hashtagList = hashtags.map(({ title }) => getAttribute('Hashtag', title));
+    attributes = _.concat(attributes,hashtagList);
 
     const metadata = {
         "name": title,
@@ -94,6 +94,8 @@ const uploadTiktokMetadataToIPFS = async (nftMetadata, strapi, job) => {
                 userId
             }
         });
+
+    // update there
     return `ipfs://${ipfs.IpfsHash}`;
 }
 

@@ -11,7 +11,7 @@ const sendJobToClient = async (job, strapi, topic, workerValue, io) => {
   // mintNFTJobCompleted
   // mintNFTJobProgress
   // mintNFTJobFailed
-  
+
   strapi.log.info(`[timestamp]:[${job.timestamp}] ${topic}: jobId: ${job.id} workerValue: ${JSON.stringify(workerValue)}`);
   try {
 
@@ -22,7 +22,7 @@ const sendJobToClient = async (job, strapi, topic, workerValue, io) => {
         topic: topic
       }
     );
-    
+
   } catch (err) {
     strapi.log.error(`[job_timestamp]:[${job.timestamp}] topic:${topic}: jobId: ${job.id} error: ${JSON.stringify(err)}`);
   }
@@ -44,8 +44,10 @@ const updateNftMintOrderMetadata = async (nftMetadata, nftMetadataIPFS, strapi, 
         nftMetadataIPFS
       }
     });
+    await job.updateMerge({ nftMintOrderEntity });
+
   return nftMintOrderEntity;
-}
+};
 
 const handleLastAttemptFailed = async (jobId, strapi) => {
   // update package-order payment

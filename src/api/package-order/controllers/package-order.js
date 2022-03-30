@@ -50,7 +50,7 @@ const _getReducerPackageOrderDB = async (strapi, userId) => {
         ],
         populate: false,
         limit: 1,
-    }
+    };
     const entries = await packageOrderDB.findMany(query);
     return entries[0];
 }

@@ -52,7 +52,7 @@ module.exports = ({ strapi }) => ({
 
 
     // ----------------------------------------------------------------
-    // 👨‍🏭⛑ Create Progress - 
+    // 👨‍🏭⛑ Create Progress -
     // ----------------------------------------------------------------
     job.pushProgress({ msg: 'NFT Job Started 🤖👩‍🌾' });
     let nftContractEntity = await job_prop_check_update(job, "nftContractEntity",
@@ -63,6 +63,7 @@ module.exports = ({ strapi }) => ({
       async () => await getIpfsCoverAndVideo(strapi, job)
     );
 
+    // Metadata
     let nftMetadata = await job_prop_check_update(job, "nftMetadata",
       async () => await getTiktokMetadata(coverVideoIPFS, strapi, job)
     );
@@ -70,14 +71,10 @@ module.exports = ({ strapi }) => ({
     let nftMetadataUrl = await job_prop_check_update(job, "nftMetadataUrl",
       async () => await uploadTiktokMetadataToIPFS(nftMetadata, strapi, job)
     );
-
-    let nftMintOrderEntity = await job_prop_check_update(job, "nftMintOrderEntity",
-      async () => await updateNftMintOrderMetadata(nftMetadata, nftMintOrderEntity, strapi, job)
-    );
-
-    nftMintOrderEntity = await job_prop_check_update(job, "mintOrderEntity",
-      async () => await mintTiktokNFT(nftMetadataUrl, strapi, job)
-    );
+    let nftMintOrderEntity = await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
+    // merge nftMintOrderEntity to job
+    // Metadata
+    nftMintOrderEntity = await mintTiktokNFT(nftMetadataUrl, nftMintOrderEntity, strapi, job);
 
     // ................................................................
     // Create Progress
