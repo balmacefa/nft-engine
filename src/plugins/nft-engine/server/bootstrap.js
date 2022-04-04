@@ -14,8 +14,11 @@ const EventEmitter = require('eventemitter3');
 // // socket.io
 const { Server } = require("socket.io");
 
+const { runTatumKMSWorker } = require('./tatumkms/worker');
 // lodash
 const queueName = 'mint-nft-queue';
+
+
 
 module.exports = ({ strapi }) => {
   strapi.log.info('nft-engine: server: bootstrap: start');
@@ -29,6 +32,7 @@ module.exports = ({ strapi }) => {
   const queue = new Queue(queueName, { ...config.queueOptions, connection });
   // this is to retry when the job fails
   const qs = new QueueScheduler(queueName, { connection });
+
 
   // redis cache
   const redisCache = CacheManager.caching({
@@ -46,7 +50,7 @@ module.exports = ({ strapi }) => {
     cors: strapi.config.get('server.frontend_cors')
   });
   const ioChannels = {};
-  // cache ioChannels in  
+  // cache ioChannels in
   const key = CacheKey.ioChannels;
 
   try {
@@ -114,6 +118,8 @@ module.exports = ({ strapi }) => {
   // Create a worker
   const worker = createWorker(mainController, connection, strapi, io);
 
+  runTatumKMSWorker(strapi, connection);
+
   strapi.plugin('nft-engine').bull = {
     worker,
     queue
@@ -178,4 +184,3 @@ function createWorker(mainController, connection, strapi, io) {
   });
   return worker;
 }
-

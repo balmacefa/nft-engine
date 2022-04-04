@@ -16,6 +16,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@balmacefa/tatum-kms": "git+https://github.com/balmacefa/tatum-kms.git",
     "@newrelic/winston-enricher": "^2.1.0",
     "@socket.io/redis-adapter": "^7.1.0",
     "@strapi/plugin-i18n": "4.0.7",
@@ -56,7 +57,7 @@
     "uuid": "452a7477-5912-4dbf-935a-c83f6757af47"
   },
   "engines": {
-    "node": "14.x.x",
+    "node": "16.14.2",
     "yarn": "1.x"
   },
   "license": "MIT"
