@@ -59,6 +59,8 @@ async function runTatumKMSWorker(strapi, connection) {
       repeat: {
         every: 5000, // 5 second
       },
+      removeOnComplete: true,
+      removeOnFail: true,
       jobId: 'UNIQUE_TATUM_KMS_JOB_ID',
     },
   );
