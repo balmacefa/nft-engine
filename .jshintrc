@@ -1,7 +1,8 @@
 {
     "curly": true,
     "eqeqeq": true,
-    "esversion": 8,
+    "esversion": 11,
+    "node": true,
     "plugins": ["sonarjs"],
     "rules": {
         "sonarjs/cognitive-complexity": "error",

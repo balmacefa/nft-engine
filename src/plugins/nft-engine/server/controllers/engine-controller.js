@@ -16,15 +16,14 @@ const {
   getJobId
 } = require('./Utils/UtilsJob.js');
 
-const { getOrCreateContractAddress } = require('./contract-address-step.js');
-const { getIpfsCoverAndVideo } = require('./ipfs-cover-video-step.js');
+const { getOrCreateNFTContractAddress } = require('./contract-address-step.js');
+const { uploadJobDataIpfsFiles, uploadNftMetadataToIPFS } = require('./upload-ipfs-files-step.js');
 
 const {
-  getTiktokMetadata,
-  uploadTiktokMetadataToIPFS
+  buildNftMetadata
 } = require('./build-metadata-step.js');
 
-const { mintTiktokNFT } = require('./mint-nft-step.js');
+const { mintNFT } = require('./mint-nft-step.js');
 
 // const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 
@@ -54,27 +53,76 @@ module.exports = ({ strapi }) => ({
     // ----------------------------------------------------------------
     // 👨‍🏭⛑ Create Progress -
     // ----------------------------------------------------------------
-    job.pushProgress({ msg: 'NFT Job Started 🤖👩‍🌾' });
-    let nftContractEntity = await job_prop_check_update(job, "nftContractEntity",
-      async () => await getOrCreateContractAddress(strapi, job)
+
+
+    // see above __
+    const inputData = {
+      file: [],
+      uploadIpfsFiles: [{
+      }],
+      nftMetadata: {
+      }
+    };
+
+    const jData = {
+      nftContractAddress: {
+        user: '',
+        blockchain: '',
+        name: '',
+        symbol: '',
+        transactionId: '',
+        contractAddress: '',
+      },
+      nftMintOrder: { // is is from User input
+        sendAddress: '',
+        blockchain: 'MATIC',
+        tokenId: "id",
+        royalties: [{
+          address: "",
+          splitRoyaltyRate: 0,
+        }],
+
+
+        transactionId: null,
+        contractAddress:null,
+        status: 'pending',
+        user: 'userId',
+      },
+      uploadIpfsFiles: [{ // is is from User input
+        // fileName: '', change to index
+        filepath: '',
+        setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
+        pinataMetaData: '',
+        ipfs: '',
+      }],
+      nftMetadata: {
+        // is is from User inputData
+        // any user input data
+      },
+
+    };
+
+    job.pushProgress({ topic: 'INIT', msg: 'NFT Job Started' });
+    let nftContractAddress = await job_prop_check_update(job, "nftContractAddress",
+      async () => await getOrCreateNFTContractAddress(strapi, job)
     );
 
-    let coverVideoIPFS = await job_prop_check_update(job, "coverVideoIPFS",
-      async () => await getIpfsCoverAndVideo(strapi, job)
+    let uploadIpfsFiles = await job_prop_check_update(job, "uploadIpfsFiles",
+      async () => await uploadJobDataIpfsFiles(strapi, job)
     );
 
     // Metadata
     let nftMetadata = await job_prop_check_update(job, "nftMetadata",
-      async () => await getTiktokMetadata(coverVideoIPFS, strapi, job)
+      async () => await buildNftMetadata(uploadIpfsFiles, strapi, job)
     );
 
     let nftMetadataUrl = await job_prop_check_update(job, "nftMetadataUrl",
-      async () => await uploadTiktokMetadataToIPFS(nftMetadata, strapi, job)
+      async () => await uploadNftMetadataToIPFS(nftMetadata, strapi, job)
     );
     let nftMintOrderEntity = await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
     // merge nftMintOrderEntity to job
     // Metadata
-    nftMintOrderEntity = await mintTiktokNFT(nftMetadataUrl, nftMintOrderEntity, strapi, job);
+    nftMintOrderEntity = await mintNFT(nftMetadataUrl, nftMintOrderEntity, nftContractAddress, strapi, job);
 
     // ................................................................
     // Create Progress
@@ -83,10 +131,10 @@ module.exports = ({ strapi }) => ({
     return nftMintOrderEntity;
   },
   mintNFTJobCompleted: async (job, returnValue, io) => {
-    sendJobToClient(job, strapi, "mintNFTJobCompleted", returnValue, io)
+    sendJobToClient(job, strapi, "mintNFTJobCompleted", returnValue, io);
   },
   mintNFTJobProgress: async (job, progress, io) => {
-    sendJobToClient(job, strapi, "mintNFTJobProgress", progress, io)
+    sendJobToClient(job, strapi, "mintNFTJobProgress", progress, io);
   },
   mintNFTJobFailed: async (job, failedReason, io) => {
     // check if is last attempt and increase order-packages mints
