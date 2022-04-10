@@ -24,10 +24,12 @@ const {
 } = require('./build-metadata-step.js');
 
 const { mintNFT } = require('./mint-nft-step.js');
+const { createNewOrderJob } = require('./Utils/UtilsNFTOrder.js');
 
 // const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 
 module.exports = ({ strapi }) => ({
+  createJob: createNewOrderJob,
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
 
@@ -56,13 +58,6 @@ module.exports = ({ strapi }) => ({
 
 
     // see above __
-    const inputData = {
-      file: [],
-      uploadIpfsFiles: [{
-      }],
-      nftMetadata: {
-      }
-    };
 
     const jData = {
       nftContractAddress: {
@@ -82,9 +77,9 @@ module.exports = ({ strapi }) => ({
           splitRoyaltyRate: 0,
         }],
 
-
+        // This is added by the system
         transactionId: null,
-        contractAddress:null,
+        contractAddress: null,
         status: 'pending',
         user: 'userId',
       },
@@ -95,8 +90,7 @@ module.exports = ({ strapi }) => ({
         pinataMetaData: '',
         ipfs: '',
       }],
-      nftMetadata: {
-        // is is from User inputData
+      nftMetadata: { // is is from User inputData
         // any user input data
       },
 

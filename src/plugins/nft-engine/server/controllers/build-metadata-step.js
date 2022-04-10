@@ -8,7 +8,6 @@ const pinataService = require('./services/pinataService');
 
 const buildNftMetadata = async (uploadIpfsFiles, strapi, job) => {
   // uploadIpfsFiles = [{
-  //   fileName: '',
   //   filepath: '',
   //   setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
   //   pinataMetaData: '',

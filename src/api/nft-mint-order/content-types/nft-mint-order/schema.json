@@ -25,26 +25,20 @@
         "ONE"
       ]
     },
-    "tikTokVideoId": {
-      "type": "string",
-      "unique": true
+    "collectionName": {
+      "type": "string"
     },
-    "extraMessage": {
+    "tokenId": {
       "type": "string"
     },
     "royalties": {
       "type": "json",
-      "sampleData": {
-        "isSplitRoyaltyRate": false,
-        "singleAddress": "0x0000",
-        "royaltyRate": 0.1,
-        "splitAddress  -> * isSplitRoyaltyRate === true": [
-          {
-            "address": "0x0000",
-            "splitRoyaltyRate": 0.1
-          }
-        ]
-      }
+      "sampleData": [
+        {
+          "address": "0x0000",
+          "splitRoyaltyRate": 0.1
+        }
+      ]
     },
     "nftMetadata": {
       "type": "json"

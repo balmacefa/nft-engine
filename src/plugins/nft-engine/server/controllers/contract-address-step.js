@@ -92,7 +92,7 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
 
   if (!contractEntity.transactionId) {
     // to be sure the contract is being signed:
-    let txId = undefined;
+    let txId;
     const initTime = Date.now();
     // Wait max of 30 min for the transaction to be signed
     const maxTime = strapi.config.get('server.retryLoop.maxWaitTimeLoop');

@@ -16,7 +16,7 @@ module.exports = {
   controllers,
   routes,
   // services,
+  policies:{},
+  middlewares:{},
   contentTypes: {},
-  policies: {},
-  middlewares: {},
 };
