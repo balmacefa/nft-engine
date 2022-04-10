@@ -7,28 +7,23 @@ const _ = require('lodash');
  */
 
 module.exports = (config, { strapi }) => {
+
+  const proxySecret = strapi.config.get('server.rapidapi.proxySecret');
   // Add your own logic here.
   return async (ctx, next) => {
     strapi.log.info('In rapidapi middleware.');
-    // get headers from koa ctx
-    // const headers = _.pick(ctx.request.headers, [
-    //   'X-RapidAPI-Proxy-Secret',
-    //   'X-RapidAPI-User',
-    //   'X-RapidAPI-Subscription',
-    //   'X-RapidAPI-Version',
-    //   'X-Forwarded-For'
-    // ]);
+
     const headers = {
-      proxySecret: _.get(ctx.request.headers, 'X-RapidAPI-Proxy-Secret'),
-      user: _.get(ctx.request.headers, 'X-RapidAPI-User'),
-      subscription: _.get(ctx.request.headers, 'X-RapidAPI-Subscription'),
-      version: _.get(ctx.request.headers, 'X-RapidAPI-Version'),
-      forwardedFor: _.get(ctx.request.headers, 'X-RapidAPI-For'),
+      proxySecret: _.get(ctx.request.headers, 'x-rapidapi-proxy-secret'),
+      user: _.get(ctx.request.headers, 'x-rapidapi-user'),
+      subscription: _.get(ctx.request.headers, 'x-rapidapi-subscription'),
+      version: _.get(ctx.request.headers, 'x-rapidapi-version'),
+      forwardedFor: _.get(ctx.request.headers, 'x-rapidapi-for'),
     };
 
-    if (strapi.config.get('server.rapidapi.proxySecret') === headers.proxySecret) {
+    if (headers.proxySecret && proxySecret === headers.proxySecret) {
       ctx.state.rapidApi = headers;
-      ctx.state.rapidApi.user = _.get(headers, 'X-RapidAPI-User');
+      ctx.state.rapidApi.user = _.get(headers, 'x-rapidapi-user');
       await next();
     }
   };

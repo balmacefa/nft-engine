@@ -29,7 +29,7 @@ const { createNewOrderJob } = require('./Utils/UtilsNFTOrder.js');
 // const ORDERS = require('./../../../../api/nft-mint-order/controllers/nft-mint-order');
 
 module.exports = ({ strapi }) => ({
-  createJob: createNewOrderJob,
+  createJob: async ctx => createNewOrderJob(strapi, ctx),
   mintNFTJob: async job => {
     strapi.log.info('ENTER mintNFTJob');
 

@@ -40,7 +40,7 @@ const compileIpfsFiles = async (ctx, strapi, uploadIpfsFiles) => {
 
 
 };
-const createNewOrderJob = async (ctx, strapi) => {
+const createNewOrderJob = async (strapi, ctx) => {
 
   strapi.log.info('ENTER POST /nft-mint-order/createMintNFTOrder');
   const nftMintOrderDB = strapi.db.query('api::nft-mint-order.nft-mint-order');
@@ -69,10 +69,18 @@ const createNewOrderJob = async (ctx, strapi) => {
       // user: 'userId',
     },
     uploadIpfsFiles: user__uploadIpfsFiles,
+    //   uploadIpfsFiles = [
+    //   //   {
+    //   //   filepath, // This is address when the file is store temp
+    //   //   setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
+    //   //   pinataMetaData,
+    //   //   ipfs,
+    //   // }
+    // ],
     nftMetadata
   } = ctx.request.body;
 
-  const compiledIpfsFiles = await compileIpfsFiles(ctx, strapi, user__uploadIpfsFiles);
+  const compiledIpfsFiles = await compileIpfsFiles(strapi, ctx, user__uploadIpfsFiles);
   let entity;
   try {
     entity = await nftMintOrderDB.findOne({
@@ -166,7 +174,7 @@ const createNewOrderJob = async (ctx, strapi) => {
   return entity;
 };
 
-const getListByUser = async (ctx, strapi) => {
+const getListByUser = async (strapi, ctx) => {
   strapi.log.info('ENTER GET /nft-mint-order/getListByUser');
 
   const nftMintOrderController = strapi.controller('api::nft-mint-order.nft-mint-order');

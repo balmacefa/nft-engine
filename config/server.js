@@ -76,5 +76,8 @@ module.exports = ({ env }) => ({
   retryLoop: {
     maxWaitTimeLoop: env.int('RETRY_LOOP_MAX_WAIT_TIME', 5000),
     sleepWaitTimeLoop: env.int('RETRY_LOOP_SLEEP_WAIT_TIME', 1000),
+  },
+  rapidapi:{
+    proxySecret: env('X_RAPID_API_PROXY_SECRET')
   }
 });
