@@ -9,7 +9,7 @@ const pinataService = require('./services/pinataService');
 const buildNftMetadata = async (uploadIpfsFiles, strapi, job) => {
   // uploadIpfsFiles = [{
   //   filepath: '',
-  //   setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
+  //   setMetadataPath: '_.set(nftMetadata, this.setMetadataPath, this.ipfs);',
   //   pinataMetaData: '',
   //   ipfs: '',
   // }]
@@ -19,9 +19,9 @@ const buildNftMetadata = async (uploadIpfsFiles, strapi, job) => {
 
   // loop through uploadIpfsFiles
   // and set the metadata
-  //  _.set(nftMetadata, uploadIpfsFilesItem.setMetaDataPath, uploadIpfsFilesItem.ipfs);
+  //  _.set(nftMetadata, uploadIpfsFilesItem.setMetadataPath, uploadIpfsFilesItem.ipfs);
   for (let fileData of uploadIpfsFiles) {
-    _.set(nftMetadata, fileData.setMetaDataPath, fileData.ipfs);
+    _.set(nftMetadata, fileData.setMetadataPath, fileData.ipfs);
   }
 
   job.pushProgress({ msg: 'NFT metadata: Built' });

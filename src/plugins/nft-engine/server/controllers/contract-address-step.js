@@ -10,7 +10,6 @@ const Sleep = require('await-sleep');
 
 const getOrCreateNFTContractAddress = async (strapi, job) => {
 
-  // TODO: STRUCTURE
   const {
     user,
     blockchain,
@@ -18,7 +17,7 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
     symbol
     // transactionId: null, This Identify the tatum queue order id
     // contractAddress:null, This the blockchain contract address resolved
-  } = job.data.nftContractAddress; // this is return as a success job result for update the job
+  } = job.data.nftMintOrder; // this is return as a success job result for update the job
   // const name = `CRIPTOK__${userId}`;
   // const symbol = `CRIPTOK`;
 

@@ -28,6 +28,9 @@
     "collectionName": {
       "type": "string"
     },
+    "symbol": {
+      "type": "string"
+    },
     "tokenId": {
       "type": "string"
     },
@@ -40,7 +43,13 @@
         }
       ]
     },
+    "rapidApiRequestHeaders": {
+      "type": "json"
+    },
     "nftMetadata": {
+      "type": "json"
+    },
+    "uploadIpfsFiles": {
       "type": "json"
     },
     "nftMetadataIPFS": {
@@ -61,9 +70,7 @@
       "type": "string"
     },
     "user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
+      "type": "string"
     }
   }
 }

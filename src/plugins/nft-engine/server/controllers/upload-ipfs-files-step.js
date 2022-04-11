@@ -25,7 +25,7 @@ const uploadFile = (fileData, strapi, job) =>
     // fileData = {
     //   fileName,
     //   filepath,
-    //   setMetaDataPath,
+    //   setMetadataPath,
     //   pinataMetaData
     // }
 
@@ -90,11 +90,11 @@ const uploadJobDataIpfsFiles = async (strapi, job) => {
 
 
   // Koa ctx.request.files
-  const uploadIpfsList = job.data.uploadIpfsFiles;
+  const uploadIpfsList = job.data.nftMintOrder.uploadIpfsFiles;
   //   [{
   //   fileName,
   //   filepath,
-  //   setMetaDataPath,
+  //   setMetadataPath,
   //   pinataMetaData,
   //   ipfs
   // }]

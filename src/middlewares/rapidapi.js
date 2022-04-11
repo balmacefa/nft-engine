@@ -23,7 +23,6 @@ module.exports = (config, { strapi }) => {
 
     if (headers.proxySecret && proxySecret === headers.proxySecret) {
       ctx.state.rapidApi = headers;
-      ctx.state.rapidApi.user = _.get(headers, 'x-rapidapi-user');
       await next();
     }
   };

@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "uploadIpfsFiles": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "base64data": {
+              "type": "string"
+            },
+            "setMetadataPath": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "base64data",
+            "setMetadataPath"
+          ]
+        }
+      ],
+      "additionalItems": true
+    },
+    "nftMintOrder": {
+      "type": "object",
+      "properties": {
+        "sendAddress": {
+          "type": "string"
+        },
+        "blockchain": {
+          "type": "string"
+        },
+        "tokenId": {
+          "type": "string"
+        },
+        "collectionName": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "royalties": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "splitRoyaltyRate": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "address",
+                "splitRoyaltyRate"
+              ]
+            }
+          ],
+          "additionalItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "sendAddress",
+        "blockchain",
+        "tokenId",
+        "collectionName",
+        "symbol"
+      ]
+    },
+    "nftMetadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "nftMintOrder",
+    "nftMetadata"
+  ]
+}

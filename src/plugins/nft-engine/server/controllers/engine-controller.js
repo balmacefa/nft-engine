@@ -56,46 +56,6 @@ module.exports = ({ strapi }) => ({
     // 👨‍🏭⛑ Create Progress -
     // ----------------------------------------------------------------
 
-
-    // see above __
-
-    const jData = {
-      nftContractAddress: {
-        user: '',
-        blockchain: '',
-        name: '',
-        symbol: '',
-        transactionId: '',
-        contractAddress: '',
-      },
-      nftMintOrder: { // is is from User input
-        sendAddress: '',
-        blockchain: 'MATIC',
-        tokenId: "id",
-        royalties: [{
-          address: "",
-          splitRoyaltyRate: 0,
-        }],
-
-        // This is added by the system
-        transactionId: null,
-        contractAddress: null,
-        status: 'pending',
-        user: 'userId',
-      },
-      uploadIpfsFiles: [{ // is is from User input
-        // fileName: '', change to index
-        filepath: '',
-        setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
-        pinataMetaData: '',
-        ipfs: '',
-      }],
-      nftMetadata: { // is is from User inputData
-        // any user input data
-      },
-
-    };
-
     job.pushProgress({ topic: 'INIT', msg: 'NFT Job Started' });
     let nftContractAddress = await job_prop_check_update(job, "nftContractAddress",
       async () => await getOrCreateNFTContractAddress(strapi, job)

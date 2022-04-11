@@ -15,29 +15,36 @@ const _ = require('lodash');
  *
  */
 
-const compileIpfsFiles = async (ctx, strapi, uploadIpfsFiles) => {
-  //   uploadIpfsFiles = [
-  //   //   {
-  //   //   filepath, // This is address when the file is store temp
-  //   //   setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
-  //   //   pinataMetaData,
-  //   //   ipfs,
-  //   // }
-  // ],
-  const uploader = strapi.service('plugin::upload.upload');
-  await uploader.upload(ctx);
+const processRapidAPiPayload = (ctx) => {
+  try {
 
-  let img;
-  for (let i = 0; i < ctx.body.length; i++) {
-    try {
-      img = ctx.body[0];
-      // img.url;
+    let {
+      nftMintOrder,
+      uploadIpfsFiles,
+      nftMetadata
+    } = ctx.request.body;
 
-    } catch (error) {
-      strapi.log.debug('Error loading files', JSON.stringify(error));
+    if (_.isString(nftMintOrder)) {
+      nftMintOrder = JSON.parse(nftMintOrder);
     }
-  }
 
+    if (_.isString(uploadIpfsFiles)) {
+      uploadIpfsFiles = JSON.parse(uploadIpfsFiles);
+    }
+
+    if (_.isString(nftMetadata)) {
+      nftMetadata = JSON.parse(nftMetadata);
+    }
+
+    return {
+      nftMintOrder,
+      uploadIpfsFiles,
+      nftMetadata
+    };
+
+  } catch (error) {
+    ctx.badRequest(`Error while parsing request body \n ${error.message}`);
+  }
 
 };
 const createNewOrderJob = async (strapi, ctx) => {
@@ -46,41 +53,20 @@ const createNewOrderJob = async (strapi, ctx) => {
   const nftMintOrderDB = strapi.db.query('api::nft-mint-order.nft-mint-order');
 
   const userId = ctx.state.rapidApi.user;
-
   const {
-    nftMintOrder: { // is is from User input
+    nftMintOrder: {
       sendAddress,
       blockchain,
       tokenId,
       collectionName,
       symbol,
       royalties,
-      // [
-      //   // {
-      //   //   address: "",
-      //   //   splitRoyaltyRate: 0,
-      //   // }
-      // ],
-
-      // This is added by the system
-      // transactionId: null,
-      // contractAddress: null,
-      // status: 'pending',
-      // user: 'userId',
     },
-    uploadIpfsFiles: user__uploadIpfsFiles,
-    //   uploadIpfsFiles = [
-    //   //   {
-    //   //   filepath, // This is address when the file is store temp
-    //   //   setMetaDataPath: '_.set(nftMetadata, this.setMetaDataPath, this.ipfs);',
-    //   //   pinataMetaData,
-    //   //   ipfs,
-    //   // }
-    // ],
+    uploadIpfsFiles,
     nftMetadata
-  } = ctx.request.body;
+  } = processRapidAPiPayload(ctx);
 
-  const compiledIpfsFiles = await compileIpfsFiles(strapi, ctx, user__uploadIpfsFiles);
+
   let entity;
   try {
     entity = await nftMintOrderDB.findOne({
@@ -102,11 +88,16 @@ const createNewOrderJob = async (strapi, ctx) => {
             tokenId,
             royalties,
             nftMetadata,
+            uploadIpfsFiles,
+            symbol,
+            status: 'pending',
+            user: userId,
+            rapidApiRequestHeaders: ctx.state.rapidApi
             // This is added by the system later
             // transactionId: null,
             // contractAddress:null,
-            status: 'pending',
-            user: userId,
+            // nftMetadataIPFS: null,
+            // signatureId: null,
           }
         }
       );
@@ -119,15 +110,7 @@ const createNewOrderJob = async (strapi, ctx) => {
 
   try {
     const jobData = {
-      nftMintOrderEntity: entity,
-      nftContractAddress: {
-        user: userId,
-        blockchain,
-        name: collectionName,
-        symbol
-      },
-      uploadIpfsFiles: compiledIpfsFiles,
-      userId
+      nftMintOrderEntity: entity
     };
 
     // const jobId = user: userId,
