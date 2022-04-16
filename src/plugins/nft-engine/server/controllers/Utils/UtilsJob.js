@@ -32,9 +32,10 @@ const addJobExtraFunc = (job) => {
 
 const getSaveCurrentNftMintOrderEntity = async (strapi, job) => {
   const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
+  const jobId = getJobId(job);
   let nftMintOrderEntity = await nftMintOrderDb.findOne({
     where: {
-      id: getJobId(job)
+      id: jobId
     }
   });
   await job.updateMerge({ nftMintOrderEntity });
@@ -53,38 +54,6 @@ const jobFilter = async (job) => {
     return nftMintOrderEntity;
   }
 
-  // if is job first attempts
-  const PackageOrderController = strapi.controller('api::package-order.package-order');
-  const userId = job.data.userId;
-
-  // check status to
-  if (_.get(job, "data.nftMintOrderEntity.status") === "pending") {
-    let decLastPackageOrder = await PackageOrderController.getReducerPackageOrderDB(strapi, userId)
-    // 🤑🤑🤑 reduce one package-order payment
-    if (_.isNil(decLastPackageOrder)) {
-      // return ctx.PaymentRequired('You have no remaining balance to mint, please purchase more packages mints');
-      // ThrowError
-      return throwError(`You have no remaining balance to mint, please purchase more packages mints`);
-    }
-    // update package-order payment
-    const result = await PackageOrderController.reduceRemainMints(strapi, decLastPackageOrder, userId);
-    if (result) {
-      const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
-      nftMintOrderEntity = await nftMintOrderDb.update(
-        {
-          where: {
-            id: nftMintOrderEntity.id
-          },
-          data: {
-            status: 'charged'
-          }
-        });
-      await job.updateMerge({ nftMintOrderEntity });
-    } else {
-      // ThrowError
-      return throwError(`You have no remaining balance to mint, please purchase more packages mints`);
-    }
-  }
 };
 
 

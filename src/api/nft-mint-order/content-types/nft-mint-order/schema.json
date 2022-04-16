@@ -28,6 +28,9 @@
     "collectionName": {
       "type": "string"
     },
+    "name": {
+      "type": "string"
+    },
     "symbol": {
       "type": "string"
     },

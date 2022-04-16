@@ -2,32 +2,22 @@
 
 const pinataService = require('./services/pinataService');
 
-// axios
-const axios = require('axios');
-
-// require lodash
 const _ = require('lodash');
 const fs = require('fs');
 const Temp = require('temp');
 const Sleep = require('await-sleep');
-const { promisify } = require('util');
-const stream = require('stream');
 const { v4: uuidv4 } = require('uuid');
 
-
-// const { createFFmpeg, fetchFile } = require('@ffmpeg/ffmpeg');
-// const ffmpeg = createFFmpeg({ log: true });
-// https://ffmpegwasm.netlify.app/#demo
 
 const uploadFile = (fileData, strapi, job) =>
   new Promise(async (resolve) => {
 
-    // fileData = {
-    //   fileName,
-    //   filepath,
-    //   setMetadataPath,
-    //   pinataMetaData
+    // {
+    //    base64data: 'datadas',
+    //    setMetadataPath: 'image_url'
     // }
+
+    const nftMintOrderEntityId = job?.data?.nftMintOrderEntity?.id;
 
     let response;
 
@@ -46,57 +36,49 @@ const uploadFile = (fileData, strapi, job) =>
         if (await pinataService.unPinIpfs(strapi, data.IpfsHash)) {
           // removed from pinata, retry
           // pus update
-          job.pushProgress({ topic: 'IPFS', msg: `FileName: ${fileData.fileName} - Hash: ${data.IpfsHash} Unpinned from pinata, retry upload` });
+          job.pushProgress({ topic: 'IPFS', msg: `Hash: ${data.IpfsHash} Unpinned from pinata, retry upload` });
           data.Unpin = false;
           data.IpfsHash = undefined;
         } else {
           // error
-          throw new Error(`IPFS media: Pinata error Uploading file: ${fileData.fileName}`);
+          throw new Error(`IPFS media: Pinata error Uploading file`);
         }
       }
 
       // _________________________________________
       // _________________________________________
-      job.pushProgress({ topic: 'IPFS', msg: `FileName: ${fileData.fileName} - Uploading to IPFS` });
-      data = await pinataService.pinFileToIPFS(strapi, fileData.filepath,
+      job.pushProgress({ topic: 'IPFS', msg: `Uploading to IPFS` });
+      data = await pinataService.pinBase64ToIPFS(strapi, fileData.base64data,
         {
-          name: fileData.fileName,
           keyvalues: {
-            ...fileData?.pinataMetaData,
-          }
+            jobId: job.id,
+            nftMintOrderEntityId
+          },
+          ...fileData?.pinataMetaData,
         });
       // _________________________________________
       // _________________________________________
       if (data?.Unpin) {
         await Sleep(strapi.config.get('server.retryLoop.sleepWaitTimeLoop'));
       } else if (data?.IpfsHash) {
-        job.pushProgress({ topic: 'IPFS', msg: `FileName: ${fileData.fileName} - Hash: ${data.IpfsHash} Uploaded to IPFS` });
+        job.pushProgress({ topic: 'IPFS', msg: `Hash: ${data.IpfsHash} Uploaded to IPFS` });
         fileData.ipfs = `ipfs://${data.IpfsHash}`;
         response = fileData;
       }
     }
     if (response === undefined) {
-      job.pushProgress({ topic: 'IPFS', msg: `Error: Timeout: IPFS media: failed to upload file: ${fileData.fileName}` });
+      job.pushProgress({ topic: 'IPFS', msg: `Error: Timeout: IPFS media: failed to upload file` });
       throw new Error("Error: Timeout: IPFS media: failed to upload cover image");
     }
     resolve(response);
   });
 
 const uploadJobDataIpfsFiles = async (strapi, job) => {
-  // return {
-  //     "image": `ipfs://sdlafksdj`, // cover
-  //     "animation_url": `ipfs://oifdpoasiudf`,
-  // }
-
-
   // Koa ctx.request.files
-  const uploadIpfsList = job.data.nftMintOrder.uploadIpfsFiles;
+  const uploadIpfsList = job.data.nftMintOrderEntity.uploadIpfsFiles;
   //   [{
-  //   fileName,
-  //   filepath,
-  //   setMetadataPath,
-  //   pinataMetaData,
-  //   ipfs
+  //   base64data,
+  //   setMetadataPath
   // }]
 
   // loop over files
@@ -127,16 +109,12 @@ const uploadJobDataIpfsFiles = async (strapi, job) => {
 
 const uploadNftMetadataToIPFS = async (nftMetadata, strapi, job) => {
   job.pushProgress({ msg: 'NFT metadata: Uploading metadata to IPFS' });
-  const { path } = Temp.openSync({
-    prefix: `nftMetadata_`,
-    suffix: `.json`
-  });
 
-  // save nftMedata to path
-  fs.writeFileSync(path, JSON.stringify(nftMetadata), 'utf8');
+  // convert nftMetadata json to base64
+  const nftMetadataBase64 = Buffer.from(JSON.stringify(nftMetadata)).toString('base64');
+
   const result = await uploadFile({
-    fileName: `${uuidv4()}_nftMetadata.json`,
-    filepath: path,
+    base64data: nftMetadataBase64
   }, strapi, job);
 
   return result.ipfs;

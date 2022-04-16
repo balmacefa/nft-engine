@@ -1,17 +1,17 @@
-
 {
-  "uploadIpfsFiles":[
+  "uploadIpfsFiles": [
     {
       "base64data": "datadas",
       "setMetadataPath": "image_url"
     }
   ],
-  "nftMintOrder":{
+  "nftMintOrder": {
     "sendAddress": "0x222",
     "blockchain": "MATIC",
     "tokenId": "0001",
     "collectionName": "collection__01",
     "symbol": "SYMBOL_01",
+    "name": "SYMBOL_01",
     "royalties": [
       {
         "address": "0x1111",
@@ -19,13 +19,9 @@
       }
     ]
   },
-
   "nftMetadata": {
     "name": "name",
     "description": "description",
     "image_url": "image_url"
   }
-
 }
-
-

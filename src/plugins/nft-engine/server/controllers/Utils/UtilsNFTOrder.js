@@ -59,6 +59,7 @@ const createNewOrderJob = async (strapi, ctx) => {
       blockchain,
       tokenId,
       collectionName,
+      name,
       symbol,
       royalties,
     },
@@ -90,6 +91,7 @@ const createNewOrderJob = async (strapi, ctx) => {
             nftMetadata,
             uploadIpfsFiles,
             symbol,
+            name,
             status: 'pending',
             user: userId,
             rapidApiRequestHeaders: ctx.state.rapidApi
