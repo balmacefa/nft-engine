@@ -3,10 +3,7 @@
 const pinataService = require('./services/pinataService');
 
 const _ = require('lodash');
-const fs = require('fs');
-const Temp = require('temp');
 const Sleep = require('await-sleep');
-const { v4: uuidv4 } = require('uuid');
 
 
 const uploadFile = (fileData, strapi, job) =>
