@@ -25,7 +25,7 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
   const nftContractDB = strapi.db.query('api::nft-contract.nft-contract');
 
   // This needs to change per blockchain --- NOT MATIC ONLY
-  const tatumSignerId = strapi.config.get('server.tatum.signatureId');
+  const tatumSignerId = tatumService.getTatumSignerId(strapi, job);
 
   const tatum_use_test_net = _.get(job, 'data.tatum_use_test_net', true);
 
@@ -127,7 +127,7 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
   }
 
   if (!contractEntity.contractAddress) {
-    const { contractAddress } = await tatumService.getNFTContractAddress(strapi, contractEntity.transactionId);
+    const { contractAddress } = await tatumService.getNFTContractAddress(strapi, contractEntity.blockchain, contractEntity.transactionId);
 
     contractEntity = await nftContractDB.update(
       {

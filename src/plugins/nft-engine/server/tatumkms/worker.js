@@ -22,7 +22,7 @@ async function runTatumKMSWorker(strapi, connection) {
   const path = Path.resolve(__dirname, `db/wallet${tatum_use_test_net ? '_test' : '_prod'}.dat`);
 
   const pwd = strapi.config.get('server.tatum.TATUM_KMS_PASSWORD');
-  const chains = ["MATIC"];
+  const chains = strapi.config.get('server.tatum.blockchains.list');
 
   const axiosInstance = axios.create({
     httpAgent: new http.Agent({ keepAlive: true }),
@@ -33,9 +33,7 @@ async function runTatumKMSWorker(strapi, connection) {
     async (job) => {
       // Call Tatum and tick transactions
       // TODO: review this, to include testnet and production
-      strapi.log.info(`RUNNING processSignatures ---------- JOB`);
       await processSignatures(pwd, tatum_use_test_net, axiosInstance, path, chains);
-      strapi.log.info(`EXIT processSignatures ---------- JOB`);
       return true;
     },
     {

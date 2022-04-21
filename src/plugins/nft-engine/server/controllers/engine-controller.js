@@ -5,7 +5,7 @@ const _ = require('lodash');
 const {
   sendJobToClient,
   updateNftMintOrderMetadata,
-  handleLastAttemptFailed,
+  // handleLastAttemptFailed,
   job_prop_check_update
 } = require('./Utils/UtilsEngineController.js');
 
@@ -13,7 +13,7 @@ const {
   addJobExtraFunc,
   getSaveCurrentNftMintOrderEntity,
   jobFilter,
-  getJobId
+  // getJobId
 } = require('./Utils/UtilsJob.js');
 
 const { getOrCreateNFTContractAddress } = require('./contract-address-step.js');
@@ -70,10 +70,6 @@ module.exports = ({ strapi }) => ({
       async () => await buildNftMetadata(uploadIpfsFiles, strapi, job)
     );
 
-    // Throw generic error for testing purpose
-    throw new Error('Generic Error');
-
-
     let nftMetadataUrl = await job_prop_check_update(job, "nftMetadataUrl",
       async () => await uploadNftMetadataToIPFS(nftMetadata, strapi, job)
     );
@@ -88,7 +84,6 @@ module.exports = ({ strapi }) => ({
     // ................................................................
     // Create Progress
     // ................................................................
-    delete nftMintOrderEntity.uploadIpfsFiles;
     return nftMintOrderEntity;
   },
   mintNFTJobCompleted: async (job, returnValue, io) => {
@@ -104,7 +99,7 @@ module.exports = ({ strapi }) => ({
       sendJobToClient(job, strapi, "unrecoverableFatalError", failedReason);
       return;
     }
-    
+
     sendJobToClient(job, strapi, "failed", failedReason);
   },
   workerError: async (jobId, err, io) => {

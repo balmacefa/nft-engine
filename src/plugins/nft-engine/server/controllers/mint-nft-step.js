@@ -11,7 +11,7 @@ const mintNFT = async (nftMetadataUrl, nftMintOrderEntity, nftContractAddress, s
   // Docs: https://docs.tatum.io/guides/blockchain/how-to-create-royalty-nfts-with-percentage-cashback-and-provenance-data#minting-a-new-unique-erc-721-token
 
   const nftMintOrderDb = strapi.db.query('api::nft-mint-order.nft-mint-order');
-  const signatureId = strapi.config.get('server.tatum.signatureId');
+  const signatureId = tatumService.getTatumSignerId(strapi, job);
 
   const body = {
 
@@ -37,7 +37,7 @@ const mintNFT = async (nftMetadataUrl, nftMintOrderEntity, nftContractAddress, s
       (address) => String(address.address)));
 
     cashbackValues = _.concat(cashbackValues, _.map(nftMintOrderEntity.royalties,
-      (address) => String(address.splitRoyaltyRate)));
+      (address) => String(address.splitRoyaltyRate * 100)));
 
     // if address.fixedValues is not empty, then add fixed values to fixedValues array otherwise add 0
     fixedValues = _.concat(fixedValues, _.map(nftMintOrderEntity.royalties,

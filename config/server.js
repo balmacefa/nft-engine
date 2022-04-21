@@ -64,7 +64,43 @@ module.exports = ({ env }) => ({
     }
   },
   tatum: {
-    signatureId: env('TATUM_SIGNATURE_ID'),
+    // This need to be per blockchain
+    blockchains: {
+      list: [
+        "BSC",
+        "MATIC",
+        "CELO",
+        "ONE"
+      ],
+      mainnet: {
+        "BSC": {
+          signatureId: env('TATUM_SIGNATURE_ID__MAINNET__BSC'),
+        },
+        "MATIC": {
+          signatureId: env('TATUM_SIGNATURE_ID__MAINNET__MATIC'),
+        },
+        "CELO": {
+          signatureId: env('TATUM_SIGNATURE_ID__MAINNET__CELO'),
+        },
+        "ONE": {
+          signatureId: env('TATUM_SIGNATURE_ID__MAINNET__ONE'),
+        }
+      },
+      testnet: {
+        "BSC": {
+          signatureId: env('TATUM_SIGNATURE_ID__TESTNET__BSC'),
+        },
+        "MATIC": {
+          signatureId: env('TATUM_SIGNATURE_ID__TESTNET__MATIC'),
+        },
+        "CELO": {
+          signatureId: env('TATUM_SIGNATURE_ID__TESTNET__CELO'),
+        },
+        "ONE": {
+          signatureId: env('TATUM_SIGNATURE_ID__TESTNET__ONE'),
+        },
+      }
+    },
     fixedRoyalty: {
       amount: env.float('TATUM_FIXED_ROYALTY_AMOUNT'),
       walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS'),
@@ -77,7 +113,7 @@ module.exports = ({ env }) => ({
     maxWaitTimeLoop: env.int('RETRY_LOOP_MAX_WAIT_TIME', 5000),
     sleepWaitTimeLoop: env.int('RETRY_LOOP_SLEEP_WAIT_TIME', 1000),
   },
-  rapidapi:{
+  rapidapi: {
     proxySecret: env('X_RAPID_API_PROXY_SECRET')
   }
 });
