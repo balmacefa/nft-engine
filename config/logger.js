@@ -5,7 +5,7 @@ const {
     formats: { prettyPrint, levelFilter },
 } = require('@strapi/logger');
 
-const Sentry = require('winston-sentry');
+// const Sentry = require('winston-sentry');
 const tracer = require('winston-tracer');
 
 module.exports = ({ env }) => ({
@@ -19,12 +19,12 @@ module.exports = ({ env }) => ({
                 prettyPrint({ timestamps: 'YYYY-MM-DD hh:mm:ss.SSS' }),
             ),
         }),
-        new Sentry({
-            level: 'http',
-            dsn: env('SENTRY_DSN', null),
-            tags: { key: 'value' },
-            // extra: { key: 'value' }
-        }),
+        // new Sentry({
+        //     level: 'http',
+        //     dsn: env('SENTRY_DSN', null),
+        //     tags: { key: 'value' },
+        //     // extra: { key: 'value' }
+        // }),
 
         new (tracer.winston.transports.Console)({
             level: 'http', // that is important to let winston know about tracing tag

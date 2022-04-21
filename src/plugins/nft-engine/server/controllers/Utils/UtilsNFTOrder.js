@@ -59,7 +59,6 @@ const createNewOrderJob = async (strapi, ctx) => {
       blockchain,
       tokenId,
       collectionName,
-      name,
       symbol,
       royalties,
     },
@@ -91,7 +90,6 @@ const createNewOrderJob = async (strapi, ctx) => {
             nftMetadata,
             uploadIpfsFiles,
             symbol,
-            name,
             status: 'pending',
             user: userId,
             rapidApiRequestHeaders: ctx.state.rapidApi
@@ -108,6 +106,11 @@ const createNewOrderJob = async (strapi, ctx) => {
     strapi.log.error(`ERROR: \n ${err.message}`);
     strapi.log.error(JSON.stringify(err));
     return ctx.badRequest(`Error while creating mint order`);
+  }
+
+  if(entity.status === 'minted'){
+    strapi.log.info(`NFT mint order already minted`);
+    return ctx.badRequest(`NFT mint order already minted`);
   }
 
   try {

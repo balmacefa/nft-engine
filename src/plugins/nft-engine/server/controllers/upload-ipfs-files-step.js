@@ -29,7 +29,7 @@ const uploadFile = (fileData, strapi, job) =>
     const maxTime = strapi.config.get('server.retryLoop.maxWaitTimeLoop');
     while (response === undefined && Date.now() - initTime < maxTime) {
 
-      if (data.Unpin && data.IpfsHash) {
+      if (data?.Unpin && data?.IpfsHash) {
         if (await pinataService.unPinIpfs(strapi, data.IpfsHash)) {
           // removed from pinata, retry
           // pus update

@@ -13,7 +13,7 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
   const {
     user,
     blockchain,
-    name,// Search by name
+    collectionName,// Search by name
     symbol
     // transactionId: null, This Identify the tatum queue order id
     // contractAddress:null, This the blockchain contract address resolved
@@ -32,7 +32,8 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
     where: {
       user,
       blockchain,
-      name
+      collectionName,
+      symbol
     }
   });
 
@@ -40,12 +41,12 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
     contractEntity = await controllerAPI.create(
       {
         data: {
-          name,
-          symbol,
+          user,
           blockchain,
+          collectionName,
+          symbol,
           // transactionId: null, This Identify the tatum queue order id
           // contractAddress:null, This the blockchain contract address resolved
-          user,
         }
       }
     );
@@ -59,7 +60,7 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
     // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
     const response = await tatumService.deployNFT(strapi,
       {
-        name,
+        name: collectionName,
         chain: blockchain,
         symbol,
         provenance: true,

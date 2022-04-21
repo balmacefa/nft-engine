@@ -39,9 +39,6 @@
         "collectionName": {
           "type": "string"
         },
-        "name": {
-          "type": "string"
-        },
         "symbol": {
           "type": "string"
         },
@@ -55,7 +52,10 @@
                   "type": "string"
                 },
                 "splitRoyaltyRate": {
-                  "type": "integer"
+                  "type": "number"
+                },
+                "fixedValue": {
+                  "type": "number"
                 }
               },
               "additionalProperties": false,
@@ -74,7 +74,6 @@
         "blockchain",
         "tokenId",
         "collectionName",
-        "name",
         "symbol"
       ]
     },

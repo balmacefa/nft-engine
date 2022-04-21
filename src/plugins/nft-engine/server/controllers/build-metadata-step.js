@@ -12,7 +12,7 @@ const buildNftMetadata = async (uploadIpfsFiles, strapi, job) => {
   // }]
   job.pushProgress({ msg: 'NFT metadata: Building' });
 
-  let nftMetadata = job.data.nftMetadata;
+  let nftMetadata = _.get(job.data, 'nftMintOrderEntity.nftMetadata', {});
 
   // loop through uploadIpfsFiles
   // and set the metadata

@@ -4,14 +4,22 @@ const { getAxiosInstance } = require('./baseService');
 const fs = require('fs');
 
 const FormData = require('form-data');
+const Temp = require('temp');
+
 
 const pinFormDataToIPFS = async (strapi, form, originalFileSize) => {
 
   const formHeaders = form.getHeaders();
   // .pinFromFS(path);
-  const { data } = await getAxiosInstance(strapi.config.get('server.pinata_axios_instance'), {
+  const response = await getAxiosInstance(strapi.config.get('server.pinata_axios_instance'), {
     requestInterceptorError: (error) => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
+      strapi.log.error(error);
+
+      if (error.response?.status === 400) {
+        // 400 Bad Request - The request was unacceptable, often due to base64 encoding
+        throw new Error(`IPFS media: Pinata error Uploading file 400 Bad Request base64 encoding`);
+      }
       return {
         Unpin: true,
         IpfsHash: undefined,
@@ -23,6 +31,7 @@ const pinFormDataToIPFS = async (strapi, form, originalFileSize) => {
       headers: formHeaders
     }
   );
+  const data = response?.data;
   //   {
   //     IpfsHash: This is the IPFS multi-hash provided back for your content,
   //     PinSize: This is how large (in bytes) the content you just pinned is,
@@ -56,9 +65,16 @@ const pinFileToIPFS = async (strapi, path, metadata) => {
 module.exports = {
   pinBase64ToIPFS: async (strapi, base64, metadata) => {
     const form = new FormData();
-    const base64Buffer = Buffer.from(base64, "base64");
 
-    form.append('file', base64Buffer);
+    const { path } = Temp.openSync({
+      prefix: 'pinata_upload_',
+    });
+
+    const base64Buffer = Buffer.from(base64, "base64");
+    // save base64 data into a temporary file
+    fs.writeFileSync(path, base64Buffer);
+
+    form.append('file', fs.createReadStream(path));
     form.append('pinataMetadata', JSON.stringify(metadata));
 
     // The size of the file in bytes.

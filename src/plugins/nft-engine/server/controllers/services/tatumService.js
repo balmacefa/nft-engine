@@ -4,8 +4,8 @@ const { getAxiosInstance } = require('./baseService');
 module.exports = {
   mintNFTWithUri: async (strapi, body) => {
     const tatumAxiosInstance = (strapi) => getAxiosInstance(strapi.config.get('server.tatum_axios_instance'));
-    const { data } = await tatumAxiosInstance(strapi).post('/v3/nft/mint', body);
-    return data;
+    const response = await tatumAxiosInstance(strapi).post('/v3/nft/mint', body);
+    return response.data;
   },
   deployNFT: async (strapi, body) => {
     const tatumAxiosInstance = (strapi) => getAxiosInstance(strapi.config.get('server.tatum_axios_instance'));
