@@ -21,7 +21,8 @@ const processRapidAPiPayload = (ctx) => {
     let {
       nftMintOrder,
       uploadIpfsFiles,
-      nftMetadata
+      nftMetadata,
+      webhooks
     } = ctx.request.body;
 
     if (_.isString(nftMintOrder)) {
@@ -35,11 +36,15 @@ const processRapidAPiPayload = (ctx) => {
     if (_.isString(nftMetadata)) {
       nftMetadata = JSON.parse(nftMetadata);
     }
+    if (_.isString(webhooks)) {
+      webhooks = JSON.parse(webhooks);
+    }
 
     return {
       nftMintOrder,
       uploadIpfsFiles,
-      nftMetadata
+      nftMetadata,
+      webhooks
     };
 
   } catch (error) {
@@ -63,7 +68,8 @@ const createNewOrderJob = async (strapi, ctx) => {
       royalties,
     },
     uploadIpfsFiles,
-    nftMetadata
+    nftMetadata,
+    webhooks
   } = processRapidAPiPayload(ctx);
 
 
@@ -79,6 +85,7 @@ const createNewOrderJob = async (strapi, ctx) => {
     });
 
     if (!entity) {
+      const rapidApiRequestHeaders = _.omit(ctx.state.rapidApi.headers, ['x-rapidapi-proxy-secret']);
       entity = await nftMintOrderDB.create(
         {
           data: {
@@ -92,7 +99,7 @@ const createNewOrderJob = async (strapi, ctx) => {
             symbol,
             status: 'pending',
             user: userId,
-            rapidApiRequestHeaders: ctx.state.rapidApi
+            rapidApiRequestHeaders
             // This is added by the system later
             // transactionId: null,
             // contractAddress:null,
@@ -114,8 +121,13 @@ const createNewOrderJob = async (strapi, ctx) => {
   }
 
   try {
+    // TODO: REVIEW THIS, TO CHANGE TEST NET OR PRODUCTION
+    const tatum_use_test_net = strapi.config.get('server.tatum.TATUM_USE_TEST_NET');
+
     const jobData = {
-      nftMintOrderEntity: entity
+      nftMintOrderEntity: entity,
+      webhooks,
+      tatum_use_test_net
     };
 
     // const jobId = user: userId,

@@ -70,9 +70,16 @@ module.exports = ({ strapi }) => ({
       async () => await buildNftMetadata(uploadIpfsFiles, strapi, job)
     );
 
+    // Throw generic error for testing purpose
+    throw new Error('Generic Error');
+
+
     let nftMetadataUrl = await job_prop_check_update(job, "nftMetadataUrl",
       async () => await uploadNftMetadataToIPFS(nftMetadata, strapi, job)
     );
+
+    // At this point we have all the data we need to mint the NFT
+    // and uploadIpfsFiles is no longer needed, so we can remove it
     let nftMintOrderEntity = await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
     // merge nftMintOrderEntity to job
     // Metadata
@@ -81,26 +88,29 @@ module.exports = ({ strapi }) => ({
     // ................................................................
     // Create Progress
     // ................................................................
-
+    delete nftMintOrderEntity.uploadIpfsFiles;
     return nftMintOrderEntity;
   },
   mintNFTJobCompleted: async (job, returnValue, io) => {
-    sendJobToClient(job, strapi, "mintNFTJobCompleted", returnValue, io);
+    sendJobToClient(job, strapi, "completed", returnValue);
   },
   mintNFTJobProgress: async (job, progress, io) => {
-    sendJobToClient(job, strapi, "mintNFTJobProgress", progress, io);
+    sendJobToClient(job, strapi, "progress", progress);
   },
   mintNFTJobFailed: async (job, failedReason, io) => {
     // check if is last attempt and increase order-packages mints
     if (_.get(job, "attemptsMade") >= _.get(job, "opts.attempts")) {
-      await handleLastAttemptFailed(getJobId(job), strapi);
+      failedReason.message = `Failed to mint NFT id ${job.id} :: after ${_.get(job, "attemptsMade")} attempts; see job.stacktrace logs for more details`;
+      sendJobToClient(job, strapi, "unrecoverableFatalError", failedReason);
+      return;
     }
-
-    sendJobToClient(job, strapi, "mintNFTJobFailed", failedReason, io);
+    
+    sendJobToClient(job, strapi, "failed", failedReason);
   },
   workerError: async (jobId, err, io) => {
-    await handleLastAttemptFailed(jobId, strapi);
-    // sendJobToClient(job, strapi, "workerError", io);
+    strapi.log.error(`WorkerError: ${jobId}`);
+    strapi.log.error(JSON.stringify(err));
+    // sendJobToClient(job, strapi, "workerError");
   }
 
 });

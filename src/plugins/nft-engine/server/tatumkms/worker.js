@@ -32,6 +32,7 @@ async function runTatumKMSWorker(strapi, connection) {
   const worker = new Worker(queueNameRepeatable,
     async (job) => {
       // Call Tatum and tick transactions
+      // TODO: review this, to include testnet and production
       strapi.log.info(`RUNNING processSignatures ---------- JOB`);
       await processSignatures(pwd, tatum_use_test_net, axiosInstance, path, chains);
       strapi.log.info(`EXIT processSignatures ---------- JOB`);

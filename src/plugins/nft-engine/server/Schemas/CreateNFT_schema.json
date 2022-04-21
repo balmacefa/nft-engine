@@ -34,7 +34,8 @@
           "type": "string"
         },
         "tokenId": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[0-9]{1,32}$"
         },
         "collectionName": {
           "type": "string"
@@ -80,6 +81,27 @@
     "nftMetadata": {
       "type": "object",
       "additionalProperties": true
+    },
+    "webhooks":{
+      "type": "object",
+      "properties": {
+        "completed": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "unrecoverableFatalError": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "completed"
+      ]
     }
   },
   "additionalProperties": false,

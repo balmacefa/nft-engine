@@ -1,0 +1,206 @@
+{
+  "job": {
+    "data": {
+      "nftMintOrderEntity": {
+        "id": 19,
+        "sendAddress": "0xf2B5B9E978Ee841c2b1507a09Aa715D19F0D76fc",
+        "blockchain": "MATIC",
+        "collectionName": "collection__012",
+        "symbol": "SYMBOL_01",
+        "tokenId": "9",
+        "royalties": [
+          {
+            "address": "0x1837F49559fC820f28C1C239aDF53854dba570Ba",
+            "splitRoyaltyRate": 10
+          }
+        ],
+        "nftMetadata": {
+          "name": "name",
+          "description": "description",
+          "image_url": {
+            "a": "ipfs://QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW"
+          }
+        },
+        "nftMetadataIPFS": "ipfs://Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP",
+        "transactionId": null,
+        "signatureId": null,
+        "contractAddress": null,
+        "status": "pending",
+        "user": "balmacefa",
+        "createdAt": "2022-04-21T21:19:46.159Z",
+        "updatedAt": "2022-04-21T21:20:27.302Z"
+      },
+      "nftContractAddress": {
+        "id": 5,
+        "symbol": "SYMBOL_01",
+        "blockchain": "MATIC",
+        "transactionId": "0xd9b605987942edc696706b9ccd3079d430e5f76f706b44f5075506a6600d35aa",
+        "signatureId": "625f59f6300c44b6ff9bcdfc",
+        "contractAddress": "0x50754DE4930A604E9ed38BE7926326F91bFA435e",
+        "useTestNet": null,
+        "createdAt": "2022-04-20T00:55:17.945Z",
+        "updatedAt": "2022-04-20T01:02:36.406Z",
+        "publishedAt": "2022-04-20T00:55:17.940Z",
+        "user": "balmacefa",
+        "collectionName": "collection__012"
+      },
+      "nftMetadata": {
+        "name": "name",
+        "description": "description",
+        "image_url": {
+          "a": "ipfs://QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW"
+        }
+      },
+      "nftMetadataUrl": "ipfs://Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP"
+    },
+    "opts": {
+      "attempts": 10,
+      "delay": 0,
+      "backoff": {
+        "delay": 1000,
+        "type": "fixed"
+      },
+      "jobId": "balmacefa____collection__012____SYMBOL_01____9"
+    },
+    "id": "balmacefa____collection__012____SYMBOL_01____9",
+    "progress": [
+      {
+        "topic": "INIT",
+        "msg": "NFT Job Started",
+        "timestamp": "2022-04-21T21:19:46.192Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "Uploading to IPFS",
+        "timestamp": "2022-04-21T21:19:54.243Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "Hash: QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW Uploaded to IPFS",
+        "timestamp": "2022-04-21T21:20:01.138Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "IPFS: Uploaded to IPFS",
+        "timestamp": "2022-04-21T21:20:01.140Z"
+      },
+      {
+        "msg": "NFT metadata: Building",
+        "timestamp": "2022-04-21T21:20:10.891Z"
+      },
+      {
+        "msg": "NFT metadata: Built",
+        "timestamp": "2022-04-21T21:20:10.891Z"
+      },
+      {
+        "msg": "NFT metadata: Uploading metadata to IPFS",
+        "timestamp": "2022-04-21T21:20:10.914Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "Uploading to IPFS",
+        "timestamp": "2022-04-21T21:20:10.914Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "Hash: Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP Uploaded to IPFS",
+        "timestamp": "2022-04-21T21:20:27.265Z"
+      },
+      {
+        "msg": "Mint NFT: Init",
+        "timestamp": "2022-04-21T21:20:27.400Z"
+      },
+      {
+        "msg": "Mint NFT: Queued",
+        "timestamp": "2022-04-21T21:20:29.796Z"
+      },
+      {
+        "msg": "Mint NFT: Waiting for blockchain confirmation",
+        "timestamp": "2022-04-21T21:20:29.796Z",
+        "count": 1,
+        "updatedAt": "2022-04-21T21:20:42.838Z"
+      },
+      {
+        "msg": "Mint NFT: NFT contract created",
+        "timestamp": "2022-04-21T21:20:44.492Z"
+      },
+      {
+        "msg": "Mint NFT: Address -> 0xd9a9ff4ae26c6d10b921a79cdfd424e90f758ced694a39a5550423e89e6a4060",
+        "data": "0xd9a9ff4ae26c6d10b921a79cdfd424e90f758ced694a39a5550423e89e6a4060",
+        "timestamp": "2022-04-21T21:20:44.492Z"
+      }
+    ],
+    "stacktrace": [],
+    "attemptsMade": 1,
+    "timestamp": 1650575986178,
+    "processedOn": 1650575986180
+  },
+  "workerValue": [
+    {
+      "topic": "INIT",
+      "msg": "NFT Job Started",
+      "timestamp": "2022-04-21T21:19:46.192Z"
+    },
+    {
+      "topic": "IPFS",
+      "msg": "Uploading to IPFS",
+      "timestamp": "2022-04-21T21:19:54.243Z"
+    },
+    {
+      "topic": "IPFS",
+      "msg": "Hash: QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW Uploaded to IPFS",
+      "timestamp": "2022-04-21T21:20:01.138Z"
+    },
+    {
+      "topic": "IPFS",
+      "msg": "IPFS: Uploaded to IPFS",
+      "timestamp": "2022-04-21T21:20:01.140Z"
+    },
+    {
+      "msg": "NFT metadata: Building",
+      "timestamp": "2022-04-21T21:20:10.891Z"
+    },
+    {
+      "msg": "NFT metadata: Built",
+      "timestamp": "2022-04-21T21:20:10.891Z"
+    },
+    {
+      "msg": "NFT metadata: Uploading metadata to IPFS",
+      "timestamp": "2022-04-21T21:20:10.914Z"
+    },
+    {
+      "topic": "IPFS",
+      "msg": "Uploading to IPFS",
+      "timestamp": "2022-04-21T21:20:10.914Z"
+    },
+    {
+      "topic": "IPFS",
+      "msg": "Hash: Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP Uploaded to IPFS",
+      "timestamp": "2022-04-21T21:20:27.265Z"
+    },
+    {
+      "msg": "Mint NFT: Init",
+      "timestamp": "2022-04-21T21:20:27.400Z"
+    },
+    {
+      "msg": "Mint NFT: Queued",
+      "timestamp": "2022-04-21T21:20:29.796Z"
+    },
+    {
+      "msg": "Mint NFT: Waiting for blockchain confirmation",
+      "timestamp": "2022-04-21T21:20:29.796Z",
+      "count": 1,
+      "updatedAt": "2022-04-21T21:20:42.838Z"
+    },
+    {
+      "msg": "Mint NFT: NFT contract created",
+      "timestamp": "2022-04-21T21:20:44.492Z"
+    },
+    {
+      "msg": "Mint NFT: Address -> 0xd9a9ff4ae26c6d10b921a79cdfd424e90f758ced694a39a5550423e89e6a4060",
+      "data": "0xd9a9ff4ae26c6d10b921a79cdfd424e90f758ced694a39a5550423e89e6a4060",
+      "timestamp": "2022-04-21T21:20:44.492Z"
+    }
+  ],
+  "topic": "progress"
+}

@@ -1,0 +1,122 @@
+{
+  "job": {
+    "data": {
+      "nftMintOrderEntity": {
+        "id": 21,
+        "sendAddress": "0xf2B5B9E978Ee841c2b1507a09Aa715D19F0D76fc",
+        "blockchain": "MATIC",
+        "collectionName": "collection__012",
+        "symbol": "SYMBOL_01",
+        "tokenId": "11",
+        "royalties": [
+          {
+            "address": "0x1837F49559fC820f28C1C239aDF53854dba570Ba",
+            "splitRoyaltyRate": 10
+          }
+        ],
+        "nftMetadata": {
+          "name": "name",
+          "description": "description",
+          "image_url": "image_url"
+        },
+        "nftMetadataIPFS": null,
+        "transactionId": null,
+        "signatureId": null,
+        "contractAddress": null,
+        "status": "pending",
+        "user": "balmacefa",
+        "createdAt": "2022-04-21T21:50:14.166Z",
+        "updatedAt": "2022-04-21T21:50:14.166Z"
+      },
+      "tatum_use_test_net": true,
+      "nftContractAddress": {
+        "id": 6,
+        "symbol": "SYMBOL_01",
+        "blockchain": "MATIC",
+        "transactionId": "0xbd631a33d1e35d939fc196f0fbc3ce0788d513d58a3fee82557a0185dfebd2cd",
+        "signatureId": "6261d0a515522efe39154296",
+        "contractAddress": "0x62d76B3089B3Cb775A8ab3684B7D84B0F6CE914d",
+        "useTestNet": true,
+        "createdAt": "2022-04-21T21:46:12.175Z",
+        "updatedAt": "2022-04-21T21:46:32.275Z",
+        "publishedAt": "2022-04-21T21:46:12.169Z",
+        "user": "balmacefa",
+        "collectionName": "collection__012"
+      },
+      "nftMetadata": {
+        "name": "name",
+        "description": "description",
+        "image_url": {
+          "a": "ipfs://QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW"
+        }
+      }
+    },
+    "opts": {
+      "attempts": 10,
+      "delay": 0,
+      "backoff": {
+        "delay": 1000,
+        "type": "fixed"
+      },
+      "jobId": "balmacefa____collection__012____SYMBOL_01____11"
+    },
+    "id": "balmacefa____collection__012____SYMBOL_01____11",
+    "progress": [
+      {
+        "topic": "INIT",
+        "msg": "NFT Job Started",
+        "timestamp": "2022-04-21T21:50:14.197Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "Uploading to IPFS",
+        "timestamp": "2022-04-21T21:50:14.212Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "Hash: QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW Uploaded to IPFS",
+        "timestamp": "2022-04-21T21:50:30.638Z"
+      },
+      {
+        "topic": "IPFS",
+        "msg": "IPFS: Uploaded to IPFS",
+        "timestamp": "2022-04-21T21:50:30.639Z"
+      },
+      {
+        "msg": "NFT metadata: Building",
+        "timestamp": "2022-04-21T21:50:30.669Z"
+      },
+      {
+        "msg": "NFT metadata: Built",
+        "timestamp": "2022-04-21T21:50:30.669Z"
+      },
+      {
+        "topic": "INIT",
+        "msg": "NFT Job Started",
+        "timestamp": "2022-04-21T21:50:31.726Z",
+        "count": 7,
+        "updatedAt": "2022-04-21T21:50:39.453Z"
+      }
+    ],
+    "stacktrace": [
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+      "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)"
+    ],
+    "attemptsMade": 9,
+    "timestamp": 1650577814184,
+    "processedOn": 1650577839445,
+    "failedReason": "Generic Error"
+  },
+  "workerValue": {
+    "stack": "Error: Generic Error\n    at Object.mintNFTJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/controllers/engine-controller.js:74:11)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Worker.connection.connection [as processFn] (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/src/plugins/nft-engine/server/bootstrap.js:159:20)\n    at async Worker.processJob (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:335:28)\n    at async Worker.retryIfFailed (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:457:24)\n    at async Worker.run (/home/balmacefa/Documents/blockchain/Criptok/nft_api_backend/node_modules/bullmq/dist/cjs/classes/worker.js:141:46)",
+    "message": "Generic Error"
+  },
+  "topic": "failed"
+}

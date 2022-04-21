@@ -28,7 +28,7 @@ module.exports = ({ strapi }) => {
     .controller('engineController');
   const config = strapi.config.get('redis.bull_mq_config');
 
-  const connection = new IORedis(config.connection)
+  const connection = new IORedis(config.connection);
   const queue = new Queue(queueName, { ...config.queueOptions, connection });
   // this is to retry when the job fails
   const qs = new QueueScheduler(queueName, { connection });
@@ -46,6 +46,39 @@ module.exports = ({ strapi }) => {
     strapi.log.error("Redis Cache error: \n" + JSON.stringify(err));
   });
 
+  // const io = socketIoServer(strapi, connection);
+  const io = null;
+
+  // generic subscribe for generic handling
+  strapi.db.lifecycles.subscribe((event) => {
+    if (event?.model?.uid === 'api::package-order.package-order') {
+      const actions = ['afterCreate', 'afterUpdate', 'afterDelete'];
+      // if event.action in list
+      if (actions.includes(event.action)) {
+        const key = CacheKey.countRemainMints(_.get(event, "params.data.user"));
+        strapi.log.debug('removing cache for key: ' + key);
+        redisCache.del(key);
+      }
+    }
+  });
+
+
+  // Create a worker
+  const worker = createWorker(mainController, connection, strapi, io);
+
+  runTatumKMSWorker(strapi, connection);
+
+  strapi.plugin('nft-engine').bull = {
+    worker,
+    queue
+  };
+  // strapi.plugin('nft-engine').eventEmitter = createEvenEmitter();
+  strapi.plugin('nft-engine').redisCache = redisCache;
+  strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);
+};
+
+
+function socketIoServer(strapi, connection) {
   const io = new Server(strapi.server.httpServer, {
     cors: strapi.config.get('server.frontend_cors')
   });
@@ -95,40 +128,11 @@ module.exports = ({ strapi }) => {
       });
     });
     // https://github.com/socketio/socket.io-redis-adapter#with-ioredishttpsgithubcomluinioredis-client
-
-
   } catch (err) {
     strapi.log.error(err);
   }
-
-  // generic subscribe for generic handling
-  strapi.db.lifecycles.subscribe((event) => {
-    if (event?.model?.uid === 'api::package-order.package-order') {
-      const actions = ['afterCreate', 'afterUpdate', 'afterDelete'];
-      // if event.action in list
-      if (actions.includes(event.action)) {
-        const key = CacheKey.countRemainMints(_.get(event, "params.data.user"));
-        strapi.log.debug('removing cache for key: ' + key);
-        redisCache.del(key);
-      }
-    }
-  });
-
-
-  // Create a worker
-  const worker = createWorker(mainController, connection, strapi, io);
-
-  runTatumKMSWorker(strapi, connection);
-
-  strapi.plugin('nft-engine').bull = {
-    worker,
-    queue
-  };
-  // strapi.plugin('nft-engine').eventEmitter = createEvenEmitter();
-  strapi.plugin('nft-engine').redisCache = redisCache;
-  strapi.plugin('nft-engine').redisCacheDelKey = (key) => redisCache.del(key);
-};
-
+  return io;
+}
 
 function createEvenEmitter(io) {
   const eventEmitter = new EventEmitter();
