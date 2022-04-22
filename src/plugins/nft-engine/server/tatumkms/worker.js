@@ -19,9 +19,17 @@ async function runTatumKMSWorker(strapi, connection) {
 
 
   const tatum_use_test_net = strapi.config.get('server.tatum.TATUM_USE_TEST_NET');
-  const path = Path.resolve(__dirname, `db/wallet${tatum_use_test_net ? '_test' : '_prod'}.dat`);
 
-  const pwd = strapi.config.get('server.tatum.TATUM_KMS_PASSWORD');
+  const testNetData = {
+    path: Path.resolve(__dirname, `db/wallet_test.dat`),
+    pwd: strapi.config.get('server.tatum.TATUM_KMS_PASSWORD_TEST')
+  };
+
+  const mainNetData = {
+    path: Path.resolve(__dirname, `db/wallet_prod.dat`),
+    pwd: strapi.config.get('server.tatum.TATUM_KMS_PASSWORD_PROD')
+  };
+
   const chains = strapi.config.get('server.tatum.blockchains.list');
 
   const axiosInstance = axios.create({
@@ -32,8 +40,11 @@ async function runTatumKMSWorker(strapi, connection) {
   const worker = new Worker(queueNameRepeatable,
     async (job) => {
       // Call Tatum and tick transactions
-      // TODO: review this, to include testnet and production
-      await processSignatures(pwd, tatum_use_test_net, axiosInstance, path, chains);
+      let config = testNetData;
+      if (job.data.tatum_use_test_net === false) {
+        config = mainNetData;
+      }
+      await processSignatures(config.pwd, tatum_use_test_net, axiosInstance, config.path, chains);
       return true;
     },
     {
@@ -50,21 +61,38 @@ async function runTatumKMSWorker(strapi, connection) {
   });
 
 
-  const data = await queueRepeatable.add('unique_tatum_KMS_job',
+  const dataTestnet = await queueRepeatable.add('unique_tatum_KMS_job',
     {
       // jobData
+      tatum_use_test_net: true
     },
     {
       repeat: {
-        every: 5000, // 5 second
+        every: 6000, // ms -> 1s = 1000ms
       },
       removeOnComplete: true,
       removeOnFail: true,
-      jobId: 'UNIQUE_TATUM_KMS_JOB_ID',
+      jobId: 'UNIQUE_TATUM_KMS_JOB_ID__TESTNET',
     },
   );
 
-  strapi.log.info(`Job Created: \n ${JSON.stringify(data)}`);
+  const dataMainnet = await queueRepeatable.add('unique_tatum_KMS_job',
+    {
+      // jobData
+      tatum_use_test_net: false
+    },
+    {
+      repeat: {
+        every: 6000, // ms -> 1s = 1000ms
+      },
+      removeOnComplete: true,
+      removeOnFail: true,
+      jobId: 'UNIQUE_TATUM_KMS_JOB_ID__MAINNET',
+    },
+  );
+
+  strapi.log.info(`Job Created: \n ${JSON.stringify(dataTestnet)}`);
+  strapi.log.info(`Job Created: \n ${JSON.stringify(dataMainnet)}`);
 
   return worker;
 

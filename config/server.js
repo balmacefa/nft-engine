@@ -106,8 +106,8 @@ module.exports = ({ env }) => ({
       walletAddress: env('TATUM_FIXED_ROYALTY_WALLET_ADDRESS'),
       maxWaitSigning: env.int('PINATA_MAX_WAIT_SIGNING', 5000)
     },
-    TATUM_USE_TEST_NET: env.bool('TATUM_USE_TEST_NET'),
-    TATUM_KMS_PASSWORD: env('TATUM_KMS_PASSWORD')
+    TATUM_KMS_PASSWORD_TEST: env('TATUM_KMS_PASSWORD_TEST'),
+    TATUM_KMS_PASSWORD_PROD: env('TATUM_KMS_PASSWORD_PROD')
   },
   retryLoop: {
     maxWaitTimeLoop: env.int('RETRY_LOOP_MAX_WAIT_TIME', 5000),
