@@ -8,19 +8,13 @@
   "nftMintOrder": {
     "sendAddress": "0xf2B5B9E978Ee841c2b1507a09Aa715D19F0D76fc",
     "blockchain": "MATIC",
-    "tokenId": "00a01edffsd",
-    "collectionName": "collection__01",
+    "tokenId": "13",
+    "collectionName": "collection__012",
     "symbol": "SYMBOL_01",
-    "name": "SYMBOL_01",
     "royalties": [
       {
-        "address": "0xf2B5B9E978Ee841c2b1507a09Aa715D19F0D76fc",
-        "splitRoyaltyRate": 2.5
-      },
-      {
         "address": "0x1837F49559fC820f28C1C239aDF53854dba570Ba",
-        "splitRoyaltyRate": 7.5,
-        "fixedValue": 2.20215
+        "splitRoyaltyRate": 10
       }
     ]
   },
@@ -28,5 +22,11 @@
     "name": "name",
     "description": "description",
     "image_url": "image_url"
+  },
+  "webhooks":{
+      "completed": "http://localhost:3003/completed",
+      "progress": "http://localhost:3003/progress",
+      "failed": "http://localhost:3003/failed",
+      "unrecoverableFatalError": "http://localhost:3003/unrecoverableFatalError"
   }
 }
