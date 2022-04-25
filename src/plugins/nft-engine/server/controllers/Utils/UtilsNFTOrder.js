@@ -80,7 +80,8 @@ const createNewOrderJob = async (strapi, ctx) => {
         user: userId,
         collectionName,
         tokenId,
-        symbol
+        symbol,
+        blockchain,
       }
     });
 
@@ -134,7 +135,7 @@ const createNewOrderJob = async (strapi, ctx) => {
     // collectionName,
     // tokenId,
     // symbol
-    const jobId = `${userId}____${collectionName}____${symbol}____${tokenId}`;
+    const jobId = `${userId}____${blockchain}____${collectionName}____${symbol}____${tokenId}`;
 
     const queue = strapi
       .plugin('nft-engine')

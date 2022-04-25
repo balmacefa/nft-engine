@@ -41,7 +41,8 @@
           "type": "string"
         },
         "symbol": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9]{1,30}$"
         },
         "royalties": {
           "type": "array",

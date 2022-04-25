@@ -17,8 +17,11 @@ const buildNftMetadata = async (uploadIpfsFiles, strapi, job) => {
   // loop through uploadIpfsFiles
   // and set the metadata
   //  _.set(nftMetadata, uploadIpfsFilesItem.setMetadataPath, uploadIpfsFilesItem.ipfs);
-  for (let fileData of uploadIpfsFiles) {
-    _.set(nftMetadata, fileData.setMetadataPath, fileData.ipfs);
+  if (!_.isEmpty(uploadIpfsFiles)) {
+
+    for (let fileData of uploadIpfsFiles) {
+      _.set(nftMetadata, fileData.setMetadataPath, fileData.ipfs);
+    }
   }
 
   job.pushProgress({ msg: 'NFT metadata: Built' });

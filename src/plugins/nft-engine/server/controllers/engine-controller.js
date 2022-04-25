@@ -31,60 +31,75 @@ const { createNewOrderJob } = require('./Utils/UtilsNFTOrder.js');
 module.exports = ({ strapi }) => ({
   createJob: async ctx => createNewOrderJob(strapi, ctx),
   mintNFTJob: async job => {
-    strapi.log.info('ENTER mintNFTJob');
 
-    // ----------------------------------------------------------------
-    // Utils 🥇🤖 - add extra function to job object for later use
-    // ----------------------------------------------------------------
-    addJobExtraFunc(job);
-    getSaveCurrentNftMintOrderEntity(strapi, job);
+    // try and cath error, log job error and id. Throrw error
+    try {
 
-    // ----------------------------------------------------------------
-    // ................................................................
-    // Utils 🥇🤖
-    // ................................................................
-    // ----------------------------------------------------------------
-    // Filter check if the job is valid to run or not 🤖 🤖 🤖
-    // ----------------------------------------------------------------
-    await jobFilter(job);
-    // ................................................................
-    // Filter
-    // ................................................................
+      strapi.log.info(`ENTER mintNFTJob: ${job.id}`);
+
+      // ----------------------------------------------------------------
+      // Utils 🥇🤖 - add extra function to job object for later use
+      // ----------------------------------------------------------------
+      addJobExtraFunc(job);
+      getSaveCurrentNftMintOrderEntity(strapi, job);
+
+      // ----------------------------------------------------------------
+      // ................................................................
+      // Utils 🥇🤖
+      // ................................................................
+      // ----------------------------------------------------------------
+      // Filter check if the job is valid to run or not 🤖 🤖 🤖
+      // ----------------------------------------------------------------
+      await jobFilter(job);
+      // ................................................................
+      // Filter
+      // ................................................................
 
 
-    // ----------------------------------------------------------------
-    // 👨‍🏭⛑ Create Progress -
-    // ----------------------------------------------------------------
+      // ----------------------------------------------------------------
+      // 👨‍🏭⛑ Create Progress -
+      // ----------------------------------------------------------------
 
-    job.pushProgress({ topic: 'INIT', msg: 'NFT Job Started' });
-    let nftContractAddress = await job_prop_check_update(job, "nftContractAddress",
-      async () => await getOrCreateNFTContractAddress(strapi, job)
-    );
+      job.pushProgress({ topic: 'INIT', msg: 'NFT Job Started' });
+      let nftContractAddress = await job_prop_check_update(job, "nftContractAddress",
+        async () => await getOrCreateNFTContractAddress(strapi, job)
+      );
 
-    let uploadIpfsFiles = await job_prop_check_update(job, "uploadIpfsFiles",
-      async () => await uploadJobDataIpfsFiles(strapi, job)
-    );
+      let uploadIpfsFiles;
+      if (!_.isEmpty(_.get(job.data, 'nftMintOrderEntity.uploadIpfsFiles', []))) {
+        uploadIpfsFiles = await job_prop_check_update(job, "uploadIpfsFiles",
+          async () => await uploadJobDataIpfsFiles(strapi, job)
+        );
+      }
 
-    // Metadata
-    let nftMetadata = await job_prop_check_update(job, "nftMetadata",
-      async () => await buildNftMetadata(uploadIpfsFiles, strapi, job)
-    );
+      // Metadata
+      let nftMetadata = await job_prop_check_update(job, "nftMetadata",
+        async () => await buildNftMetadata(uploadIpfsFiles, strapi, job)
+      );
 
-    let nftMetadataUrl = await job_prop_check_update(job, "nftMetadataUrl",
-      async () => await uploadNftMetadataToIPFS(nftMetadata, strapi, job)
-    );
+      let nftMetadataUrl = await job_prop_check_update(job, "nftMetadataUrl",
+        async () => await uploadNftMetadataToIPFS(nftMetadata, strapi, job)
+      );
 
-    // At this point we have all the data we need to mint the NFT
-    // and uploadIpfsFiles is no longer needed, so we can remove it
-    let nftMintOrderEntity = await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
-    // merge nftMintOrderEntity to job
-    // Metadata
-    nftMintOrderEntity = await mintNFT(nftMetadataUrl, nftMintOrderEntity, nftContractAddress, strapi, job);
+      // At this point we have all the data we need to mint the NFT
+      // and uploadIpfsFiles is no longer needed, so we can remove it
+      let nftMintOrderEntity = await updateNftMintOrderMetadata(nftMetadata, nftMetadataUrl, strapi, job);
+      // merge nftMintOrderEntity to job
+      // Metadata
+      nftMintOrderEntity = await mintNFT(nftMetadataUrl, nftMintOrderEntity, nftContractAddress, strapi, job);
 
-    // ................................................................
-    // Create Progress
-    // ................................................................
-    return nftMintOrderEntity;
+      // ................................................................
+      // Create Progress
+      // ................................................................
+      strapi.log.info(`EXIT mintNFTJob: ${job.id}`);
+
+      return nftMintOrderEntity;
+    } catch (error) {
+      strapi.log.info(`________________START Error in mintNFTJob: ${job.id}`);
+      strapi.log.info(error);
+      strapi.log.info(`________________END Error in mintNFTJob: ${job.id}`);
+      throw error;
+    }
   },
   mintNFTJobCompleted: async (job, returnValue, io) => {
     sendJobToClient(job, strapi, "completed", returnValue);
