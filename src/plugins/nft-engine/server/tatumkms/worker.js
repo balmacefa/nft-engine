@@ -5,6 +5,7 @@ const { processSignatures } = require('@balmacefa/tatum-kms/dist/signatures');
 const axios = require('axios');
 const http = require('http');
 const https = require('https');
+const { writeFileSync } = require('fs');
 
 
 // queueRepeatable
@@ -29,6 +30,9 @@ async function runTatumKMSWorker(strapi, connection) {
     path: Path.resolve(__dirname, `db/wallet_prod.dat`),
     pwd: strapi.config.get('server.tatum.TATUM_KMS_PASSWORD_PROD')
   };
+
+  writeFileSync(mainNetData.path, process.env.TATUM_KMS_DATA_PROD);
+  writeFileSync(testNetData.path, process.env.TATUM_KMS_DATA_TEST);
 
   const chains = strapi.config.get('server.tatum.blockchains.list');
 
