@@ -31,7 +31,10 @@
           "type": "string"
         },
         "blockchain": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "MATIC"
+          ]
         },
         "tokenId": {
           "type": "string",
@@ -42,7 +45,7 @@
         },
         "symbol": {
           "type": "string",
-          "pattern": "^[a-zA-Z0-9]{1,30}$"
+          "pattern": "^[a-zA-Z0-9_-]{1,30}$"
         },
         "royalties": {
           "type": "array",
@@ -83,7 +86,7 @@
       "type": "object",
       "additionalProperties": true
     },
-    "webhooks":{
+    "webhooks": {
       "type": "object",
       "properties": {
         "completed": {
