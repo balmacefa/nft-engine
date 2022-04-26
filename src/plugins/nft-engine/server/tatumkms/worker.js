@@ -31,8 +31,8 @@ async function runTatumKMSWorker(strapi, connection) {
     pwd: strapi.config.get('server.tatum.TATUM_KMS_PASSWORD_PROD')
   };
 
-  writeFileSync(mainNetData.path, process.env.TATUM_KMS_DATA_PROD);
-  writeFileSync(testNetData.path, process.env.TATUM_KMS_DATA_TEST);
+  writeFileSync(mainNetData.path, strapi.config.get('server.tatum.TATUM_KMS_DATA_PROD'));
+  writeFileSync(testNetData.path, strapi.config.get('server.tatum.TATUM_KMS_DATA_TEST'));
 
   const chains = strapi.config.get('server.tatum.blockchains.list');
 

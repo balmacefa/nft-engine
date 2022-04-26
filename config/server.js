@@ -107,7 +107,9 @@ module.exports = ({ env }) => ({
       maxWaitSigning: env.int('PINATA_MAX_WAIT_SIGNING', 5000)
     },
     TATUM_KMS_PASSWORD_TEST: env('TATUM_KMS_PASSWORD_TEST'),
+    TATUM_KMS_DATA_TEST: env('TATUM_KMS_DATA_TEST'),
     TATUM_KMS_PASSWORD_PROD: env('TATUM_KMS_PASSWORD_PROD'),
+    TATUM_KMS_DATA_PROD: env('TATUM_KMS_DATA_PROD'),
     TATUM_USE_TEST_NET: true
   },
   retryLoop: {
