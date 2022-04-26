@@ -1,6 +1,9 @@
 module.exports = ({ env }) => ({
   auth: {
-    secret: env('ADMIN_JWT_SECRET', 'a891e4c1a7f0766ea9a5421eb8b20a07'),
+    secret: env('ADMIN_JWT_SECRET'),
+  },
+  apiToken: {
+    salt: env('API_TOKEN_SALT'),
   },
   watchIgnoreFiles:['**/*.dat']
 });

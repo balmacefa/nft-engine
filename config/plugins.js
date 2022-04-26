@@ -3,6 +3,11 @@ module.exports = ({ env }) => ({
     enabled: true,
     resolve: './src/plugins/nft-engine'
   },
+  'users-permissions': {
+    config: {
+      jwtSecret: env('JWT_SECRET')
+    }
+  },
   'upload': {
     enabled: true,
     config: {
