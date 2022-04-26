@@ -16,7 +16,7 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@balmacefa/tatum-kms": "git+https://github.com/balmacefa/tatum-kms.git",
+    "@balmacefa/tatum-kms": "https://github.com/balmacefa/tatum-kms.git",
     "@newrelic/winston-enricher": "^2.1.2",
     "@socket.io/redis-adapter": "^7.1.0",
     "@strapi/plugin-i18n": "4.1.8",
