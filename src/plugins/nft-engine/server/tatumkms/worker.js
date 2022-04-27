@@ -22,17 +22,14 @@ async function runTatumKMSWorker(strapi, connection) {
   const tatum_use_test_net = strapi.config.get('server.tatum.TATUM_USE_TEST_NET');
 
   const testNetData = {
-    path: Path.resolve(__dirname, `db/wallet_test.dat`),
+    path: Path.resolve(__dirname, `db/wallet_test.wallz`),
     pwd: strapi.config.get('server.tatum.TATUM_KMS_PASSWORD_TEST')
   };
 
   const mainNetData = {
-    path: Path.resolve(__dirname, `db/wallet_prod.dat`),
+    path: Path.resolve(__dirname, `db/wallet_prod.wallz`),
     pwd: strapi.config.get('server.tatum.TATUM_KMS_PASSWORD_PROD')
   };
-
-  writeFileSync(mainNetData.path, strapi.config.get('server.tatum.TATUM_KMS_DATA_PROD'));
-  writeFileSync(testNetData.path, strapi.config.get('server.tatum.TATUM_KMS_DATA_TEST'));
 
   const chains = strapi.config.get('server.tatum.blockchains.list');
 
