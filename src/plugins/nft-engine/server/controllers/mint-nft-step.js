@@ -30,7 +30,6 @@ const mintNFT = async (nftMetadataUrl, nftMintOrderEntity, nftContractAddress, s
   // set default royalties, 2.5% to criptok: TODO change if order include royalties for coupon discount of 20%
   let cashbackValues = [String(strapi.config.get('server.tatum.fixedRoyalty.amount'))];
   let authorAddresses = [String(strapi.config.get('server.tatum.fixedRoyalty.walletAddress'))];
-  let fixedValues = [String('0')];
 
   if (!_.isEmpty(nftMintOrderEntity.royalties)) {
     authorAddresses = _.concat(authorAddresses, _.map(nftMintOrderEntity.royalties,
@@ -38,15 +37,10 @@ const mintNFT = async (nftMetadataUrl, nftMintOrderEntity, nftContractAddress, s
 
     cashbackValues = _.concat(cashbackValues, _.map(nftMintOrderEntity.royalties,
       (address) => String(address.splitRoyaltyRate * 100)));
-
-    // if address.fixedValues is not empty, then add fixed values to fixedValues array otherwise add 0
-    fixedValues = _.concat(fixedValues, _.map(nftMintOrderEntity.royalties,
-      (address) => String(address.fixedValue ? address.fixedValue : 0)));
   }
 
   body.cashbackValues = cashbackValues;
   body.authorAddresses = authorAddresses;
-  body.fixedValues = fixedValues;
 
 
   if (!nftMintOrderEntity.signatureId) {
