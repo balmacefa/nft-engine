@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "A JSON schema for: Create NFT in one API call",
+  "properties": {
+    "uploadIpfsFiles": {
+      "type": "array",
+      "description": "A collection of base64 data to be uploaded to the IPFS. Also, assign each file result to the NFT Metadata Path.",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "base64data": {
+              "type": "string",
+              "description": "Base 64 data will be uploaded to the IPFS."
+            },
+            "setMetadataPath": {
+              "type": "string",
+              "description": "The upload result will be set to JSON NFT Metadata obj, specify by this Path, which is done internally by  [lodash _.set](https://lodash.com/docs/4.17.15#set)"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "base64data",
+            "setMetadataPath"
+          ]
+        }
+      ],
+      "additionalItems": true
+    },
+    "nftMintOrder": {
+      "type": "object",
+      "description": "This defines the NFT Collection - Blockchain, collection name, royalties, symbol, and the Unique NFT Token id; this information is used to identify the order in the system.",
+      "properties": {
+        "sendAddress": {
+          "type": "string",
+          "description": "During the Mint phase, the NFT will be sent to this address. This will be the NFT's owner."
+        },
+        "blockchain": {
+          "type": "string",
+          "description": "At the moment, only Polygon MATIC is supported. Other blockchains will be integrated in the future ( BSC, CELO, ONE).",
+          "enum": [
+            "MATIC"
+          ]
+        },
+        "tokenId": {
+          "type": "string",
+          "description": "Token ID that will be issued. This identifies the NFT within the collection.",
+          "pattern": "^[0-9]{1,32}$"
+        },
+        "collectionName": {
+          "type": "string",
+          "description": "Name of the collection"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "The collection's symbol. For example, the Bitcoin symbol is BTC.",
+          "pattern": "^[a-zA-Z0-9_-]{1,30}$"
+        },
+        "royalties": {
+          "type": "array",
+          "description": "At the moment, Opensea does not support split revenue. When a splitter address is implemented or our NFT Marketplace contract becomes accessible, this information will be used. This project will earn a split revenue of 2.5%.",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string",
+                  "description": "Address where royalties should be sent every transaction"
+                },
+                "splitRoyaltyRate": {
+                  "type": "number",
+                  "description": "Percentage for this Address"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "address",
+                "splitRoyaltyRate"
+              ]
+            }
+          ],
+          "additionalItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "sendAddress",
+        "blockchain",
+        "tokenId",
+        "collectionName",
+        "symbol"
+      ]
+    },
+    "nftMetadata": {
+      "type": "object",
+      "description": "NFT JSON Metadata, This can be a NFT standard or any other structure that fits your business logic. For Opensea or marketplace standard see https://docs.opensea.io/docs/metadata-standards",
+      "additionalProperties": true
+    },
+    "webhooks": {
+      "type": "object",
+      "description": "Webhook for each stage of the redis job status - For further information and structure, see the Webhooks Section.",
+      "properties": {
+        "completed": {
+          "type": "string",
+          "description": "This is triggered when the NFT is successfully minted."
+        },
+        "progress": {
+          "type": "string",
+          "description": "This is triggered when job update the status of the order/job"
+        },
+        "failed": {
+          "type": "string",
+          "description": "This is triggered when a task fails. Please keep in mind that the job is retrying 10 times until the order's status is declared as unrecoverable. Fatal Error"
+        },
+        "unrecoverableFatalError": {
+          "type": "string",
+          "description": "This is triggered when a job fails many times and will not be retried; the job is then removed from the queue stack."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "completed"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "nftMintOrder",
+    "nftMetadata"
+  ]
+}
