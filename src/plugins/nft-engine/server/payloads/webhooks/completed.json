@@ -5,9 +5,9 @@
         "id": 20,
         "sendAddress": "0xf2B5B9E978Ee841c2b1507a09Aa715D19F0D76fc",
         "blockchain": "MATIC",
-        "collectionName": "collection__012",
-        "symbol": "SYMBOL_01",
-        "tokenId": "10",
+        "collectionName": "collection_name",
+        "symbol": "NSL_NFT_SYMBOL",
+        "tokenId": "137",
         "royalties": [
           {
             "address": "0x1837F49559fC820f28C1C239aDF53854dba570Ba",
@@ -15,10 +15,24 @@
           }
         ],
         "nftMetadata": {
-          "name": "name",
-          "description": "description",
-          "image_url": {
-            "a": "ipfs://QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW"
+          "description": "See opensea standard - https://docs.opensea.io/docs/metadata-standards",
+          "external_url": "https://your_domain.xyz/nft/1",
+          "image": "This will be set by payload: uploadIpfsFiles[0].setMetadataPath",
+          "animation_url": "uploadIpfsFiles[1].setMetadataPath ??",
+          "name": "Name of the NFT -- see standards ^^",
+          "attributes": [
+            {
+              "trait_type": "Personality",
+              "value": "Go4It"
+            },
+            {
+              "display_type": "date",
+              "trait_type": "birthday",
+              "value": 1546360800
+            }
+          ],
+          "custom_data": {
+            "key": "You can set any property outside the marketplace standards"
           }
         },
         "nftMetadataIPFS": "ipfs://Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP",
@@ -33,7 +47,7 @@
       "tatum_use_test_net": true,
       "nftContractAddress": {
         "id": 6,
-        "symbol": "SYMBOL_01",
+        "symbol": "NSL_NFT_SYMBOL",
         "blockchain": "MATIC",
         "transactionId": "0xbd631a33d1e35d939fc196f0fbc3ce0788d513d58a3fee82557a0185dfebd2cd",
         "signatureId": "6261d0a515522efe39154296",
@@ -43,13 +57,27 @@
         "updatedAt": "2022-04-21T21:46:32.275Z",
         "publishedAt": "2022-04-21T21:46:12.169Z",
         "user": "balmacefa",
-        "collectionName": "collection__012"
+        "collectionName": "collection_name"
       },
       "nftMetadata": {
-        "name": "name",
-        "description": "description",
-        "image_url": {
-          "a": "ipfs://QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW"
+        "description": "See opensea standard - https://docs.opensea.io/docs/metadata-standards",
+        "external_url": "https://your_domain.xyz/nft/1",
+        "image": "This will be set by payload: uploadIpfsFiles[0].setMetadataPath",
+        "animation_url": "uploadIpfsFiles[1].setMetadataPath ??",
+        "name": "Name of the NFT -- see standards ^^",
+        "attributes": [
+          {
+            "trait_type": "Personality",
+            "value": "Go4It"
+          },
+          {
+            "display_type": "date",
+            "trait_type": "birthday",
+            "value": 1546360800
+          }
+        ],
+        "custom_data": {
+          "key": "You can set any property outside the marketplace standards"
         }
       },
       "nftMetadataUrl": "ipfs://Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP"
@@ -61,9 +89,9 @@
         "delay": 1000,
         "type": "fixed"
       },
-      "jobId": "balmacefa____collection__012____SYMBOL_01____10"
+      "jobId": "NSL_NFT_SYMBOL____137_cname"
     },
-    "id": "balmacefa____collection__012____SYMBOL_01____10",
+    "id": "NSL_NFT_SYMBOL____137_cname",
     "progress": [
       {
         "topic": "INIT",
@@ -97,7 +125,7 @@
         "msg": "NFT contract: Address -> [object Object]",
         "data": {
           "id": 6,
-          "symbol": "SYMBOL_01",
+          "symbol": "NSL_NFT_SYMBOL",
           "blockchain": "MATIC",
           "transactionId": "0xbd631a33d1e35d939fc196f0fbc3ce0788d513d58a3fee82557a0185dfebd2cd",
           "signatureId": "6261d0a515522efe39154296",
@@ -107,7 +135,7 @@
           "updatedAt": "2022-04-21T21:46:32.275Z",
           "publishedAt": "2022-04-21T21:46:12.169Z",
           "user": "balmacefa",
-          "collectionName": "collection__012"
+          "collectionName": "collection_name"
         },
         "timestamp": "2022-04-21T21:46:32.305Z"
       },
@@ -181,8 +209,8 @@
     "id": 20,
     "sendAddress": "0xf2B5B9E978Ee841c2b1507a09Aa715D19F0D76fc",
     "blockchain": "MATIC",
-    "collectionName": "collection__012",
-    "symbol": "SYMBOL_01",
+    "collectionName": "collection_name",
+    "symbol": "NSL_NFT_SYMBOL",
     "tokenId": "10",
     "royalties": [
       {
@@ -192,10 +220,24 @@
     ],
     "rapidApiRequestHeaders": {},
     "nftMetadata": {
-      "name": "name",
-      "description": "description",
-      "image_url": {
-        "a": "ipfs://QmVotqYfwe4w5qcnKRmsU8swfWFJmim8uJdwHWEHZau7TW"
+      "description": "See opensea standard - https://docs.opensea.io/docs/metadata-standards",
+      "external_url": "https://your_domain.xyz/nft/1",
+      "image": "This will be set by payload: uploadIpfsFiles[0].setMetadataPath",
+      "animation_url": "uploadIpfsFiles[1].setMetadataPath ??",
+      "name": "Name of the NFT -- see standards ^^",
+      "attributes": [
+        {
+          "trait_type": "Personality",
+          "value": "Go4It"
+        },
+        {
+          "display_type": "date",
+          "trait_type": "birthday",
+          "value": 1546360800
+        }
+      ],
+      "custom_data": {
+        "key": "You can set any property outside the marketplace standards"
       }
     },
     "nftMetadataIPFS": "ipfs://Qma9zdmCq9uh7c8UshsuyKr28mKfWkvjQe1FpWPVzey6jP",

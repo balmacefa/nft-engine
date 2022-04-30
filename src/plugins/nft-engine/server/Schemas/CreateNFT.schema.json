@@ -3,31 +3,6 @@
   "type": "object",
   "description": "A JSON schema for: Create NFT in one API call",
   "properties": {
-    "uploadIpfsFiles": {
-      "type": "array",
-      "description": "A collection of base64 data to be uploaded to the IPFS. Also, assign each file result to the NFT Metadata Path.",
-      "items": [
-        {
-          "type": "object",
-          "properties": {
-            "base64data": {
-              "type": "string",
-              "description": "Base 64 data will be uploaded to the IPFS."
-            },
-            "setMetadataPath": {
-              "type": "string",
-              "description": "The upload result will be set to JSON NFT Metadata obj, specify by this Path, which is done internally by  [lodash _.set](https://lodash.com/docs/4.17.15#set)"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "base64data",
-            "setMetadataPath"
-          ]
-        }
-      ],
-      "additionalItems": true
-    },
     "nftMintOrder": {
       "type": "object",
       "description": "This defines the NFT Collection - Blockchain, collection name, royalties, symbol, and the Unique NFT Token id; this information is used to identify the order in the system.",
@@ -123,6 +98,31 @@
         "completed"
       ]
     }
+  },
+  "uploadIpfsFiles": {
+    "type": "array",
+    "description": "A collection of base64 data to be uploaded to the IPFS. Also, assign each file result to the NFT Metadata Path.",
+    "items": [
+      {
+        "type": "object",
+        "properties": {
+          "base64data": {
+            "type": "string",
+            "description": "Base 64 data will be uploaded to the IPFS."
+          },
+          "setMetadataPath": {
+            "type": "string",
+            "description": "The upload result will be set to JSON NFT Metadata obj, specify by this Path, which is done internally by  [lodash _.set](https://lodash.com/docs/4.17.15#set)"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "base64data",
+          "setMetadataPath"
+        ]
+      }
+    ],
+    "additionalItems": true
   },
   "additionalProperties": false,
   "required": [
