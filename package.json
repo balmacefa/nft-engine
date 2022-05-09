@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "description": "A Strapi application",
+  "prod_host_url": "https://nft-api-engine.herokuapp.com/api/nft-engine/",
   "scripts": {
     "start": "strapi start",
     "dev": "cross-env ENV_PATH='./.env.development' strapi develop",
