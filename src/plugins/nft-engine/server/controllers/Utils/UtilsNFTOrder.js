@@ -122,9 +122,7 @@ const createNewOrderJob = async (strapi, ctx) => {
   }
 
   try {
-    // TODO: REVIEW THIS, TO CHANGE TEST NET OR PRODUCTION
-    const tatum_use_test_net = strapi.config.get('server.tatum.TATUM_USE_TEST_NET');
-
+    const tatum_use_test_net = _.get(ctx.state, 'rapidApi.useTestnet', true);
     const jobData = {
       nftMintOrderEntity: entity,
       webhooks,

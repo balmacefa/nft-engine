@@ -19,6 +19,7 @@ module.exports = (config, { strapi }) => {
       subscription: _.get(ctx.request.headers, 'x-rapidapi-subscription'),
       version: _.get(ctx.request.headers, 'x-rapidapi-version'),
       forwardedFor: _.get(ctx.request.headers, 'x-rapidapi-for'),
+      useTestnet: _.get(ctx.request.headers, 'y-network') !== 'mainnet' ? true : false
     };
 
     if (headers.proxySecret && proxySecret === headers.proxySecret) {
