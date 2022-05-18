@@ -66,7 +66,7 @@ module.exports = ({ strapi }) => {
   // Create a worker
   const worker = createWorker(mainController, connection, strapi, io);
 
-  runTatumKMSWorker(strapi, connection);
+  runTatumKMSWorker(strapi, connection, queue);
 
   strapi.plugin('nft-engine').bull = {
     worker,

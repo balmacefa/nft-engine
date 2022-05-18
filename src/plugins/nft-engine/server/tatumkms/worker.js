@@ -12,7 +12,7 @@ const { writeFileSync } = require('fs');
 // Create Worker for queueNameRepeatable
 const queueNameRepeatable = 'mint-nft-queue-Repeatable';
 
-async function runTatumKMSWorker(strapi, connection) {
+async function runTatumKMSWorker(strapi, connection, mint_nft_queue) {
 
   const queueRepeatable = new Queue(queueNameRepeatable, { connection });
   // this is to retry when the job fails
@@ -40,13 +40,27 @@ async function runTatumKMSWorker(strapi, connection) {
 
   const worker = new Worker(queueNameRepeatable,
     async (job) => {
-      // Call Tatum and tick transactions
-      let config = testNetData;
+      let returnMsg = 'Tick tatum transactions';
+      const count = await mint_nft_queue.count();
+      if (count === 0) {
+        returnMsg = 'nft-engine: mint_nft_queue queue is empty';
+        return returnMsg;
+      }
+
+      let config;
+
       if (job.data.tatum_use_test_net === false) {
         config = mainNetData;
+        process.env.TATUM_API_KEY = strapi.config.get('server.tatum.TATUM_API_KEY_MAINNET');
+        returnMsg = 'nft-engine: Tatum KMS: mainnet';
+      } else {
+        config = testNetData;
+        process.env.TATUM_API_KEY = strapi.config.get('server.tatum.TATUM_API_KEY_TESTNET');
+        returnMsg = 'nft-engine: Tatum KMS: testnet';
       }
+
       await processSignatures(config.pwd, tatum_use_test_net, axiosInstance, config.path, chains);
-      return true;
+      return returnMsg;
     },
     {
       connection

@@ -124,7 +124,9 @@ module.exports = ({ env }) => ({
     },
     TATUM_KMS_PASSWORD_TEST: env('TATUM_KMS_PASSWORD_TEST'),
     TATUM_KMS_PASSWORD_PROD: env('TATUM_KMS_PASSWORD_PROD'),
-    TATUM_USE_TEST_NET: true
+    TATUM_USE_TEST_NET: true,
+    TATUM_API_KEY_TESTNET: env('TATUM_API_KEY_TESTNET'),
+    TATUM_API_KEY_MAINNET: env('TATUM_API_KEY_MAINNET'),
   },
   retryLoop: {
     maxWaitTimeLoop: env.int('RETRY_LOOP_MAX_WAIT_TIME', 5000),
