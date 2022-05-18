@@ -57,7 +57,8 @@
     },
     "transactionId": {
       "type": "string",
-      "unique": true
+      "unique": true,
+      "description": "Blockchain txId"
     },
     "signatureId": {
       "type": "string",

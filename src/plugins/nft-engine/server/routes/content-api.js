@@ -11,5 +11,37 @@ module.exports = {
         middlewares: ['global::rapidapi'],
       },
     },
+    {
+      method: 'GET',
+      path: '/NFT_orders/{id}',
+      handler: 'NFT_ordersController.findOne',
+      config: {
+        middlewares: ['global::rapidapi'],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/NFT_orders',
+      handler: 'NFT_ordersController.getListByUser',
+      config: {
+        middlewares: ['global::rapidapi'],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/NFT_contracts/{id}',
+      handler: 'NFT_contractsController.findOne',
+      config: {
+        middlewares: ['global::rapidapi'],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/NFT_contracts',
+      handler: 'NFT_contractsController.getListByUser',
+      config: {
+        middlewares: ['global::rapidapi'],
+      },
+    },
   ],
 };
