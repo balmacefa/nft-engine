@@ -44,7 +44,7 @@ const mintNFT = async (nftMetadataUrl, nftMintOrderEntity, nftContractAddress, s
 
 
   if (!nftMintOrderEntity.signatureId) {
-    const { signatureId } = await tatumService.mintNFTWithUri(strapi, body);
+    const { signatureId } = await tatumService.mintNFTWithUri(strapi, body, job);
     // call Tatum
     // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
 
@@ -75,7 +75,7 @@ const mintNFT = async (nftMetadataUrl, nftMintOrderEntity, nftContractAddress, s
       job.pushProgress({ msg: `Mint NFT: Waiting for blockchain confirmation` });
       // call Tatum
       // Because Polygon is an Ethereum-compatible blockchain, this means that any token or wallet address you have on Ethereum is also interchangeable with Polygon. You can use the exact same wallet address to interact between your regular ERC20 tokens on Ethereum and with Polygon using the Matic bridge.
-      const response = await tatumService.getTransactionDetailFromSignature(strapi, nftMintOrderEntity.signatureId);
+      const response = await tatumService.getTransactionDetailFromSignature(strapi, job, nftMintOrderEntity.signatureId);
       txId = _.get(response, "txId", undefined);
       if (!txId) {
         await Sleep(sleepWaitTimeLoop);
