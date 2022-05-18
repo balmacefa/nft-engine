@@ -35,16 +35,32 @@ module.exports = ({ env }) => ({
     },
   },
   tatum_axios_instance: {
-    axiosConfig: {
-      baseURL: env('TATUM_API_URL'),
-      headers: {
-        'x-api-key': env('TATUM_API_KEY')
+    testnet: {
+      axiosConfig: {
+        baseURL: env('TATUM_API_URL'),
+        headers: {
+          'x-api-key': env('TATUM_API_KEY_TESTNET'),
+        },
+        maxBodyLength: 'Infinity'
       },
-      maxBodyLength: 'Infinity'
+      axiosRetry: {
+        retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
+        retries: env.int('TATUM_RETRIES', 5),
+      }
     },
-    axiosRetry: {
-      retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
-      retries: env.int('TATUM_RETRIES', 5),
+    mainnet: {
+      axiosConfig: {
+        baseURL: env('TATUM_API_URL'),
+        headers: {
+          'x-api-key': env('TATUM_API_KEY_MAINNET'),
+        },
+        maxBodyLength: 'Infinity'
+      },
+      axiosRetry: {
+        retryDelay: env.int('TATUM_RETRY_DELAY', 1000),
+        retries: env.int('TATUM_RETRIES', 5),
+      }
+
     }
   },
   pinata_axios_instance: {
