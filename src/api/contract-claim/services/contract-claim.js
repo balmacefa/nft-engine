@@ -23,7 +23,7 @@ const findContractClaims = async (strapi, user, blockchain, useTestNet) => {
 
 const userHaveContractClaims = async (strapi, user, blockchain, useTestNet) => {
   const contractClaimEntity = await findContractClaims(strapi, user, blockchain, useTestNet);
-  if (!contractClaimEntity || _.get(contractClaimEntity, 'remainClaim', 0) <= 0) {
+  if (!contractClaimEntity || _.get(contractClaimEntity, 'remainClaims', 0) <= 0) {
     return false;
   }
   return true;
@@ -32,19 +32,23 @@ const userHaveContractClaims = async (strapi, user, blockchain, useTestNet) => {
 const increaseContractClaim = async (strapi, user, blockchain, useTestNet) => {
   const contractClaimEntity = await findContractClaims(strapi, user, blockchain, useTestNet);
   if (!contractClaimEntity) {
-    return strapi.db.query(apiId).create({
-      user,
-      blockchain,
-      useTestNet,
-      remainClaim: 1
-    });
+    return strapi.db.query(apiId).create(
+      {
+        data: {
+          user,
+          blockchain,
+          useTestNet,
+          remainClaims: 1
+        }
+      });
   }
+  const base = contractClaimEntity.remainClaims < 0 ? 0 : contractClaimEntity.remainClaims;
   return strapi.db.query(apiId).update({
     where: {
       id: contractClaimEntity.id
     },
     data: {
-      remainClaim: contractClaimEntity.remainClaim + 1
+      remainClaims: base + 1
     }
   });
 };
@@ -60,7 +64,7 @@ const decreaseContractClaim = async (strapi, user, blockchain, useTestNet) => {
       id: contractClaimEntity.id
     },
     data: {
-      remainClaim: contractClaimEntity.remainClaim - 1
+      remainClaims: contractClaimEntity.remainClaims - 1
     }
   });
 };

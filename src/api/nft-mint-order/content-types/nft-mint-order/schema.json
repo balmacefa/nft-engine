@@ -50,7 +50,8 @@
       "type": "json"
     },
     "uploadIpfsFiles": {
-      "type": "json"
+      "type": "json",
+      "private": true
     },
     "nftMetadataIPFS": {
       "type": "string"

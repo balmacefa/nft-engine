@@ -87,7 +87,8 @@ const createNewOrderJob = async (strapi, ctx) => {
 
   if (!contractEntity) {
     // Check if the user has enough Contract claim balance
-    const userHasContractClaims = await strapi.service('aapi::contract-claim.contract-claim').userHaveContractClaims(userId, blockchain, tatum_use_test_net);
+    const contractClaimService = strapi.service('api::contract-claim.contract-claim');
+    const userHasContractClaims = await contractClaimService.userHaveContractClaims(userId, blockchain, tatum_use_test_net);
     if (!userHasContractClaims) {
       strapi.log.info('User has not enough Contract claim balance');
       return ctx.badRequest('User has not enough Contract claim balance, call /contract-claim/{blockchain} to get more');
@@ -189,6 +190,14 @@ const createNewOrderJob = async (strapi, ctx) => {
     strapi.log.error(`ERROR: \n ${err.message}`);
     strapi.log.error(JSON.stringify(err));
     return ctx.badRequest(`Error while creating mint order job \n ${err.message}`);
+  }
+
+  // if entity.nftMetadata.uploadIpfsFiles key is present, then delete
+  if (_.has(entity, 'nftMetadata.uploadIpfsFiles')) {
+    delete entity.nftMetadata.uploadIpfsFiles;
+  }
+  if (_.has(entity, 'uploadIpfsFiles')) {
+    delete entity.uploadIpfsFiles;
   }
   strapi.log.info(`EXIT POST /nft-mint-order/createMintNFTOrder \n ${entity}`);
   return entity;

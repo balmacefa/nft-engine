@@ -1,11 +1,12 @@
 'use strict';
 const { getAxiosInstance } = require('./baseService');
 
-const getKeyStrapiTatumAxios = (strapi, job) =>{
+const getKeyStrapiTatumAxios = (strapi, job) => {
   const {
     tatum_use_test_net
   } = job.data;
-  return `server.tatum_axios_instance.${tatum_use_test_net ? 'testnet' : 'mainnet'}`;
+  const q = `server.tatum_axios_instance.${tatum_use_test_net ? 'testnet' : 'mainnet'}`;
+  return strapi.config.get(q);
 };
 
 module.exports = {

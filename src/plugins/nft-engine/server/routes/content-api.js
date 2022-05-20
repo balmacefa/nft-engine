@@ -8,22 +8,28 @@ module.exports = {
       path: '/createNFT',
       handler: 'engineController.createJob',
       config: {
+        // auth: false, this is handled by middleware global::rapidApi
+        auth: false,
         middlewares: ['global::rapidapi'],
       },
     },
     {
       method: 'POST',
-      path: '/contract_claims/{network}/{blockchain}',
+      path: '/contract_claims/:network',
       handler: 'ContractClaimsController.addContractClaim',
       config: {
+        /// auth: false, this is handled by middleware global::rapidApi
+        auth: false,
         middlewares: ['global::rapidapi'],
       }
     },
     {
       method: 'GET',
-      path: '/NFT_orders/{id}',
+      path: '/NFT_orders/:id',
       handler: 'NFT_ordersController.findOne',
       config: {
+        /// auth: false, this is handled by middleware global::rapidApi
+        auth: false,
         middlewares: ['global::rapidapi'],
       },
     },
@@ -32,14 +38,18 @@ module.exports = {
       path: '/NFT_orders',
       handler: 'NFT_ordersController.getListByUser',
       config: {
+        /// auth: false, this is handled by middleware global::rapidApi
+        auth: false,
         middlewares: ['global::rapidapi'],
       },
     },
     {
       method: 'GET',
-      path: '/NFT_contracts/{id}',
+      path: '/NFT_contracts/:id',
       handler: 'NFT_contractsController.findOne',
       config: {
+        /// auth: false, this is handled by middleware global::rapidApi
+        auth: false,
         middlewares: ['global::rapidapi'],
       },
     },
@@ -48,6 +58,8 @@ module.exports = {
       path: '/NFT_contracts',
       handler: 'NFT_contractsController.getListByUser',
       config: {
+        /// auth: false, this is handled by middleware global::rapidApi
+        auth: false,
         middlewares: ['global::rapidapi'],
       },
     },

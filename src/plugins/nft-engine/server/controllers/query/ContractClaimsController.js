@@ -18,12 +18,20 @@ module.exports = ({ strapi }) => ({
 
     let {
       network,
-      blockchain
-    } = ctx.request.query;
+    } = ctx.request.params;
+
+    let {
+      blockchain,
+    } = ctx.request.body;
 
     const use_test_net = network !== 'mainnet' ? true : false;
 
-    const entity = await contractClaimService.increaseContractClaim(userId, blockchain, use_test_net);
+    let entity;
+    try {
+      entity = await contractClaimService.increaseContractClaim(userId, blockchain, use_test_net);
+    } catch (error) {
+      return ctx.badRequest(`Error while parsing request body \n ${error.message}`);
+    }
 
 
     strapi.log.info(`EXIT POST /contract_claims/{network}/{blockchain} \n ${JSON.stringify(entity)}`);

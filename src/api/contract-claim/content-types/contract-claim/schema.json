@@ -17,13 +17,19 @@
       "required": true
     },
     "blockchain": {
-      "type": "string",
+      "type": "enumeration",
+      "enum": [
+        "BSC",
+        "MATIC",
+        "CELO",
+        "ONE"
+      ],
       "required": true
     },
     "useTestNet": {
       "type": "boolean"
     },
-    "remainClaim": {
+    "remainClaims": {
       "type": "integer",
       "required": true,
       "default": 0
