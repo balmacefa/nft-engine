@@ -21,26 +21,23 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
   // const name = `CRIPTOK__${userId}`;
   // const symbol = `CRIPTOK`;
 
-  const controllerAPI = strapi.service('api::nft-contract.nft-contract');
-  const nftContractDB = strapi.db.query('api::nft-contract.nft-contract');
+  const nftContractService = strapi.service('api::nft-contract.nft-contract');
 
   // This needs to change per blockchain --- NOT MATIC ONLY
   const tatumSignerId = tatumService.getTatumSignerId(strapi, job);
 
   const tatum_use_test_net = _.get(job, 'data.tatum_use_test_net', true);
 
-  let contractEntity = await nftContractDB.findOne({
-    where: {
-      user,
-      blockchain,
-      collectionName,
-      symbol,
-      useTestNet: tatum_use_test_net
-    }
+  let contractEntity = await nftContractService.findContractEntity({
+    user,
+    blockchain,
+    collectionName,
+    symbol,
+    useTestNet: tatum_use_test_net
   });
 
   if (!contractEntity) {
-    contractEntity = await controllerAPI.create(
+    contractEntity = await nftContractService.create(
       {
         data: {
           user,
@@ -53,6 +50,8 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
         }
       }
     );
+    // decrease the user contract claim balance
+    await strapi.service('api::contract-claim.contract-claim').decreaseContractClaim(user, blockchain, tatum_use_test_net);
   }
 
 
@@ -78,17 +77,12 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
     }
 
     // Update contract entity with transaction.signatureId
-    contractEntity = await nftContractDB.update(
+    contractEntity = await nftContractService.updateContractEntity(
+      contractEntity.id,
       {
-        where: {
-          id: contractEntity.id
-
-        },
-        data: {
-          signatureId: response.signatureId
-        }
-
-      });
+        signatureId: response.signatureId
+      }
+    );
 
     job.pushProgress({ topic: 'NFT_COLLECTION_CONTRACT', msg: 'NFT contract: new Contract queued' });
   }
@@ -112,33 +106,24 @@ const getOrCreateNFTContractAddress = async (strapi, job) => {
       throw new Error("Error: Transaction has not been signed - Timeout");
     }
 
-    contractEntity = await nftContractDB.update(
+    contractEntity = await nftContractService.updateContractEntity(
+      contractEntity.id,
       {
-        where: {
-          id: contractEntity.id
-
-        },
-        data: {
-          transactionId: txId
-        }
-
-      });
+        transactionId: txId
+      }
+    );
     job.pushProgress({ topic: 'NFT_COLLECTION_CONTRACT', msg: 'NFT contract: Created' });
   }
 
   if (!contractEntity.contractAddress) {
     const { contractAddress } = await tatumService.getNFTContractAddress(strapi, job, contractEntity.blockchain, contractEntity.transactionId);
 
-    contractEntity = await nftContractDB.update(
+    contractEntity = await nftContractService.updateContractEntity(
+      contractEntity.id,
       {
-        where: {
-          id: contractEntity.id
-
-        },
-        data: {
-          contractAddress
-        }
-      });
+        contractAddress
+      }
+    );
 
     job.pushProgress({ topic: 'NFT_COLLECTION_CONTRACT', msg: `NFT contract: Address -> ${contractEntity}`, data: contractEntity });
   }

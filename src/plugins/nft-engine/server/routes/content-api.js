@@ -12,6 +12,14 @@ module.exports = {
       },
     },
     {
+      method: 'POST',
+      path: '/contract_claims/{network}/{blockchain}',
+      handler: 'ContractClaimsController.addContractClaim',
+      config: {
+        middlewares: ['global::rapidapi'],
+      }
+    },
+    {
       method: 'GET',
       path: '/NFT_orders/{id}',
       handler: 'NFT_ordersController.findOne',

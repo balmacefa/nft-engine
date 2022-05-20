@@ -71,6 +71,28 @@ const createNewOrderJob = async (strapi, ctx) => {
     nftMetadata,
     webhooks
   } = processRapidAPiPayload(ctx);
+  const tatum_use_test_net = _.get(ctx.state, 'rapidApi.useTestnet', true);
+
+
+  // check if the user has already a contract with the same tokenId
+  const nftContractService = strapi.service('api::nft-contract.nft-contract');
+
+  let contractEntity = await nftContractService.findContractEntity({
+    user: userId,
+    blockchain,
+    collectionName,
+    symbol,
+    useTestNet: tatum_use_test_net
+  });
+
+  if (!contractEntity) {
+    // Check if the user has enough Contract claim balance
+    const userHasContractClaims = await strapi.service('aapi::contract-claim.contract-claim').userHaveContractClaims(userId, blockchain, tatum_use_test_net);
+    if (!userHasContractClaims) {
+      strapi.log.info('User has not enough Contract claim balance');
+      return ctx.badRequest('User has not enough Contract claim balance, call /contract-claim/{blockchain} to get more');
+    }
+  }
 
 
   let entity;
@@ -116,13 +138,12 @@ const createNewOrderJob = async (strapi, ctx) => {
     return ctx.badRequest(`Error while creating mint order`);
   }
 
-  if(entity.status === 'minted'){
+  if (entity.status === 'minted') {
     strapi.log.info(`NFT mint order already minted`);
     return ctx.badRequest(`NFT mint order already minted`);
   }
 
   try {
-    const tatum_use_test_net = _.get(ctx.state, 'rapidApi.useTestnet', true);
     const jobData = {
       nftMintOrderEntity: entity,
       webhooks,

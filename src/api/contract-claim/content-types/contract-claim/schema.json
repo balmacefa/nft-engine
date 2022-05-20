@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contract_claims",
+  "info": {
+    "singularName": "contract-claim",
+    "pluralName": "contract-claims",
+    "displayName": "Contract Claim",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "string",
+      "required": true
+    },
+    "blockchain": {
+      "type": "string",
+      "required": true
+    },
+    "useTestNet": {
+      "type": "boolean"
+    },
+    "remainClaim": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    }
+  }
+}
