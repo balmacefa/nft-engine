@@ -7,31 +7,31 @@
 // get lodash
 const _ = require('lodash');
 
-const getNFTContractEntity = async(strapi, id, userId) => {
+const getNFTContractEntity = async (strapi, id, userId) => {
   const nftContractController = strapi.controller('api::nft-contract.nft-contract');
-    const result = await nftContractController.find(
-      {
-        query: {
-          filters: {
-            $or: [
-              {
-                transactionId: id
-              },
-              {
-                id: id
-              }
-            ],
-            user: userId
-          },
-          pagination: {
-            limit: 1
-          }
+  const result = await nftContractController.find(
+    {
+      query: {
+        filters: {
+          $or: [
+            {
+              transactionId: id
+            },
+            {
+              id: id
+            }
+          ],
+          user: userId
+        },
+        pagination: {
+          limit: 1
         }
       }
-    );
-    const entity = _.get(result, "data[0].attributes", null);
-    entity.id = _.get(result, "data[0].id");
-    return entity;
+    }
+  );
+  const entity = _.get(result, "data[0].attributes", null);
+  entity.id = _.get(result, "data[0].id");
+  return entity;
 };
 
 module.exports = ({ strapi }) => ({
@@ -44,7 +44,7 @@ module.exports = ({ strapi }) => ({
 
     let {
       id
-    } = ctx.request.query;
+    } = ctx.request.params;
 
     const entity = getNFTContractEntity(strapi, id, userId);
     if (!entity) {
@@ -64,8 +64,35 @@ module.exports = ({ strapi }) => ({
 
     let {
       page,
-      pageSize
+      pageSize,
+      symbol,
+      blockchain,
+      network,
+      collectionName,
     } = ctx.request.query;
+
+    const filters = {
+      user: userId
+    };
+
+    let useTestNet = network !== 'mainnet' ? true : false;
+
+    if (network) {
+      filters.useTestNet = useTestNet;
+    }
+
+    if (blockchain) {
+      filters.blockchain = blockchain;
+    }
+
+    if (symbol) {
+      filters.symbol = symbol;
+    }
+
+    if (collectionName) {
+      filters.collectionName = collectionName;
+    }
+
     // set default values and parse to int
     page = parseInt(page || 0);
     // clamp pageSize between 1 and 100
@@ -74,9 +101,7 @@ module.exports = ({ strapi }) => ({
     const entities = await nftContractController.find(
       {
         query: {
-          filters: {
-            user: userId
-          },
+          filters,
           pagination: {
             page,
             pageSize,

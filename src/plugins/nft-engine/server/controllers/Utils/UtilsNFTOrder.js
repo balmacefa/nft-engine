@@ -115,6 +115,7 @@ const createNewOrderJob = async (strapi, ctx) => {
           data: {
             sendAddress,
             blockchain,
+            useTestNet: tatum_use_test_net,
             collectionName,
             tokenId,
             royalties,

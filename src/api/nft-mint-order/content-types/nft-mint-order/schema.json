@@ -25,6 +25,9 @@
         "ONE"
       ]
     },
+    "useTestNet": {
+      "type": "boolean"
+    },
     "collectionName": {
       "type": "string"
     },

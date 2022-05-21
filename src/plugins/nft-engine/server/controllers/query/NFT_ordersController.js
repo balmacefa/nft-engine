@@ -18,7 +18,7 @@ module.exports = ({ strapi }) => ({
 
     let {
       id
-    } = ctx.request.query;
+    } = ctx.request.params;
 
     const result = await nftMintOrderController.find(
       {
@@ -58,19 +58,42 @@ module.exports = ({ strapi }) => ({
 
     let {
       page,
-      pageSize
+      pageSize,
+      status,
+      network,
+      contractAddress,
+      blockchain,
     } = ctx.request.query;
+
+    let useTestNet = network !== 'mainnet' ? true : false;
+
     // set default values and parse to int
     page = parseInt(page || 0);
     // clamp pageSize between 1 and 100
     pageSize = Math.max(1, Math.min(parseInt(pageSize || 10), 100));
 
+
+    const filters = {
+      user: userId
+    };
+
+    if (network) {
+      filters.useTestNet = useTestNet;
+    }
+    if (status) {
+      filters.status = status;
+    }
+    if (contractAddress) {
+      filters.contractAddress = contractAddress;
+    }
+    if (blockchain) {
+      filters.blockchain = blockchain;
+    }
+
     const entities = await nftMintOrderController.find(
       {
         query: {
-          filters: {
-            user: userId
-          },
+          filters,
           pagination: {
             page,
             pageSize,
