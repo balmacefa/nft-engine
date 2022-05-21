@@ -15,7 +15,7 @@ module.exports = {
     },
     {
       method: 'POST',
-      path: '/contract_claims/:network',
+      path: '/contract_claims/:network/:blockchain',
       handler: 'ContractClaimsController.addContractClaim',
       config: {
         /// auth: false, this is handled by middleware global::rapidApi

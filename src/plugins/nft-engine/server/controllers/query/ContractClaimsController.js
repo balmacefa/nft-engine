@@ -18,11 +18,9 @@ module.exports = ({ strapi }) => ({
 
     let {
       network,
+      blockchain
     } = ctx.request.params;
 
-    let {
-      blockchain,
-    } = ctx.request.body;
 
     const use_test_net = network !== 'mainnet' ? true : false;
 
