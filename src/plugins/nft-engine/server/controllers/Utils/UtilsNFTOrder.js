@@ -105,6 +105,7 @@ const createNewOrderJob = async (strapi, ctx) => {
         tokenId,
         symbol,
         blockchain,
+        useTestNet: tatum_use_test_net,
       }
     });
 
