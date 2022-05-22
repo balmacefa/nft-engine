@@ -45,6 +45,33 @@ module.exports = ({ strapi }) => ({
       return ctx.notFound(`No order found for id ${id}`);
     }
     entity.id = _.get(result, "data[0].id");
+
+
+    /* The code below does the following:
+    1. If the status of the entity is not 'minted', then we find the job in the Bull queue by its id.
+    2. If the job exists, then we set the job property of the entity to the job. */
+    if (entity.status !== 'minted') {
+      const {
+        blockchain, collectionName, symbol, tokenId
+      } = entity;
+
+      const nftMintOrderService = strapi.service('api::nft-mint-order.nft-mint-order');
+      // { userId, blockchain, collectionName, symbol, tokenId }
+      const jobId = nftMintOrderService.getJobId({ userId, blockchain, collectionName, symbol, tokenId });
+
+      const queue = strapi
+        .plugin('nft-engine')
+        .bull.queue;
+      // bullMQ
+      // find by project id
+      const job = await queue.getJob(jobId);
+      if (job) {
+        delete job.data;
+        entity.job = job;
+      }
+    }
+
+
     strapi.log.info(`EXIT GET /NFT_orders/{id} \n ${JSON.stringify(entity)}`);
     return entity;
   },

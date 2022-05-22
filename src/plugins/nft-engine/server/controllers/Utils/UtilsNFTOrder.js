@@ -159,7 +159,10 @@ const createNewOrderJob = async (strapi, ctx) => {
     // collectionName,
     // tokenId,
     // symbol
-    const jobId = `${userId}____${blockchain}____${collectionName}____${symbol}____${tokenId}`;
+    const nftMintOrderService = strapi.service('api::nft-mint-order.nft-mint-order');
+
+    // { userId, blockchain, collectionName, symbol, tokenId }
+    const jobId = nftMintOrderService.getJobId({ userId, blockchain, collectionName, symbol, tokenId });
 
     const queue = strapi
       .plugin('nft-engine')
