@@ -58,7 +58,7 @@ const createNewOrderJob = async (strapi, ctx) => {
   const nftMintOrderDB = strapi.db.query('api::nft-mint-order.nft-mint-order');
 
   const userId = ctx.state.rapidApi.user;
-  const {
+  let {
     nftMintOrder: {
       sendAddress,
       blockchain,
@@ -76,6 +76,8 @@ const createNewOrderJob = async (strapi, ctx) => {
 
   // check if the user has already a contract with the same tokenId
   const nftContractService = strapi.service('api::nft-contract.nft-contract');
+
+  collectionName = nftContractService.getHashedCollectionName(collectionName, userId);
 
   let contractEntity = await nftContractService.findContractEntity({
     user: userId,

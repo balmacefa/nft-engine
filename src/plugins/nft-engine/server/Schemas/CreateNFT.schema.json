@@ -25,7 +25,8 @@
         },
         "collectionName": {
           "type": "string",
-          "description": "Name of the collection"
+          "description": "Name of the collection",
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$"
         },
         "symbol": {
           "type": "string",

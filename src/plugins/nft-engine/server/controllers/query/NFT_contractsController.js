@@ -29,6 +29,9 @@ const getNFTContractEntity = async (strapi, id, userId) => {
       }
     }
   );
+  if (result.data.length === 0) {
+    return null;
+  }
   const entity = _.get(result, "data[0].attributes", null);
   entity.id = _.get(result, "data[0].id");
   return entity;
@@ -90,6 +93,9 @@ module.exports = ({ strapi }) => ({
     }
 
     if (collectionName) {
+      const nftContractService = strapi.service('api::nft-contract.nft-contract');
+      collectionName = nftContractService.getHashedCollectionName(collectionName, userId);
+
       filters.collectionName = collectionName;
     }
 
