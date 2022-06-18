@@ -17,6 +17,9 @@ This means that you can now create an NFT and put it on the Polygon blockchain w
 - A webhook is used to notify the user of the job's stages and status.
 
 
+![NFT_API_MINT](https://user-images.githubusercontent.com/8296124/174458010-9eab4080-a062-4151-9f67-d27daccdc135.png)
+
+
 ### The Job queue 💀🥀🧲🧭
 
 The nature of the networks and technology used to create non-fungible tokens (NFTs) means that there are multiple potential points of failure. To account for this, a resilience work queue is used that attempts each step until the NFT is successfully deployed. If a job does not succeed after 10 tries, it is considered unrecoverable.
@@ -27,8 +30,12 @@ self signed.
 own private keys.
 
 
-# Cloud service available
+# Cloud service available At
+![image](https://user-images.githubusercontent.com/8296124/174458072-6620457a-ee0b-404f-b00d-b1938770151f.png)
+
 https://nftapiengine.xyz
+and
+https://rapidapi.com/balmacefa/api/nft_engine_api
 
 # Book a call
 Manage, maintain of project, custom code, Strategy, features, key management, cloud service, etc.
