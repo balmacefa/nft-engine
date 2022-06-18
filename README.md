@@ -30,8 +30,8 @@ own private keys.
 # Cloud service available
 https://nftapiengine.xyz
 
-# Book a custom service integration
-Manage or maintain of this project, custom code, questions:
+# Book a call
+Manage, maintain of project, custom code, Strategy, features, key management, cloud service, etc.
 https://calendly.com/balmacefa/nft
 
 # API Documentation
