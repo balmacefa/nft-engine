@@ -5,6 +5,23 @@ This is a fully automated solution 🤖🧞 that allows you to deploy an NFT wit
 
 This means that you can now create an NFT and put it on the Polygon blockchain with a single API call. Other blockchains will be added in the future see galaxy use cases 🏰🌈
 
+- [Introduction 🤴⚔](#introduction----)
+  * [Key points 🥇🔑](#key-points-----)
+    + [The Job queue 💀🥀🧲🧭](#the-job-queue---------)
+- [Cloud service available](#cloud-service-available)
+- [Book a call](#book-a-call)
+- [API Documentation](#api-documentation)
+- [Architecture](#architecture)
+  * [API CMS](#api-cms)
+    + [Engine folder Entry point:](#engine-folder-entry-point-)
+  * [Redis job Queue](#redis-job-queue)
+  * [Tatum NFT API](#tatum-nft-api)
+    + [Private key Management](#private-key-management)
+  * [Pinata IPFS](#pinata-ipfs)
+  * [Usage see Makefile](#usage-see-makefile)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 ## Key points 🥇🔑
 
