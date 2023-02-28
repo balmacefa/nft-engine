@@ -56,7 +56,7 @@ https://rapidapi.com/balmacefa/api/nft_engine_api
 
 # Book a call
 Manage, maintain of project, custom code, Strategy, features, key management, cloud service, etc.
-https://calendly.com/balmacefa/nft
+https://calendly.com/balmacefa/nft-api-engine
 
 # API Documentation
 Send headers:
